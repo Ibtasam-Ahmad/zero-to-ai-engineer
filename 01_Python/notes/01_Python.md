@@ -35,10 +35,10 @@ How Python runs your code, from source text to visible output:
 
 ```mermaid
 flowchart LR
-  A[Source code<br/>your .py file] --> B[Interpreter<br/>CPython]
-  B --> C[Compile to bytecode<br/>.pyc instructions]
-  C --> D[Python Virtual Machine<br/>executes bytecode]
-  D --> E[Output<br/>result on screen]
+    A[Source code<br/>your .py file] --> B[Interpreter<br/>CPython]
+    B --> C[Compile to bytecode<br/>.pyc instructions]
+    C --> D[Python Virtual Machine<br/>executes bytecode]
+    D --> E[Output<br/>result on screen]
 ```
 
 ---
@@ -113,30 +113,30 @@ A taxonomy of Python's built-in data types, grouped by whether they can be chang
 }}%%
 
 mindmap
- root((Python Data Types))
-  Immutable
-   int
-   float
-   complex
-   bool
-   str
-   bytes
-   tuple
-   frozenset
-   NoneType
-  Mutable
-   list
-   dict
-   set
-  Sequence
-   str
-   list
-   tuple
-  Mapping
-   dict
-  Collection of unique items
-   set
-   frozenset
+  root((Python Data Types))
+    Immutable
+      int
+      float
+      complex
+      bool
+      str
+      bytes
+      tuple
+      frozenset
+      NoneType
+    Mutable
+      list
+      dict
+      set
+    Sequence
+      str
+      list
+      tuple
+    Mapping
+      dict
+    Collection of unique items
+      set
+      frozenset
 ```
 
 ---
@@ -334,14 +334,14 @@ How control flows through an if / elif / else chain, testing each condition unti
 
 ```mermaid
 flowchart TD
-  A[Start] --> B{if condition}
-  B -->|True| C[Run if block]
-  B -->|False| D{elif condition}
-  D -->|True| E[Run elif block]
-  D -->|False| F[Run else block]
-  C --> G[Continue program]
-  E --> G
-  F --> G
+    A[Start] --> B{if condition}
+    B -->|True| C[Run if block]
+    B -->|False| D{elif condition}
+    D -->|True| E[Run elif block]
+    D -->|False| F[Run else block]
+    C --> G[Continue program]
+    E --> G
+    F --> G
 ```
 
 ### The for Loop
@@ -367,15 +367,15 @@ How a loop iterates, with continue skipping ahead, break exiting early, and else
 
 ```mermaid
 flowchart TD
-  A[Start loop] --> B{More items?}
-  B -->|No| C[Run else block]
-  C --> D[Exit loop]
-  B -->|Yes| E[Run loop body]
-  E --> F{continue?}
-  F -->|Yes| B
-  F -->|No| G{break?}
-  G -->|Yes| D
-  G -->|No| B
+    A[Start loop] --> B{More items?}
+    B -->|No| C[Run else block]
+    C --> D[Exit loop]
+    B -->|Yes| E[Run loop body]
+    E --> F{continue?}
+    F -->|Yes| B
+    F -->|No| G{break?}
+    G -->|Yes| D
+    G -->|No| B
 ```
 
 ### match / case
@@ -421,10 +421,10 @@ How a function call resolves names through the LEGB scope chain, from innermost 
 
 ```mermaid
 flowchart LR
-  A[Local<br/>names inside the function] --> B[Enclosing<br/>names in an outer function]
-  B --> C[Global<br/>names at module top level]
-  C --> D[Built-in<br/>names Python provides]
-  A -.call returns.-> E[Caller receives return value]
+    A[Local<br/>names inside the function] --> B[Enclosing<br/>names in an outer function]
+    B --> C[Global<br/>names at module top level]
+    C --> D[Built-in<br/>names Python provides]
+    A -.call returns.-> E[Caller receives return value]
 ```
 
 ### Generators
@@ -498,24 +498,24 @@ The base class MLModel and its subclasses, each inheriting shared machinery whil
 
 ```mermaid
 classDiagram
-  class MLModel {
-    +str name
-    +float learning_rate
-    +int model_count
-    +__init__()
-    +fit()
-    +predict()
-  }
-  class LinearRegression {
-    +list weights
-    +predict()
-  }
-  class NeuralNetwork {
-    +list layers
-    +predict()
-  }
-  MLModel <|-- LinearRegression
-  MLModel <|-- NeuralNetwork
+    class MLModel {
+        +str name
+        +float learning_rate
+        +int model_count
+        +__init__()
+        +fit()
+        +predict()
+    }
+    class LinearRegression {
+        +list weights
+        +predict()
+    }
+    class NeuralNetwork {
+        +list layers
+        +predict()
+    }
+    MLModel <|-- LinearRegression
+    MLModel <|-- NeuralNetwork
 ```
 
 ### Polymorphism
@@ -593,15 +593,15 @@ How execution moves through try / except / else / finally depending on whether a
 
 ```mermaid
 flowchart TD
-  A[Enter try block] --> B{Exception raised?}
-  B -->|No| C[Run else block]
-  B -->|Yes| D{Matching except?}
-  D -->|Yes| E[Run except handler]
-  D -->|No| F[Exception propagates up]
-  C --> G[Run finally block]
-  E --> G
-  F --> G
-  G --> H[Continue or re-raise]
+    A[Enter try block] --> B{Exception raised?}
+    B -->|No| C[Run else block]
+    B -->|Yes| D{Matching except?}
+    D -->|Yes| E[Run except handler]
+    D -->|No| F[Exception propagates up]
+    C --> G[Run finally block]
+    E --> G
+    F --> G
+    G --> H[Continue or re-raise]
 ```
 
 ### Raising and Defining Exceptions

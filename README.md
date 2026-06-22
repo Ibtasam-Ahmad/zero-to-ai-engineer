@@ -27,13 +27,14 @@
 - [🚀 Quick Start for Absolute Beginners](#-quick-start-for-absolute-beginners)
 - [🧮 Prerequisites & Math](#-prerequisites--math-fundamentals)
 - [📚 The Complete Roadmap](#-the-complete-roadmap)
- - [Phase 0: Programming & Tools](#-phase-0-programming--tools-week-0)
- - [Phase 1: Machine Learning Foundations](#-phase-1-machine-learning-foundations-weeks-1-4)
- - [Phase 2: Deep Learning from Scratch](#-phase-2-deep-learning-from-scratch-weeks-5-8)
- - [Phase 3: Transformers & LLMs](#-phase-3-transformers--large-language-models-weeks-9-12)
- - [Phase 4: RAG & Vector Databases](#-phase-4-retrieval-augmented-generation-rag-weeks-13-15)
- - [Phase 5: Agentic AI & Autonomous Systems](#-phase-5-agentic-ai--autonomous-systems-weeks-16-19)
- - [Phase 6: Production AI & MLOps](#-phase-6-production-ai--mlops-weeks-20-24)
+  - [Phase 0: AI Fundamentals (Ethics, Fairness & Safety)](#-phase-0-ai-fundamentals-ethics-fairness--safety-week--1)
+  - [Phase 1: Programming & Tools](#-phase-1-programming--tools-week-0)
+  - [Phase 2: Machine Learning Foundations](#-phase-2-machine-learning-foundations-weeks-1-4)
+  - [Phase 3: Deep Learning from Scratch](#-phase-3-deep-learning-from-scratch-weeks-5-8)
+  - [Phase 4: Transformers & LLMs](#-phase-4-transformers--large-language-models-weeks-9-12)
+  - [Phase 5: RAG & Vector Databases](#-phase-5-retrieval-augmented-generation-rag-weeks-13-15)
+  - [Phase 6: Agentic AI & Autonomous Systems](#-phase-6-agentic-ai--autonomous-systems-weeks-16-19)
+  - [Phase 7: Production AI & MLOps](#-phase-7-production-ai--mlops-weeks-20-24)
 - [🛠️ Build Projects](#-build-projects)
 - [📚 Mega Resource Library](#-mega-resource-library)
 - [🎯 Learning Tips](#-learning-tips-from-experts)
@@ -43,287 +44,408 @@
 
 ## 📂 Repository Structure
 
-> **158 Jupyter notebooks** covering the complete AI/ML stack from Python basics to production deployment. Every notebook contains markdown explanations with LaTeX math formulas, code (scratch → library → production), and an Additional Learning Resources section.
+> **164 Jupyter notebooks** covering the complete AI/ML stack from Python basics to production deployment. Every notebook contains markdown explanations with LaTeX math formulas, code (scratch → library → production), and an Additional Learning Resources section.
 >
 > 🆕 Each section folder also has a **`notes/` sub-folder** with a comprehensive, plain-English **conceptual study guide** (with diagrams) see [Conceptual Study Notes](#-conceptual-study-notes-with-diagrams). Every notebook has been **executed and verified to run** on a current Python 3.12 stack, with a root **`requirements.txt`** pinning the full environment see [Verified Runnable](#-all-notebooks-verified-runnable).
 
 ```
 zero-to-ai-engineer/
 │
+├── 00_AI_Fundamentals/
+│   ├── 01_bias_and_fairness.ipynb            # Algorithmic bias types, fairness metrics, Fairlearn, AIF360
+│   ├── 02_transparency_and_explainability.ipynb  # SHAP, LIME, PDP, ICE, model cards, interpretability
+│   ├── 03_accountability_and_governance.ipynb    # AI governance, EU AI Act, NIST RMF, OECD principles
+│   ├── 04_privacy_and_security.ipynb           # Differential privacy, DP-SGD, federated learning, Opacus
+│   ├── 05_robustness_and_safety.ipynb        # Adversarial attacks (FGSM, PGD), ART, certified defenses
+│   ├── 06_responsible_ai_and_ethics.ipynb    # Constitutional AI, RLHF safety, red teaming, AI alignment
+│   └── notes/
+│       └── 00_AI_Fundamentals.md             # Conceptual study guide with Mermaid diagrams
+│
 ├── 01_Python/
-│  ├── 01_basic.ipynb            # Variables, OOP, comprehensions, file I/O, error handling
-│  ├── 02_industrial.ipynb          # Decorators, type hints, Pydantic, logging, testing, async
-│  └── 03_advanced.ipynb           # Metaclasses, descriptors, generators, memory, concurrency
+│   ├── 01_basic.ipynb                        # Variables, OOP, comprehensions, file I/O, error handling
+│   ├── 02_industrial.ipynb                   # Decorators, type hints, Pydantic, logging, testing, async
+│   ├── 03_advanced.ipynb                     # Metaclasses, descriptors, generators, memory, concurrency
+│   └── notes/
 │
 ├── 02_Data_Analysis/
-│  ├── 01_data_preprocessing.ipynb      # Cleaning, missing values, outliers, pipelines
-│  ├── 02_numpy.ipynb            # Arrays, broadcasting, linear algebra ops
-│  ├── 03_pandas.ipynb            # DataFrames, groupby, merges, time series
-│  ├── 04_matplotlib.ipynb          # Static plots, subplots, styles, animations
-│  ├── 05_seaborn.ipynb           # Statistical visualization, heatmaps, pair plots
-│  ├── 06_plotly.ipynb            # Interactive plots, dashboards, 3D charts
-│  ├── 07_eda.ipynb             # Exploratory data analysis, profiling, storytelling
-│  └── 08_statistics.ipynb          # 13+ distributions with PDF/PMF, hypothesis tests
+│   ├── 01_data_preprocessing.ipynb           # Cleaning, missing values, outliers, pipelines
+│   ├── 02_numpy.ipynb                        # Arrays, broadcasting, linear algebra ops
+│   ├── 03_pandas.ipynb                       # DataFrames, groupby, merges, time series
+│   ├── 04_matplotlib.ipynb                   # Static plots, subplots, styles, animations
+│   ├── 05_seaborn.ipynb                      # Statistical visualization, heatmaps, pair plots
+│   ├── 06_plotly.ipynb                       # Interactive plots, dashboards, 3D charts
+│   ├── 07_eda.ipynb                          # Exploratory data analysis, profiling, storytelling
+│   └── 08_statistics.ipynb                   # 13+ distributions with PDF/PMF, hypothesis tests
+│   └── notes/
 │
 ├── 03_Machine_Learning/
-│  ├── 01_supervised/
-│  │  ├── 01_linear_regression.ipynb    # Ridge, Lasso, Elastic Net, polynomial
-│  │  ├── 02_logistic_regression.ipynb   # Binary, multi-class, regularization
-│  │  ├── 03_decision_trees.ipynb      # CART, ID3, C4.5, pruning
-│  │  ├── 04_ensemble_methods.ipynb     # Random Forest, XGBoost, LightGBM, CatBoost, AdaBoost
-│  │  ├── 05_svm.ipynb           # Kernels (RBF, poly, sigmoid), SVR, kernel ridge
-│  │  ├── 06_naive_bayes.ipynb       # Gaussian, Multinomial, Complement, Bernoulli
-│  │  ├── 07_knn.ipynb           # k-NN, LVQ, distance metrics
-│  │  └── 08_generalized_linear_models.ipynb # Poisson, Negative Binomial, Ordinal, Probit, Tobit, GDA, QDA
-│  ├── 02_unsupervised/
-│  │  ├── 01_clustering.ipynb        # KMeans++, DBSCAN, HDBSCAN, GMM, Spectral, BIRCH
-│  │  ├── 02_dimensionality_reduction.ipynb # PCA, t-SNE, UMAP, ICA, NMF, Isomap, LLE, MDS
-│  │  └── 03_association_rules.ipynb    # Apriori, FP-Growth, ECLAT, SPADE, PrefixSpan
-│  ├── 03_semi_supervised/
-│  │  └── 01_semi_supervised_learning.ipynb # Label propagation, FixMatch, MixMatch, ReMixMatch, VAT
-│  ├── 04_uncommon_models/
-│  │  └── 01_uncommon_ml_models.ipynb    # GP, HMM (Viterbi), RBM, SOM, Hopfield, ELM, MARS, CapsNet
-│  ├── 05_feature_engineering/
-│  │  ├── 01_feature_engineering.ipynb   # All scalers, encoders, feature selection (Boruta, SHAP)
-│  │  └── 02_imbalanced_data.ipynb     # SMOTE, ADASYN, Borderline-SMOTE, NearMiss, SMOTE-Tomek
-│  ├── 06_model_evaluation/
-│  │  └── 01_model_evaluation.ipynb     # All CV strategies, all metrics, Optuna HPO
-│  ├── 07_explainability/
-│  │  └── 01_explainability.ipynb      # SHAP (Shapley), LIME, PDP, ICE, GRAD-CAM
-│  ├── 08_anomaly_detection/
-│  │  └── 01_anomaly_detection.ipynb    # Isolation Forest, LOF, Mahalanobis, PyOD, Deep SVDD
-│  ├── 09_recommendation_systems/
-│  │  └── 01_recommendation_systems.ipynb  # CF, matrix factorization, NCF, LightGCN
-│  ├── 10_evaluation_metrics_comprehensive.ipynb # Every metric: classification/regression/ranking/clustering/NLP/CV/TS/RAG
-│  └── projects/
-│    ├── 01_titanic_survival.py
-│    ├── 02_customer_churn.py
-│    └── 03_house_price.py
+│   ├── 01_supervised/
+│   │   ├── 01_linear_regression.ipynb        # Ridge, Lasso, Elastic Net, polynomial
+│   │   ├── 02_logistic_regression.ipynb      # Binary, multi-class, regularization
+│   │   ├── 03_decision_trees.ipynb           # CART, ID3, C4.5, pruning
+│   │   ├── 04_ensemble_methods.ipynb         # Random Forest, XGBoost, LightGBM, CatBoost, AdaBoost
+│   │   ├── 05_svm.ipynb                      # Kernels (RBF, poly, sigmoid), SVR, kernel ridge
+│   │   ├── 06_naive_bayes.ipynb              # Gaussian, Multinomial, Complement, Bernoulli
+│   │   ├── 07_knn.ipynb                      # k-NN, LVQ, distance metrics
+│   │   ├── 08_generalized_linear_models.ipynb # Poisson, Negative Binomial, Ordinal, Probit, Tobit, GDA, QDA
+│   │   └── notes/
+│   ├── 02_unsupervised/
+│   │   ├── 01_clustering.ipynb               # KMeans++, DBSCAN, HDBSCAN, GMM, Spectral, BIRCH
+│   │   ├── 02_dimensionality_reduction.ipynb # PCA, t-SNE, UMAP, ICA, NMF, Isomap, LLE, MDS
+│   │   ├── 03_association_rules.ipynb        # Apriori, FP-Growth, ECLAT, SPADE, PrefixSpan
+│   │   └── notes/
+│   ├── 03_semi_supervised/
+│   │   ├── 01_semi_supervised_learning.ipynb # Label propagation, FixMatch, MixMatch, ReMixMatch, VAT
+│   │   └── notes/
+│   ├── 04_uncommon_models/
+│   │   ├── 01_uncommon_ml_models.ipynb       # GP, HMM (Viterbi), RBM, SOM, Hopfield, ELM, MARS, CapsNet
+│   │   └── notes/
+│   ├── 05_feature_engineering/
+│   │   ├── 01_feature_engineering.ipynb      # All scalers, encoders, feature selection (Boruta, SHAP)
+│   │   ├── 02_imbalanced_data.ipynb          # SMOTE, ADASYN, Borderline-SMOTE, NearMiss, SMOTE-Tomek
+│   │   └── notes/
+│   ├── 06_model_evaluation/
+│   │   ├── 01_model_evaluation.ipynb         # All CV strategies, all metrics, Optuna HPO
+│   │   └── notes/
+│   ├── 07_explainability/
+│   │   ├── 01_explainability.ipynb           # SHAP (Shapley), LIME, PDP, ICE, GRAD-CAM
+│   │   └── notes/
+│   ├── 08_anomaly_detection/
+│   │   ├── 01_anomaly_detection.ipynb        # Isolation Forest, LOF, Mahalanobis, PyOD, Deep SVDD
+│   │   └── notes/
+│   ├── 09_recommendation_systems/
+│   │   ├── 01_recommendation_systems.ipynb   # CF, matrix factorization, NCF, LightGCN
+│   │   └── notes/
+│   ├── 10_evaluation_metrics_comprehensive.ipynb  # Every metric: classification/regression/ranking/clustering/NLP/CV/TS/RAG
+│   └── projects/
+│       ├── 01_titanic_survival.py
+│       ├── 02_customer_churn.py
+│       └── 03_house_price.py
 │
 ├── 04_Forecasting/
-│  ├── 01_time_series_basics.ipynb      # Stationarity, decomposition, ACF/PACF, ADF test
-│  ├── 02_classical_methods.ipynb      # ARIMA, SARIMA, SARIMAX, VAR, Exponential Smoothing, TBATS
-│  ├── 03_ml_for_forecasting.ipynb      # XGBoost/LightGBM for TS, lag features, rolling stats
-│  ├── 04_deep_learning_forecasting.ipynb  # LSTM, GRU, Seq2Seq, Informer, Autoformer, PatchTST, DLinear
-│  ├── 05_prophet.ipynb           # Prophet, NeuralProphet, trend/seasonality/holidays
-│  ├── 06_advanced_forecasting.ipynb     # N-BEATS, N-HiTS, TFT, TimesFM, Chronos, TimesNet
-│  ├── 07_multivariate_forecasting.ipynb   # VARMAX, multivariate LSTM, cross-series dependencies
-│  ├── 08_garch_volatility_models.ipynb   # ARCH, GARCH, EGARCH, GJR-GARCH, DCC-GARCH, VaR
-│  ├── 09_probabilistic_forecasting.ipynb  # Conformal prediction, DeepAR, GP, quantile regression, ensembles
-│  └── projects/
-│    ├── 01_stock_forecast.py
-│    ├── 02_energy_demand.py
-│    └── 03_sales_forecast.py
+│   ├── 01_time_series_basics.ipynb           # Stationarity, decomposition, ACF/PACF, ADF test
+│   ├── 02_classical_methods.ipynb            # ARIMA, SARIMA, SARIMAX, VAR, Exponential Smoothing, TBATS
+│   ├── 03_ml_for_forecasting.ipynb           # XGBoost/LightGBM for TS, lag features, rolling stats
+│   ├── 04_deep_learning_forecasting.ipynb    # LSTM, GRU, Seq2Seq, Informer, Autoformer, PatchTST, DLinear
+│   ├── 05_prophet.ipynb                      # Prophet, NeuralProphet, trend/seasonality/holidays
+│   ├── 06_advanced_forecasting.ipynb         # N-BEATS, N-HiTS, TFT, TimesFM, Chronos, TimesNet
+│   ├── 07_multivariate_forecasting.ipynb     # VARMAX, multivariate LSTM, cross-series dependencies
+│   ├── 08_garch_volatility_models.ipynb      # ARCH, GARCH, EGARCH, GJR-GARCH, DCC-GARCH, VaR
+│   ├── 09_probabilistic_forecasting.ipynb    # Conformal prediction, DeepAR, GP, quantile regression, ensembles
+│   ├── notes/
+│   └── projects/
+│       ├── 01_stock_forecast.py
+│       ├── 02_energy_demand.py
+│       └── 03_sales_forecast.py
 │
 ├── 05_Deep_Learning/
-│  ├── 01_neural_network_fundamentals.ipynb # Activations, backprop derivation, BatchNorm, Xavier/He init
-│  ├── 02_optimizers.ipynb          # SGD, Adam, AdamW, Lion, SAM, Sophia, schedulers
-│  ├── 03_cnn.ipynb             # LeNet→ConvNeXt, ResNet, EfficientNet, transfer learning
-│  ├── 04_rnn_lstm_gru.ipynb         # All 5 LSTM gate equations, Word2Vec, GloVe, BPTT
-│  ├── 05_transformers_architecture.ipynb  # Scaled dot-product attention, sinusoidal PE, full transformer
-│  ├── 06_generative_models.ipynb      # VAE ELBO, GAN minimax, DDPM, VQVAE, ControlNet
-│  ├── 07_gnn.ipynb             # GCN, GAT, GraphSAGE, GIN, DGI, contrastive graph SSL
-│  ├── 08_model_compression.ipynb      # Knowledge distillation, LoRA (W=W₀+BA), QLoRA
-│  ├── 09_self_supervised_learning.ipynb   # SimCLR, MoCo, BYOL, DINO, MAE, BEiT, I-JEPA, Barlow Twins
-│  ├── 10_neural_ode.ipynb          # Neural ODE, FFJORD, Hamiltonian NN, KAN, Normalizing Flows
-│  ├── 11_distributed_training.ipynb     # ZeRO 1/2/3, FSDP, DeepSpeed, Megatron-LM, pipeline parallelism
-│  ├── 12_advanced_peft.ipynb        # DoRA, Prefix Tuning, P-Tuning v1/v2, Adapters, IA³, BitFit, ReLoRA
-│  ├── 13_quantization_and_compression_advanced.ipynb # GPTQ, AWQ, SmoothQuant, GGUF, SpQR, AQLM, HQQ, NAS
-│  └── projects/
-│    ├── 01_mnist_from_scratch.py
-│    ├── 02_image_classifier_pytorch.py
-│    └── 03_text_generator.py
+│   ├── 01_neural_network_fundamentals.ipynb  # Activations, backprop derivation, BatchNorm, Xavier/He init
+│   ├── 02_optimizers.ipynb                   # SGD, Adam, AdamW, Lion, SAM, Sophia, schedulers
+│   ├── 03_cnn.ipynb                          # LeNet→ConvNeXt, ResNet, EfficientNet, transfer learning
+│   ├── 04_rnn_lstm_gru.ipynb                 # All 5 LSTM gate equations, Word2Vec, GloVe, BPTT
+│   ├── 05_transformers_architecture.ipynb    # Scaled dot-product attention, sinusoidal PE, full transformer
+│   ├── 06_generative_models.ipynb            # VAE ELBO, GAN minimax, DDPM, VQVAE, ControlNet
+│   ├── 07_gnn.ipynb                          # GCN, GAT, GraphSAGE, GIN, DGI, contrastive graph SSL
+│   ├── 08_model_compression.ipynb            # Knowledge distillation, LoRA (W=W₀+BA), QLoRA
+│   ├── 09_self_supervised_learning.ipynb     # SimCLR, MoCo, BYOL, DINO, MAE, BEiT, I-JEPA, Barlow Twins
+│   ├── 10_neural_ode.ipynb                   # Neural ODE, FFJORD, Hamiltonian NN, KAN, Normalizing Flows
+│   ├── 11_distributed_training.ipynb         # ZeRO 1/2/3, FSDP, DeepSpeed, Megatron-LM, pipeline parallelism
+│   ├── 12_advanced_peft.ipynb                # DoRA, Prefix Tuning, P-Tuning v1/v2, Adapters, IA³, BitFit, ReLoRA
+│   ├── 13_quantization_and_compression_advanced.ipynb  # GPTQ, AWQ, SmoothQuant, GGUF, SpQR, AQLM, HQQ, NAS
+│   ├── lora-sst2/                        # LoRA fine-tuning output folder
+│   ├── peft_comparison.png               # PEFT methods comparison image
+│   ├── notes/
+│   └── projects/
+│       ├── 01_mnist_from_scratch.py
+│       ├── 02_image_classifier_pytorch.py
+│       └── 03_text_generator.py
 │
 ├── 06_Computer_Vision/
-│  ├── 01_image_basics_opencv.ipynb     # OpenCV, morphology, filtering, SIFT, ORB, optical flow
-│  ├── 02_image_classification.ipynb     # timm, EfficientNet, ViT, data augmentation, TTA
-│  ├── 03_object_detection.ipynb       # YOLO v1-v11, Faster R-CNN, DETR, RT-DETR, YOLO-World
-│  ├── 04_image_segmentation.ipynb      # U-Net, SAM, SAM2, OneFormer, Mask2Former, SegFormer
-│  ├── 05_vision_transformers.ipynb     # ViT, DeiT, Swin, CLIP, DINO, DINOv2, EVA-CLIP, SigLIP
-│  ├── 06_image_generation.ipynb       # Stable Diffusion, SDXL, Flux, ControlNet, DreamBooth, LCM
-│  ├── 07_ocr_and_pose.ipynb         # PaddleOCR, TrOCR, Donut, MediaPipe, RTMPose, DWPose
-│  ├── 08_video_analysis.ipynb        # I3D, SlowFast, VideoMAE, ByteTrack, Video-LLaMA, Sora
-│  ├── 09_3d_vision.ipynb          # NeRF, Instant-NGP, 3D Gaussian Splatting, PointNet, BEVFormer
-│  └── projects/
-│    ├── 01_face_detector.py
-│    ├── 02_object_counter.py
-│    └── 03_image_similarity.py
+│   ├── 01_image_basics_opencv.ipynb          # OpenCV, morphology, filtering, SIFT, ORB, optical flow
+│   ├── 02_image_classification.ipynb         # timm, EfficientNet, ViT, data augmentation, TTA
+│   ├── 03_object_detection.ipynb             # YOLO v1-v11, Faster R-CNN, DETR, RT-DETR, YOLO-World
+│   ├── 04_image_segmentation.ipynb           # U-Net, SAM, SAM2, OneFormer, Mask2Former, SegFormer
+│   ├── 05_vision_transformers.ipynb          # ViT, DeiT, Swin, CLIP, DINO, DINOv2, EVA-CLIP, SigLIP
+│   ├── 06_image_generation.ipynb             # Stable Diffusion, SDXL, Flux, ControlNet, DreamBooth, LCM
+│   ├── 07_ocr_and_pose.ipynb                 # PaddleOCR, TrOCR, Donut, MediaPipe, RTMPose, DWPose
+│   ├── 08_video_analysis.ipynb               # I3D, SlowFast, VideoMAE, ByteTrack, Video-LLaMA, Sora
+│   ├── 09_3d_vision.ipynb                    # NeRF, Instant-NGP, 3D Gaussian Splatting, PointNet, BEVFormer
+│   ├── notes/
+│   └── projects/
+│       ├── 01_face_detector.py
+│       ├── 02_object_counter.py
+│       └── 03_image_similarity.py
 │
 ├── 07_NLP/
-│  ├── 01_text_preprocessing.ipynb      # Tokenization (BPE/WordPiece/SentencePiece), TF-IDF, BM25
-│  ├── 02_word_embeddings.ipynb       # Word2Vec, GloVe, FastText, ELMo, contextualized embeddings
-│  ├── 03_text_classification.ipynb     # BERT fine-tuning, SetFit, zero-shot classification
-│  ├── 04_named_entity_recognition.ipynb   # CRF, BiLSTM-CRF, BERT-NER, spaCy, Flair, GLiNER
-│  ├── 05_language_models_and_generation.ipynb # GPT decoding strategies, CTRL, text generation
-│  ├── 06_question_answering.ipynb      # BiDAF, BERT-QA, RAG-QA, FiD, DrQA
-│  ├── 07_topic_modeling.ipynb        # LDA (Dirichlet formula), NMF, BERTopic, Top2Vec
-│  ├── 08_speech_and_audio.ipynb       # Whisper, wav2vec2, HuBERT, MusicGen, TTS (XTTS, StyleTTS2)
-│  ├── 09_sentence_embeddings_advanced.ipynb # SBERT, E5, BGE/M3, GTE, Jina, Nomic, GritLM, MRL
-│  ├── 10_advanced_nlp_tasks.ipynb      # POS, dep. parsing, coreference, relation/event extraction, style transfer
-│  └── projects/
-│    ├── 01_sentiment_analyzer.py
-│    ├── 02_text_summarizer.py
-│    └── 03_ner_extractor.py
+│   ├── 01_text_preprocessing.ipynb           # Tokenization (BPE/WordPiece/SentencePiece), TF-IDF, BM25
+│   ├── 02_word_embeddings.ipynb              # Word2Vec, GloVe, FastText, ELMo, contextualized embeddings
+│   ├── 03_text_classification.ipynb          # BERT fine-tuning, SetFit, zero-shot classification
+│   ├── 04_named_entity_recognition.ipynb     # CRF, BiLSTM-CRF, BERT-NER, spaCy, Flair, GLiNER
+│   ├── 05_language_models_and_generation.ipynb  # GPT decoding strategies, CTRL, text generation
+│   ├── 06_question_answering.ipynb           # BiDAF, BERT-QA, RAG-QA, FiD, DrQA
+│   ├── 07_topic_modeling.ipynb               # LDA (Dirichlet formula), NMF, BERTopic, Top2Vec
+│   ├── 08_speech_and_audio.ipynb             # Whisper, wav2vec2, HuBERT, MusicGen, TTS (XTTS, StyleTTS2)
+│   ├── 09_sentence_embeddings_advanced.ipynb # SBERT, E5, BGE/M3, GTE, Jina, Nomic, GritLM, MRL
+│   ├── 10_advanced_nlp_tasks.ipynb           # POS, dep. parsing, coreference, relation/event extraction, style transfer
+│   ├── notes/
+│   └── projects/
+│       ├── 01_sentiment_analyzer.py
+│       ├── 02_text_summarizer.py
+│       └── 03_ner_extractor.py
 │
 ├── 08_LLM/
-│  ├── 01_chatbots/
-│  │  └── 01_chatbots.ipynb         # Multi-turn chat, memory, system prompts, streaming
-│  ├── 02_rag/
-│  │  ├── 01_rag_fundamentals.ipynb     # Naive RAG pipeline, FAISS, Chroma, chunking basics
-│  │  ├── 02_advanced_rag.ipynb       # HyDE, RAG-Fusion, Self-RAG, CRAG, RAPTOR, GraphRAG
-│  │  ├── 03_rag_frameworks.ipynb      # LangChain, LlamaIndex, Haystack, RAGFlow, Dify, txtai
-│  │  └── 04_advanced_retrieval_and_reranking.ipynb # ColBERT, BGE Reranker, SPLADE, hybrid search, LightRAG
-│  ├── 03_fine_tuning/
-│  │  └── 01_fine_tuning.ipynb       # SFT, LoRA, QLoRA, DPO math, TRL trainer
-│  ├── 04_different_llms/
-│  │  └── 01_llm_landscape.ipynb      # GPT-4o, Claude, Gemini, LLaMA 4, Mistral, MoE formula
-│  ├── 05_slms/
-│  │  └── 01_small_language_models.ipynb  # Phi-4, Gemma 3, SmolLM, quantized models, edge deployment
-│  ├── 06_vision_llm/
-│  │  └── 01_vision_language_models.ipynb  # LLaVA, Qwen2-VL, InternVL, GPT-4o vision, BLIP-2
-│  ├── 07_prompt_engineering/
-│  │  └── 01_llm_prompt_engineering.ipynb  # DSPy, Instructor, LLMLingua, prompt caching
-│  ├── 08_evaluation/
-│  │  └── 01_llm_evaluation.ipynb      # MMLU, HumanEval, RAGAS, G-Eval, Arena Elo, LLM-as-judge
-│  ├── 09_knowledge_graphs/
-│  │  └── 01_knowledge_graphs.ipynb     # Neo4j, entity extraction, KG-RAG, GraphRAG
-│  ├── 10_synthetic_data/
-│  │  └── 01_synthetic_data.ipynb      # Evol-Instruct, self-instruct, distilabel, data quality
-│  ├── 11_multimodal/
-│  │  └── 01_multimodal_ai.ipynb      # Audio+vision+text fusion, Gemini, unified models
-│  ├── 12_alignment_techniques.ipynb     # DPO, IPO, KTO, ORPO, SimPO, RLAIF, Constitutional AI, SPIN
-│  ├── 13_inference_optimization.ipynb    # Speculative decoding, vLLM, FlashAttention, PagedAttention, GPTQ/AWQ
-│  ├── 14_llm_architecture_innovations.ipynb # GQA, MQA, MoE, RoPE, Mamba, RWKV, SwiGLU, RMSNorm
-│  ├── 15_specialized_llms.ipynb       # Code/Math/Medical/Legal/Scientific/Financial/Reasoning LLMs
-│  └── projects/
-│    ├── 01_local_rag.py
-│    ├── 02_llm_benchmark.py
-│    └── 03_finetune_classifier.py
+│   ├── 01_chatbots/
+│   │   ├── 01_chatbots.ipynb                 # Multi-turn chat, memory, system prompts, streaming
+│   │   └── notes/
+│   ├── 02_rag/
+│   │   ├── 01_rag_fundamentals.ipynb         # Naive RAG pipeline, FAISS, Chroma, chunking basics
+│   │   ├── 02_advanced_rag.ipynb             # HyDE, RAG-Fusion, Self-RAG, CRAG, RAPTOR, GraphRAG
+│   │   ├── 03_rag_frameworks.ipynb           # LangChain, LlamaIndex, Haystack, RAGFlow, Dify, txtai
+│   │   ├── 04_advanced_retrieval_and_reranking.ipynb  # ColBERT, BGE Reranker, SPLADE, hybrid search, LightRAG
+│   │   ├── chroma_langchain_demo/            # Chroma database file for demo
+│   │   └── notes/
+│   ├── 03_fine_tuning/
+│   │   ├── 01_fine_tuning.ipynb              # SFT, LoRA, QLoRA, DPO math, TRL trainer
+│   │   └── notes/
+│   ├── 04_different_llms/
+│   │   ├── 01_llm_landscape.ipynb            # GPT-4o, Claude, Gemini, LLaMA 4, Mistral, MoE formula
+│   │   └── notes/
+│   ├── 05_slms/
+│   │   ├── 01_small_language_models.ipynb    # Phi-4, Gemma 3, SmolLM, quantized models, edge deployment
+│   │   └── notes/
+│   ├── 06_vision_llm/
+│   │   ├── 01_vision_language_models.ipynb   # LLaVA, Qwen2-VL, InternVL, GPT-4o vision, BLIP-2
+│   │   └── notes/
+│   ├── 07_prompt_engineering/
+│   │   ├── 01_llm_prompt_engineering.ipynb   # DSPy, Instructor, LLMLingua, prompt caching
+│   │   └── notes/
+│   ├── 08_evaluation/
+│   │   ├── 01_llm_evaluation.ipynb           # MMLU, HumanEval, RAGAS, G-Eval, Arena Elo, LLM-as-judge
+│   │   └── notes/
+│   ├── 09_knowledge_graphs/
+│   │   ├── 01_knowledge_graphs.ipynb         # Neo4j, entity extraction, KG-RAG, GraphRAG
+│   │   └── notes/
+│   ├── 10_synthetic_data/
+│   │   ├── 01_synthetic_data.ipynb           # Evol-Instruct, self-instruct, distilabel, data quality
+│   │   └── notes/
+│   ├── 11_multimodal/
+│   │   ├── 01_multimodal_ai.ipynb            # Audio+vision+text fusion, Gemini, unified models
+│   │   └── notes/
+│   ├── 12_alignment_techniques.ipynb         # DPO, IPO, KTO, ORPO, SimPO, RLAIF, Constitutional AI, SPIN
+│   ├── 13_inference_optimization.ipynb       # Speculative decoding, vLLM, FlashAttention, PagedAttention, GPTQ/AWQ
+│   ├── 14_llm_architecture_innovations.ipynb # GQA, MQA, MoE, RoPE, Mamba, RWKV, SwiGLU, RMSNorm
+│   ├── 15_specialized_llms.ipynb             # Code/Math/Medical/Legal/Scientific/Financial/Reasoning LLMs
+│   └── projects/
+│       ├── 01_local_rag.py
+│       ├── 02_llm_benchmark.py
+│       └── 03_finetune_classifier.py
 │
 ├── 09_Prompt_Engineering/
-│  ├── 01_basics.ipynb            # Zero-shot, few-shot, prompt anatomy, roles
-│  ├── 02_techniques.ipynb          # CoT, Zero-Shot CoT, Self-Consistency, ToT, ReAct, Reflexion
-│  ├── 03_advanced.ipynb           # DSPy, Instructor, Program-of-Thoughts, Step-Back
-│  ├── 04_adversarial.ipynb         # Prompt injection, jailbreaks, red-teaming, defenses
-│  └── ai_tools/
-│    ├── 01_claude.ipynb          # Claude API, extended thinking, tool use, artifacts
-│    ├── 02_cursor.ipynb          # AI-powered IDE, composer, codebase chat
-│    ├── 03_github_copilot.ipynb      # Copilot Chat, workspace, CLI, extensions
-│    └── 04_other_tools.ipynb       # ChatGPT, Perplexity, v0, Bolt, Windsurf, NotebookLM
+│   ├── 01_basics.ipynb                       # Zero-shot, few-shot, prompt anatomy, roles
+│   ├── 02_techniques.ipynb                   # CoT, Zero-Shot CoT, Self-Consistency, ToT, ReAct, Reflexion
+│   ├── 03_advanced.ipynb                     # DSPy, Instructor, Program-of-Thoughts, Step-Back
+│   ├── 04_adversarial.ipynb                  # Prompt injection, jailbreaks, red-teaming, defenses
+│   ├── notes/
+│   └── ai_tools/
+│       ├── 01_claude.ipynb                   # Claude API, extended thinking, tool use, artifacts
+│       ├── 02_cursor.ipynb                   # AI-powered IDE, composer, codebase chat
+│       ├── 03_github_copilot.ipynb           # Copilot Chat, workspace, CLI, extensions
+│       └── 04_other_tools.ipynb              # ChatGPT, Perplexity, v0, Bolt, Windsurf, NotebookLM
 │
 ├── 10_Agents/
-│  ├── 01_agent_fundamentals.ipynb      # ReAct from scratch, tool use, function calling
-│  ├── 02_memory_and_planning.ipynb     # Memory types, Reflexion, task decomposition, Scratchpad
-│  ├── 03_langgraph.ipynb          # StateGraph, conditional edges, HITL, checkpointing
-│  ├── 04_multi_agent_frameworks.ipynb    # CrewAI, AutoGen, Smolagents, PydanticAI comparison
-│  ├── 05_mcp_and_tools.ipynb        # MCP protocol, servers, clients, tool schemas
-│  ├── 06_agent_observability.ipynb     # LangSmith, tracing, evaluation, cost tracking
-│  ├── 07_advanced_agent_frameworks.ipynb  # MetaGPT, OpenAI Agents SDK, BabyAGI, MemGPT, AutoGPT
-│  └── projects/
-│    ├── 01_research_agent.py
-│    ├── 02_code_review_agent.py
-│    └── 03_data_analysis_agent.py
+│   ├── 01_agent_fundamentals.ipynb           # ReAct from scratch, tool use, function calling
+│   ├── 02_memory_and_planning.ipynb          # Memory types, Reflexion, task decomposition, Scratchpad
+│   ├── 03_langgraph.ipynb                    # StateGraph, conditional edges, HITL, checkpointing
+│   ├── 04_multi_agent_frameworks.ipynb       # CrewAI, AutoGen, Smolagents, PydanticAI comparison
+│   ├── 05_mcp_and_tools.ipynb                # MCP protocol, servers, clients, tool schemas
+│   ├── 06_agent_observability.ipynb          # LangSmith, tracing, evaluation, cost tracking
+│   ├── 07_advanced_agent_frameworks.ipynb    # MetaGPT, OpenAI Agents SDK, BabyAGI, MemGPT, AutoGPT
+│   ├── notes/
+│   └── projects/
+│       ├── 01_research_agent.py
+│       ├── 02_code_review_agent.py
+│       └── 03_data_analysis_agent.py
 │
 ├── 11_Reinforcement_Learning/
-│  ├── 01_rl_fundamentals.ipynb       # MDP, Bellman equations, policy/value functions
-│  ├── 02_dynamic_programming.ipynb     # Value iteration, policy iteration, DP
-│  ├── 03_monte_carlo_td.ipynb        # MC, TD(0), TD(λ), SARSA, Q-learning
-│  ├── 04_deep_q_networks.ipynb       # DQN, Double DQN, Dueling DQN, Rainbow
-│  ├── 05_policy_gradient.ipynb       # REINFORCE, PPO (clipped objective), SAC (entropy max)
-│  ├── 06_advanced_rl.ipynb         # Model-based RL, MBPO, Dreamer, RLHF, RLAIF
-│  ├── 07_multi_armed_bandits.ipynb     # UCB1, Thompson sampling, contextual bandits
-│  └── projects/
-│    ├── 01_cartpole_dqn.py
-│    ├── 02_gridworld_rl.py
-│    ├── 03_rlhf_demo.py
-│    ├── 04_ppo_lunarlander.py
-│    └── 05_multi_armed_bandit.py
+│   ├── 01_rl_fundamentals.ipynb              # MDP, Bellman equations, policy/value functions
+│   ├── 02_dynamic_programming.ipynb          # Value iteration, policy iteration, DP
+│   ├── 03_monte_carlo_td.ipynb               # MC, TD(0), TD(λ), SARSA, Q-learning
+│   ├── 04_deep_q_networks.ipynb              # DQN, Double DQN, Dueling DQN, Rainbow
+│   ├── 05_policy_gradient.ipynb              # REINFORCE, PPO (clipped objective), SAC (entropy max)
+│   ├── 06_advanced_rl.ipynb                  # Model-based RL, MBPO, Dreamer, RLHF, RLAIF
+│   ├── 07_multi_armed_bandits.ipynb          # UCB1, Thompson sampling, contextual bandits
+│   ├── notes/
+│   └── projects/
+│       ├── 01_cartpole_dqn.py
+│       ├── 02_gridworld_rl.py
+│       ├── 03_rlhf_demo.py
+│       ├── 04_ppo_lunarlander.py
+│       └── 05_multi_armed_bandit.py
 │
 ├── 12_FastAPI/
-│  ├── 01_fastapi_intro.ipynb        # Routes, Pydantic models, path/query params, CRUD
-│  ├── 02_advanced_fastapi.ipynb       # JWT auth, WebSockets, middleware, background tasks
-│  ├── 03_ml_serving_with_fastapi.ipynb   # Model endpoints, async inference, batching, health checks
-│  └── fastapi_project/
-│    ├── main.py / models.py / schemas.py / database.py / auth.py
-│    ├── requirements.txt
-│    └── Dockerfile
+│   ├── 01_fastapi_intro.ipynb                # Routes, Pydantic models, path/query params, CRUD
+│   ├── 02_advanced_fastapi.ipynb             # JWT auth, WebSockets, middleware, background tasks
+│   ├── 03_ml_serving_with_fastapi.ipynb      # Model endpoints, async inference, batching, health checks
+│   ├── Dockerfile.example                    # Example Dockerfile for FastAPI ML service
+│   ├── requirements_example.txt             # Example requirements file
+│   ├── iris_model.pkl                        # Pre-trained Iris classification model
+│   ├── iris_scaler.pkl                       # Scaler for Iris model
+│   ├── uploads/                             # Upload directory for file uploads
+│   ├── notes/
+│   └── fastapi_project/
+│       ├── main.py / models.py / schemas.py / database.py / auth.py
+│       ├── requirements.txt
+│       └── Dockerfile
 │
 ├── 13_Databases/
-│  ├── 01_sql/01_sql_fundamentals.ipynb   # PostgreSQL, joins, indexes, window functions, CTEs
-│  ├── 02_nosql/01_nosql_databases.ipynb   # MongoDB, Redis, Cassandra, CAP theorem
-│  ├── 03_vector_db/01_vector_databases.ipynb # FAISS, Chroma, Pinecone, Qdrant, Weaviate, pgvector, HNSW
-│  ├── 04_orm/01_orm.ipynb          # SQLAlchemy 2.0, SQLModel, Alembic migrations
-│  ├── 05_db_in_ai/01_databases_in_ai.ipynb # Feature stores, Feast, online/offline stores
-│  └── 06_data_engineering/01_data_engineering.ipynb # Spark, Kafka, dbt, data lakehouse
+│   ├── 01_sql/01_sql_fundamentals.ipynb      # PostgreSQL, joins, indexes, window functions, CTEs
+│   ├── 02_nosql/01_nosql_databases.ipynb     # MongoDB, Redis, Cassandra, CAP theorem
+│   ├── 03_vector_db/01_vector_databases.ipynb # FAISS, Chroma, Pinecone, Qdrant, Weaviate, pgvector, HNSW
+│   ├── 04_orm/01_orm.ipynb                   # SQLAlchemy 2.0, SQLModel, Alembic migrations
+│   ├── 05_db_in_ai/01_databases_in_ai.ipynb  # Feature stores, Feast, online/offline stores
+│   └── 06_data_engineering/01_data_engineering.ipynb  # Spark, Kafka, dbt, data lakehouse
+│   └── notes/
 │
 ├── 14_Mathematics/
-│  ├── 01_linear_algebra.ipynb        # SVD (A=UΣVᵀ), eigendecomp, matrix calculus
-│  ├── 02_calculus.ipynb           # Gradients, Jacobian, Hessian, backprop derivation
-│  ├── 03_probability.ipynb         # 13 distributions with PDF/PMF LaTeX formulas
-│  ├── 04_statistics.ipynb          # MLE, MAP, hypothesis tests, Bayesian inference
-│  ├── 05_information_theory.ipynb      # Entropy, KL divergence, cross-entropy, mutual info
-│  └── 06_optimization.ipynb         # All optimizers with update equations, convergence proofs
+│   ├── 01_linear_algebra.ipynb               # SVD (A=UΣVᵀ), eigendecomp, matrix calculus
+│   ├── 02_calculus.ipynb                     # Gradients, Jacobian, Hessian, backprop derivation
+│   ├── 03_probability.ipynb                  # 13 distributions with PDF/PMF LaTeX formulas
+│   ├── 04_statistics.ipynb                   # MLE, MAP, hypothesis tests, Bayesian inference
+│   ├── 05_information_theory.ipynb           # Entropy, KL divergence, cross-entropy, mutual info
+│   └── 06_optimization.ipynb                 # All optimizers with update equations, convergence proofs
+│   └── notes/
 │
 ├── 15_MLOps/
-│  ├── 01_experiment_tracking/
-│  │  ├── 01_mlflow.ipynb          # Runs, experiments, model registry, serving
-│  │  └── 02_wandb.ipynb          # Sweeps, artifacts, tables, reports
-│  ├── 02_data_versioning/01_dvc.ipynb    # DVC pipelines, remote storage, data registry
-│  ├── 03_pipeline_orchestration/01_orchestration.ipynb # Prefect, Airflow, ZenML, Dagster, Metaflow
-│  ├── 04_ci_cd_for_ml/01_cicd_ml.ipynb   # GitHub Actions ML pipeline YAML, model testing
-│  ├── 05_model_registry/01_model_registry.ipynb # MLflow registry, HF Hub, W&B Artifacts, versioning
-│  ├── 06_monitoring/01_monitoring.ipynb   # Evidently AI, KS test, PSI, data/concept drift
-│  ├── 07_testing_in_ml/01_testing_ml.ipynb # Great Expectations, Pandera, deepchecks, gradient check
-│  ├── 08_automl/01_automl.ipynb       # Optuna, NAS, AutoKeras, FLAML, H2O AutoML
-│  ├── 09_federated_learning/01_federated_learning.ipynb # FedAvg, differential privacy, Flower framework
-│  ├── 10_advanced_experiment_tracking.ipynb # Neptune, TensorBoard, Comet, Sacred, Aim, ClearML
-│  ├── 11_model_serving_advanced.ipynb    # BentoML, KServe, Seldon, Triton, Ray Serve, TorchServe
-│  └── 12_feature_stores.ipynb        # Feast, Tecton, Hopsworks, Databricks, Fennel, point-in-time joins
+│   ├── 01_experiment_tracking/
+│   │   ├── 01_mlflow.ipynb                   # Runs, experiments, model registry, serving
+│   │   ├── 02_wandb.ipynb                    # Sweeps, artifacts, tables, reports
+│   │   ├── mlflow.db                         # MLflow SQLite database
+│   │   ├── mlruns/                           # MLflow runs directory
+│   │   └── notes/
+│   ├── 02_data_versioning/
+│   │   ├── 01_dvc.ipynb                     # DVC pipelines, remote storage, data registry
+│   │   └── notes/
+│   ├── 03_pipeline_orchestration/
+│   │   ├── 01_orchestration.ipynb           # Prefect, Airflow, ZenML, Dagster, Metaflow
+│   │   └── notes/
+│   ├── 04_ci_cd_for_ml/
+│   │   ├── 01_cicd_ml.ipynb                 # GitHub Actions ML pipeline YAML, model testing
+│   │   └── notes/
+│   ├── 05_model_registry/
+│   │   ├── 01_model_registry.ipynb           # MLflow registry, HF Hub, W&B Artifacts, versioning
+│   │   ├── mlflow.db                         # MLflow SQLite database
+│   │   ├── mlruns/                           # MLflow runs directory
+│   │   └── notes/
+│   ├── 06_monitoring/
+│   │   ├── 01_monitoring.ipynb               # Evidently AI, KS test, PSI, data/concept drift
+│   │   └── notes/
+│   ├── 07_testing_in_ml/
+│   │   ├── 01_testing_ml.ipynb               # Great Expectations, Pandera, deepchecks, gradient check
+│   │   └── notes/
+│   ├── 08_automl/
+│   │   ├── 01_automl.ipynb                   # Optuna, NAS, AutoKeras, FLAML, H2O AutoML
+│   │   └── notes/
+│   ├── 09_federated_learning/
+│   │   ├── 01_federated_learning.ipynb       # FedAvg, differential privacy, Flower framework
+│   │   └── notes/
+│   ├── 10_advanced_experiment_tracking.ipynb # Neptune, TensorBoard, Comet, Sacred, Aim, ClearML
+│   ├── 11_model_serving_advanced.ipynb       # BentoML, KServe, Seldon, Triton, Ray Serve, TorchServe
+│   ├── 12_feature_stores.ipynb               # Feast, Tecton, Hopsworks, Databricks, Fennel, point-in-time joins
+│   ├── notes/
+│   ├── mlflow.db                             # MLflow SQLite database (root)
+│   ├── mlruns/                               # MLflow runs directory (root)
+│   ├── my-aim-repo/                          # Aim experiment tracking repository
+│   └── runs/                                 # Additional runs directory
 │
 ├── 16_Deployment/
-│  ├── 01_deployment_concepts.ipynb     # ONNX, TorchScript, torch.compile, model optimization
-│  ├── 02_streamlit_gradio.ipynb       # Streamlit apps, Gradio interfaces, HF Spaces
-│  ├── 03_serverless_deployment.ipynb    # AWS Lambda, Modal, SageMaker serverless, Cloud Functions
-│  └── message_queues/01_message_queues.ipynb # Kafka, Celery, Redis Streams, async task queues
+│   ├── 01_deployment_concepts.ipynb          # ONNX, TorchScript, torch.compile, model optimization
+│   ├── 02_streamlit_gradio.ipynb             # Streamlit apps, Gradio interfaces, HF Spaces
+│   ├── 03_serverless_deployment.ipynb        # AWS Lambda, Modal, SageMaker serverless, Cloud Functions
+│   ├── message_queues/01_message_queues.ipynb # Kafka, Celery, Redis Streams, async task queues
+│   └── notes/
 │
 ├── 17_Docker/
-│  ├── 01_docker_basics.ipynb        # Dockerfile, images, volumes, networks, compose
-│  ├── 02_docker_for_ml.ipynb        # Multi-stage builds, GPU support, ML-optimized images
-│  └── kubernetes/01_kubernetes.ipynb    # Pods, services, HPA, Kubeflow, KServe
+│   ├── 01_docker_basics.ipynb                # Dockerfile, images, volumes, networks, compose
+│   ├── 02_docker_for_ml.ipynb                # Multi-stage builds, GPU support, ML-optimized images
+│   ├── kubernetes/01_kubernetes.ipynb         # Pods, services, HPA, Kubeflow, KServe
+│   └── notes/
 │
 ├── 18_Cloud/
-│  ├── 01_aws_for_ai.ipynb          # SageMaker, Bedrock, boto3, S3, Lambda
-│  ├── 02_gcp_for_ai.ipynb          # Vertex AI, BigQuery ML, Colab Enterprise
-│  ├── 03_azure_for_ai.ipynb         # Azure ML, Azure OpenAI, Cognitive Services
-│  └── 04_cloud_cost_optimization.ipynb   # Spot instances, reserved capacity, cost monitoring
+│   ├── 01_aws_for_ai.ipynb                   # SageMaker, Bedrock, boto3, S3, Lambda
+│   ├── 02_gcp_for_ai.ipynb                   # Vertex AI, BigQuery ML, Colab Enterprise
+│   ├── 03_azure_for_ai.ipynb                 # Azure ML, Azure OpenAI, Cognitive Services
+│   └── 04_cloud_cost_optimization.ipynb      # Spot instances, reserved capacity, cost monitoring
+│   └── notes/
 │
 ├── 19_AI_Ethics_and_Safety/
-│  ├── 01_bias_fairness.ipynb        # Demographic parity, equalized odds, Fairlearn, AIF360
-│  ├── 02_adversarial_attacks.ipynb     # FGSM (x_adv = x + ε·sign(∇J)), PGD, adversarial training
-│  ├── 03_privacy.ipynb           # DP-SGD, Laplace/Gaussian mechanism, federated privacy
-│  └── 04_responsible_ai.ipynb        # EU AI Act, NIST RMF, model cards, RLHF safety
+│   ├── 01_bias_fairness.ipynb                # Demographic parity, equalized odds, Fairlearn, AIF360
+│   ├── 02_adversarial_attacks.ipynb          # FGSM (x_adv = x + ε·sign(∇J)), PGD, adversarial training
+│   ├── 03_privacy.ipynb                      # DP-SGD, Laplace/Gaussian mechanism, federated privacy
+│   ├── 04_responsible_ai.ipynb               # EU AI Act, NIST RMF, model cards, RLHF safety
+│   └── notes/
 │
 ├── 20_Git_and_DevOps/
-│  ├── 01_git_basics.ipynb          # Branching strategies, GitFlow, rebase vs merge
-│  ├── 02_git_for_ml.ipynb          # Git LFS, DVC, MLflow+git, experiment branches
-│  └── 03_github_actions_cicd.ipynb     # Full ML CI/CD pipeline YAML, model testing automation
+│   ├── 01_git_basics.ipynb                   # Branching strategies, GitFlow, rebase vs merge
+│   ├── 02_git_for_ml.ipynb                   # Git LFS, DVC, MLflow+git, experiment branches
+│   ├── 03_github_actions_cicd.ipynb          # Full ML CI/CD pipeline YAML, model testing automation
+│   └── notes/
 │
-└── 21_Projects/               # 6 end-to-end capstone projects (FastAPI + HTML/CSS/JS)
-  ├── 01_ml_pipeline/            # Scikit-learn pipeline API with train/predict/explain endpoints
-  ├── 02_rag_chatbot/            # Document Q&A chatbot (drop PDFs in docs/ folder)
-  ├── 03_computer_vision_app/        # Real-time object detection + segmentation web app
-  ├── 04_forecasting_dashboard/       # Multi-model forecast comparison (ARIMA/Prophet/LSTM/XGBoost)
-  ├── 05_multi_agent_system/        # LangGraph multi-agent with research + code + data agents
-  └── 06_production_model/         # Full MLOps: monitoring + drift detection + Dockerfile + CI/CD
+└── 21_Projects/                              # 6 end-to-end capstone projects (FastAPI + HTML/CSS/JS)
+    ├── 01_ml_pipeline/                       # Scikit-learn pipeline API with train/predict/explain endpoints
+    │   ├── api.py
+    │   ├── main.py
+    │   ├── train.py
+    │   ├── requirements.txt
+    │   ├── templates/index.html
+    │   └── notes/
+    ├── 02_rag_chatbot/                       # Document Q&A chatbot (drop PDFs in docs/ folder)
+    │   ├── api.py
+    │   ├── main.py
+    │   ├── ingest.py
+    │   ├── docs/                             # Place PDF files here for ingestion
+    │   ├── requirements.txt
+    │   ├── templates/
+    │   └── notes/
+    ├── 03_computer_vision_app/               # Real-time object detection + segmentation web app
+    │   ├── api.py
+    │   ├── main.py
+    │   ├── requirements.txt
+    │   ├── templates/
+    │   └── notes/
+    ├── 04_forecasting_dashboard/             # Multi-model forecast comparison (ARIMA/Prophet/LSTM/XGBoost)
+    │   ├── api.py
+    │   ├── main.py
+    │   ├── requirements.txt
+    │   ├── templates/
+    │   └── notes/
+    ├── 05_multi_agent_system/                # LangGraph multi-agent with research + code + data agents
+    │   ├── agents.py
+    │   ├── api.py
+    │   ├── graph.py
+    │   ├── main.py
+    │   ├── requirements.txt
+    │   ├── templates/
+    │   └── notes/
+    ├── 06_production_model/                  # Full MLOps: monitoring + drift detection + Dockerfile + CI/CD
+        ├── api.py
+        ├── main.py
+        ├── monitoring.py
+        ├── docker-compose.yml
+        ├── Dockerfile
+        ├── requirements.txt
+        ├── templates/
+        └── notes/
+    └── notes/                                # Conceptual study guides for all projects
 ```
 
 ### 📊 Repository Stats
 
 | Category | Count |
 |----------|-------|
-| Total Jupyter Notebooks | **158** (all executed & verified ✅) |
-| Conceptual Study Guides (`notes/`) | **65** |
-| Mermaid Diagrams in Guides | **247** |
+| Total Jupyter Notebooks | **164** (164 executed & verified ✅) |
+| Conceptual Study Guides (`notes/`) | **66** |
+| Mermaid Diagrams in Guides | **254** |
+| AI Fundamentals | 6 |
 | ML & Data Science | 27 |
 | Deep Learning | 13 |
 | Computer Vision | 9 |
@@ -337,51 +459,19 @@ zero-to-ai-engineer/
 | Capstone Projects (Python scripts) | 31 |
 | Full-Stack Web Projects | 6 |
 
-### 🆕 Recently Added Notebooks
-
-These notebooks were added to cover the complete AI/ML landscape:
-
-| Notebook | Key Topics |
-|----------|-----------|
-| `03_ML/01_supervised/08_generalized_linear_models.ipynb` | Poisson, Negative Binomial, Ordinal, Probit, Tobit, GDA, QDA |
-| `03_ML/02_unsupervised/03_association_rules.ipynb` | Apriori, FP-Growth, ECLAT, SPADE, PrefixSpan |
-| `03_ML/05_feature_engineering/02_imbalanced_data.ipynb` | SMOTE, ADASYN, Borderline-SMOTE, NearMiss, all variants |
-| `03_ML/10_evaluation_metrics_comprehensive.ipynb` | Every metric for every domain with LaTeX + implementations |
-| `05_DL/09_self_supervised_learning.ipynb` | SimCLR, MoCo, BYOL, DINO, MAE, BEiT, I-JEPA |
-| `05_DL/10_neural_ode.ipynb` | Neural ODE, FFJORD, Hamiltonian NN, KAN, Normalizing Flows |
-| `05_DL/11_distributed_training.ipynb` | ZeRO 1/2/3, FSDP, DeepSpeed, Megatron-LM |
-| `05_DL/12_advanced_peft.ipynb` | DoRA, Prefix Tuning, P-Tuning v1/v2, Adapters, IA³, BitFit |
-| `05_DL/13_quantization_and_compression_advanced.ipynb` | GPTQ, AWQ, SmoothQuant, SpQR, AQLM, QuIP, HQQ, NAS |
-| `06_CV/08_video_analysis.ipynb` | I3D, SlowFast, VideoMAE, tracking, Video-LLaMA, Sora |
-| `06_CV/09_3d_vision.ipynb` | NeRF, Instant-NGP, 3D Gaussian Splatting, PointNet, BEVFormer |
-| `07_NLP/09_sentence_embeddings_advanced.ipynb` | SBERT, E5, BGE/M3, GTE, Jina, Nomic, GritLM, MRL |
-| `07_NLP/10_advanced_nlp_tasks.ipynb` | POS, dep. parsing, coreference, relation extraction, Donut |
-| `08_LLM/12_alignment_techniques.ipynb` | DPO, IPO, KTO, ORPO, SimPO, RLAIF, Constitutional AI |
-| `08_LLM/13_inference_optimization.ipynb` | Speculative decoding, vLLM, FlashAttention, PagedAttention |
-| `08_LLM/14_llm_architecture_innovations.ipynb` | GQA, MQA, MoE, RoPE, Mamba, RWKV, SwiGLU, RMSNorm |
-| `08_LLM/15_specialized_llms.ipynb` | Code/Math/Medical/Legal/Scientific/Financial/Reasoning LLMs |
-| `08_LLM/02_rag/03_rag_frameworks.ipynb` | LangChain, LlamaIndex, Haystack, RAGFlow, Dify, Flowise |
-| `08_LLM/02_rag/04_advanced_retrieval_and_reranking.ipynb` | ColBERT, SPLADE, hybrid search, RAPTOR, LightRAG, HippoRAG |
-| `10_Agents/07_advanced_agent_frameworks.ipynb` | MetaGPT, OpenAI Agents SDK, BabyAGI, MemGPT, AutoGPT |
-| `04_Forecasting/08_garch_volatility_models.ipynb` | ARCH, GARCH, EGARCH, GJR-GARCH, DCC-GARCH, VaR |
-| `04_Forecasting/09_probabilistic_forecasting.ipynb` | Conformal prediction, DeepAR, GP, PatchTST, DLinear |
-| `15_MLOps/10_advanced_experiment_tracking.ipynb` | Neptune, TensorBoard, Comet, Sacred, Aim, ClearML |
-| `15_MLOps/11_model_serving_advanced.ipynb` | BentoML, KServe, Seldon, Triton, Ray Serve, TorchServe |
-| `15_MLOps/12_feature_stores.ipynb` | Feast, Tecton, Hopsworks, Databricks, Fennel |
-
----
 
 ## 📝 Conceptual Study Notes (with Diagrams)
 
 Every section folder now contains a **`notes/` sub-folder** holding a comprehensive, **purely conceptual study guide** (named after the folder). The notebooks are the *hands-on code*; these notes are the *explanation* they teach each topic **from absolute scratch**, defining every term on first use, with no prior knowledge assumed.
 
-- **65 guides** spanning all 21 sections and their sub-topics
-- **247 diagrams** drawn with **[Mermaid](https://mermaid.js.org/)** (render natively on GitHub) neural-network architectures, CNN / RNN / Transformer internals, the RAG and agent pipelines, the ML lifecycle, ER diagrams, and more
+- **66 guides** spanning all 22 sections and their sub-topics
+- **254 diagrams** drawn with **[Mermaid](https://mermaid.js.org/)** (render natively on GitHub) neural-network architectures, CNN / RNN / Transformer internals, the RAG and agent pipelines, the ML lifecycle, ER diagrams, and more
 - **Conceptual only** (no code dumps) with light pointers into the notebooks ("see `xx.ipynb` the cell that does Y")
 - No prerequisites or audience jargon just the subject, explained simply yet in depth
 
 | Topic | Study guide |
 |-------|-------------|
+| AI Fundamentals | `00_AI_Fundamentals/notes/00_AI_Fundamentals.md` |
 | Python | `01_Python/notes/01_Python.md` |
 | Data Analysis | `02_Data_Analysis/notes/02_Data_Analysis.md` |
 | Machine Learning | `03_Machine_Learning/notes/03_Machine_Learning.md` (+ one per sub-topic, e.g. `01_supervised/notes/01_supervised.md`) |
@@ -403,11 +493,11 @@ Every section folder now contains a **`notes/` sub-folder** holding a comprehens
 
 ## ✅ All Notebooks Verified Runnable
 
-Every one of the **158 notebooks has been executed end-to-end and fixed** to run on a current **Python 3.12** stack (NumPy 2.x, pandas, scikit-learn 1.7, PyTorch, Transformers, and more). A root **`requirements.txt`** pins the complete environment.
+Every one of the **164 notebooks has been executed end-to-end and fixed** to run on a current **Python 3.12** stack (NumPy 2.x, pandas, scikit-learn 1.7, PyTorch, Transformers, and more). A root **`requirements.txt`** pins the complete environment.
 
 - **Version-compatibility fixes** applied throughout (NumPy 2, pandas 3, scikit-learn 1.7, Matplotlib, Transformers, etc.).
 - **API-key / cloud cells** (OpenAI, Anthropic, Gemini, AWS, …) are written against **current SDK documentation** so they execute as-is once you supply credentials.
-- **GPU-only notebooks** (large 7B–32B model loads) are correct but require a GPU to run.
+- **GPU-only notebooks** (large 7B-32B model loads) are correct but require a GPU to run.
 
 ```bash
 # Install the full environment used across all notebooks
@@ -431,11 +521,27 @@ Most AI roadmaps either:
 - ✅ **Production Ready**: Ends with MLOps and deployment
 - ✅ **All Free**: Every resource is free and open-source
 
+**Why AI Fundamentals First?**
+Before writing a single line of ML code, you should understand the societal impact of what you are building. Phase 0 covers the six pillars of responsible AI: **Bias, Fairness, Transparency, Accountability, Privacy, and Robustness**. These are not optional extras. They are core competencies every AI engineer needs, and increasingly they are legal requirements under the EU AI Act and the NIST AI Risk Management Framework.
+
 ---
 
 ## 🚀 Quick Start for Absolute Beginners
 
 > **Never coded before?** Start here. This section gets you ready in 1-2 weeks.
+
+### Step 0: Understand AI's Impact (Before You Code)
+
+| Resource | Type | Time | Why It Matters | Link |
+|----------|------|------|----------------|------|
+| **Ethics of AI** | 🎓 Free Course | Self-paced | University of Helsinki's comprehensive ethics course | [ethics-of-ai.mooc.fi](https://ethics-of-ai.mooc.fi/) |
+| **AI Ethics (DataCamp)** | 🎓 Free Course | 1 hour | Principles, fairness, bias reduction, trust | [datacamp.com](https://www.datacamp.com/courses/ai-ethics) |
+| **Responsible AI for Developers: Fairness & Bias** | 🎓 Free Course | 5 hours | Google's practical fairness and bias course | [Coursera](https://www.coursera.org/learn/responsible-ai-for-developers-fairness--bias) |
+| **AI Fluency: Framework & Foundations** | 🎓 Free Course | Self-paced | Anthropic's critical thinking about AI use | [anthropic.skilljar.com](https://anthropic.skilljar.com/) |
+| **AI Governance and Ethics** | 🎓 Free Course | Self-paced | Laws, frameworks, security, compliance | [alison.com](https://alison.com/course/ai-governance-and-ethics) |
+| **NIST AI Risk Management Framework** | 📄 Free Guide | 2 hours | Voluntary US framework for AI risk | [nist.gov](https://www.nist.gov/itl/ai-risk-management-framework) |
+| **EU AI Act Explained** | 📄 Free Guide | 1 hour | The world's first comprehensive AI law | [digital-strategy.ec.europa.eu](https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai) |
+| **OECD AI Principles** | 📄 Free Guide | 30 min | International standards for trustworthy AI | [oecd.org](https://www.oecd.org/digital/artificial-intelligence/) |
 
 ### Step 1: Learn Python (5-7 days)
 
@@ -486,7 +592,7 @@ conda activate ai-learning
 # 3a. Install core packages (enough for sections 01-03)
 pip install numpy pandas matplotlib scikit-learn jupyter
 
-# 3b. OR install the full environment used across ALL 158 notebooks
+# 3b. OR install the full environment used across ALL 164 notebooks
 pip install -r requirements.txt
 
 # 4. Verify installation
@@ -542,7 +648,134 @@ python -c "import numpy; print(numpy.__version__)"
 
 ---
 
-### 🧱 Phase 0: Programming & Tools (Week 0)
+### 🛡️ Phase 0: AI Fundamentals (Ethics, Fairness & Safety) (Week -1)
+
+> **Goal**: Understand the six pillars of responsible AI before touching code. This is not optional. It is an ethical and increasingly a legal prerequisite.
+
+#### 📚 Core Concepts to Master
+
+```
+Pillar 1: Bias & Fairness
+├── Types of Bias (Historical, Representation, Measurement, Aggregation, Evaluation, Deployment)
+├── Fairness Metrics (Demographic Parity, Equal Opportunity, Equalized Odds, Individual Fairness, Calibration)
+├── Bias Mitigation (Pre-processing, In-processing, Post-processing)
+├── Tools: Fairlearn, AIF360, What-If Tool
+└── The Impossibility Theorem of Fairness
+
+Pillar 2: Transparency & Explainability
+├── Interpretable vs Explainable Models
+├── Post-hoc Explanations (SHAP, LIME, PDP, ICE, Grad-CAM)
+├── Attention Visualization
+├── Model Cards & Datasheets
+└── Tools: SHAP, LIME, InterpretML, Alibi
+
+Pillar 3: Accountability & Governance
+├── AI Governance Frameworks
+├── EU AI Act (Risk-based classification, prohibited practices, high-risk obligations)
+├── NIST AI Risk Management Framework (Govern, Map, Measure, Manage)
+├── ISO/IEC 42001 AI Management System
+├── Model Registry & Versioning
+├── Audit Trails & Documentation
+└── Redress Mechanisms
+
+Pillar 4: Privacy & Security
+├── Differential Privacy (epsilon-DP, Laplace/Gaussian mechanisms, composition)
+├── DP-SGD (Differentially Private Stochastic Gradient Descent)
+├── Federated Learning (FedAvg, secure aggregation)
+├── Homomorphic Encryption
+├── Synthetic Data Generation
+└── Tools: Opacus, TensorFlow Privacy, Diffprivlib, PySyft
+
+Pillar 5: Robustness & Safety
+├── Adversarial Attacks (FGSM, PGD, CW, DeepFool, AutoAttack)
+├── Adversarial Defenses (Adversarial Training, Randomized Smoothing, Certified Defenses)
+├── Distribution Shift & OOD Detection
+├── Model Poisoning & Backdoor Attacks
+└── Tools: Adversarial Robustness Toolbox (ART), Foolbox, CleverHans
+
+Pillar 6: Responsible AI & Ethics
+├── AI Ethics Principles (Beneficence, Non-maleficence, Autonomy, Justice, Explicability)
+├── Constitutional AI & RLHF Safety
+├── Red Teaming & Jailbreaks
+├── Content Moderation & Guardrails
+├── Human-in-the-Loop & Human Oversight
+└── Tools: Guardrails AI, Llama Guard, Perspective API
+```
+
+#### 🎬 Video Courses & Tutorials
+
+| Course | Provider | Duration | Why Watch |
+|--------|----------|----------|-----------|
+| [Ethics of AI](https://ethics-of-ai.mooc.fi/) | University of Helsinki | Self-paced | Free, comprehensive, no prerequisites |
+| [AI Ethics](https://www.datacamp.com/courses/ai-ethics) | DataCamp | 1 hour | Principles, fairness, bias, trust |
+| [Responsible AI for Developers: Fairness & Bias](https://www.coursera.org/learn/responsible-ai-for-developers-fairness--bias) | Google Cloud | 5 hours | Practical bias identification and mitigation |
+| [AI Fluency: Framework & Foundations](https://anthropic.skilljar.com/) | Anthropic Academy | Self-paced | Critical thinking about AI collaboration |
+| [AI Governance and Ethics](https://alison.com/course/ai-governance-and-ethics) | Alison | Self-paced | Laws, frameworks, security, compliance |
+| [Fairness in AI](https://www.classcentral.com/subject/fairness-in-ai) | Class Central | Various | Curated free courses and videos |
+| [NIST AI Risk Management Framework](https://www.nist.gov/itl/ai-risk-management-framework) | NIST | Self-paced | Official US government framework |
+| [EU AI Act Explained](https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai) | European Commission | 1-2 hours | Official EU regulation |
+| [OECD AI Principles](https://www.oecd.org/digital/artificial-intelligence/) | OECD | 30 min | International AI standards |
+
+#### 📖 Books, Papers & Guides
+
+| Resource | Author | Type | Link |
+|----------|--------|------|------|
+| **The Ethical Algorithm** | Kearns & Roth | 📖 Paid | [Oxford University Press](https://global.oup.com/academic/product/the-ethical-algorithm-9780190948207) |
+| **Weapons of Math Destruction** | Cathy O'Neil | 📖 Paid | [Crown Publishers](https://www.penguinrandomhouse.com/books/241363/weapons-of-math-destruction-by-cathy-oneil/) |
+| **Fairness and Machine Learning** | Barocas, Hardt, Narayanan | 📖 Free PDF | [fairmlbook.org](https://fairmlbook.org/) |
+| **The Algorithmic Foundations of Differential Privacy** | Dwork & Roth | 📖 Free PDF | [cis.upenn.edu](https://www.cis.upenn.edu/~aaroth/Papers/privacybook.pdf) |
+| **How to DP-fy ML: A Practical Guide to ML with DP** | Ponomareva et al. | 📄 Paper | [arXiv:2108.07345](https://arxiv.org/abs/2108.07345) |
+| **NIST AI RMF 1.0** | NIST | 📄 Free | [nist.gov](https://www.nist.gov/itl/ai-risk-management-framework) |
+| **EU AI Act (Regulation 2024/1689)** | European Union | 📄 Free | [eur-lex.europa.eu](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32024R1689) |
+| **OECD AI Principles (2019)** | OECD | 📄 Free | [oecd.org](https://www.oecd.org/digital/artificial-intelligence/) |
+| **UNESCO Recommendation on the Ethics of AI** | UNESCO | 📄 Free | [unesdoc.unesco.org](https://unesdoc.unesco.org/ark:/48223/pf0000381137) |
+| **Constitutional AI: Harmlessness from AI Feedback** | Bai et al. | 📄 Paper | [arXiv:2212.08073](https://arxiv.org/abs/2212.08073) |
+| **Red Teaming Language Models to Reduce Harms** | Perez et al. | 📄 Paper | [arXiv:2202.03286](https://arxiv.org/abs/2202.03286) |
+| **Technical AI Safety Upskilling Resources** | 80,000 Hours | 📄 Guide | [80000hours.org](https://80000hours.org/2025/06/technical-ai-safety-upskilling-resources/) |
+
+#### 💻 GitHub Repositories & Tools
+
+| Repository | Stars | What It Provides | Link |
+|------------|-------|------------------|------|
+| **Fairlearn** | ⭐ 2k+ | Bias detection and mitigation toolkit | [github.com/fairlearn/fairlearn](https://github.com/fairlearn/fairlearn) |
+| **AI Fairness 360 (AIF360)** | ⭐ 3k+ | Fairness metrics and algorithms | [github.com/Trusted-AI/AIF360](https://github.com/Trusted-AI/AIF360) |
+| **What-If Tool** | ⭐ 1k+ | Interactive visual ML model probing | [github.com/pair-code/what-if-tool](https://github.com/pair-code/what-if-tool) |
+| **SHAP** | ⭐ 23k+ | Unified approach to explain predictions | [github.com/shap/shap](https://github.com/shap/shap) |
+| **LIME** | ⭐ 11k+ | Local Interpretable Model-agnostic Explanations | [github.com/marcotcr/lime](https://github.com/marcotcr/lime) |
+| **InterpretML** | ⭐ 6k+ | Interpretable ML package | [github.com/interpretml/interpret](https://github.com/interpretml/interpret) |
+| **Alibi Explain** | ⭐ 2k+ | Model explanations and drift detection | [github.com/SeldonIO/alibi](https://github.com/SeldonIO/alibi) |
+| **Opacus** | ⭐ 1k+ | PyTorch differential privacy library | [github.com/pytorch/opacus](https://github.com/pytorch/opacus) |
+| **TensorFlow Privacy** | ⭐ 1k+ | DP training for TensorFlow | [github.com/tensorflow/privacy](https://github.com/tensorflow/privacy) |
+| **Diffprivlib** | ⭐ 800+ | IBM's differential privacy library | [github.com/IBM/differential-privacy-library](https://github.com/IBM/differential-privacy-library) |
+| **PySyft** | ⭐ 9k+ | Secure and private deep learning | [github.com/OpenMined/PySyft](https://github.com/OpenMined/PySyft) |
+| **Adversarial Robustness Toolbox (ART)** | ⭐ 4k+ | Adversarial attack and defense library | [github.com/Trusted-AI/adversarial-robustness-toolbox](https://github.com/Trusted-AI/adversarial-robustness-toolbox) |
+| **Foolbox** | ⭐ 2k+ | Adversarial attacks for PyTorch/TF/JAX | [github.com/bethgelab/foolbox](https://github.com/bethgelab/foolbox) |
+| **Guardrails AI** | ⭐ 4k+ | Guardrails for LLMs | [github.com/guardrails-ai/guardrails](https://github.com/guardrails-ai/guardrails) |
+| **Llama Guard (PurpleLlama)** | ⭐ 2k+ | Safety classifier for LLM I/O | [github.com/meta-llama/PurpleLlama](https://github.com/meta-llama/PurpleLlama) |
+
+#### 🛠️ Phase 0 Projects
+
+| Project | Skills | Tools | Difficulty |
+|---------|--------|-------|------------|
+| ⚖️ **Bias Audit: Loan Approval Dataset** | Fairness metrics, demographic parity | Fairlearn, AIF360 | ⭐⭐ |
+| 🔍 **Explainable House Price Predictor** | SHAP, LIME, model cards | SHAP, LIME, InterpretML | ⭐⭐ |
+| 🛡️ **Differentially Private MNIST Classifier** | DP-SGD, privacy accounting | Opacus, TensorFlow Privacy | ⭐⭐⭐ |
+| 🎯 **Adversarial Robustness Evaluation** | FGSM, PGD, adversarial training | ART, Foolbox | ⭐⭐⭐ |
+| 📋 **AI Governance Checklist for a Use Case** | EU AI Act, NIST RMF, risk classification | N/A | ⭐⭐ |
+| 🔒 **Federated Learning Simulation** | FedAvg, secure aggregation | PySyft, Flower | ⭐⭐⭐⭐ |
+
+#### 📄 Cheat Sheets & References
+
+- [Fairlearn User Guide](https://fairlearn.org/main/user_guide/index.html) Bias mitigation algorithms
+- [AIF360 Documentation](https://aif360.readthedocs.io/) Fairness metrics reference
+- [SHAP Documentation](https://shap.readthedocs.io/en/latest/) Explainability API
+- [NIST AI RMF Playbook](https://www.nist.gov/itl/ai-risk-management-framework) Risk management steps
+- [EU AI Act Regulatory Framework](https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai) Official EU resources
+- [Adversarial Robustness Toolbox Docs](https://adversarial-robustness-toolbox.readthedocs.io/) Attack and defense catalog
+
+---
+
+### 🧱 Phase 1: Programming & Tools (Week 0)
 
 > **Goal**: Get comfortable with Python, Jupyter, and the data science workflow.
 
@@ -579,7 +812,7 @@ python -c "import numpy; print(numpy.__version__)"
 
 ---
 
-### 🧱 Phase 1: Machine Learning Foundations (Weeks 1-4)
+### 🧱 Phase 2: Machine Learning Foundations (Weeks 1-4)
 
 > **Goal**: Understand how machines learn from data. Build algorithms from scratch before using libraries.
 
@@ -657,7 +890,7 @@ Week 4: Feature Engineering & Pipelines
 | **Fast.ai Practical ML** | [Fast.ai](https://course.fast.ai/) | Top-down approach, very practical |
 | **Made With ML** | [madewithml.com](https://madewithml.com/) | End-to-end ML projects |
 
-#### 🛠️ Phase 1 Projects
+#### 🛠️ Phase 2 Projects
 
 | Project | Skills | Dataset | Difficulty |
 |---------|--------|---------|------------|
@@ -676,7 +909,7 @@ Week 4: Feature Engineering & Pipelines
 
 ---
 
-### 🧠 Phase 2: Deep Learning from Scratch (Weeks 5-8)
+### 🧠 Phase 3: Deep Learning from Scratch (Weeks 5-8)
 
 > **Goal**: Understand neural networks at the tensor level. Build backpropagation by hand.
 
@@ -763,7 +996,7 @@ Week 8: Transformers (The Big One!)
 | **Transformer from Scratch** | [Blog](https://peterbloem.nl/blog/transformers) | Build Transformer step by step |
 | **The Annotated Transformer** | [Harvard NLP](https://nlp.seas.harvard.edu/annotated-transformer/) | PyTorch Transformer with explanations |
 
-#### 🛠️ Phase 2 Projects
+#### 🛠️ Phase 3 Projects
 
 | Project | Skills | Dataset | Difficulty |
 |---------|--------|---------|------------|
@@ -783,7 +1016,7 @@ Week 8: Transformers (The Big One!)
 
 ---
 
-### 🤖 Phase 3: Transformers & Large Language Models (Weeks 9-12)
+### 🤖 Phase 4: Transformers & Large Language Models (Weeks 9-12)
 
 > **Goal**: Understand how ChatGPT works. Build a GPT-like model from scratch.
 
@@ -850,6 +1083,8 @@ Week 12: Fine-Tuning & Inference
 | **LoRA: Low-Rank Adaptation** | Hu et al. | 📄 Paper | [arXiv:2106.09685](https://arxiv.org/abs/2106.09685) |
 | **QLoRA** | Dettmers et al. | 📄 Paper | [arXiv:2305.14314](https://arxiv.org/abs/2305.14314) |
 | **Training Language Models to Follow Instructions** | Ouyang et al. (InstructGPT) | 📄 Paper | [arXiv:2203.02155](https://arxiv.org/abs/2203.02155) |
+| **Constitutional AI: Harmlessness from AI Feedback** | Bai et al. | 📄 Paper | [arXiv:2212.08073](https://arxiv.org/abs/2212.08073) |
+| **Red Teaming Language Models to Reduce Harms** | Perez et al. | 📄 Paper | [arXiv:2202.03286](https://arxiv.org/abs/2202.03286) |
 
 #### 💻 GitHub Repositories
 
@@ -864,6 +1099,8 @@ Week 12: Fine-Tuning & Inference
 | **unsloth** | ⭐ 20k+ | 2-5x faster LLM fine-tuning | [github.com/unslothai/unsloth](https://github.com/unslothai/unsloth) |
 | **text-generation-inference** | ⭐ 10k+ | Production LLM serving (Hugging Face) | [github.com/huggingface/text-generation-inference](https://github.com/huggingface/text-generation-inference) |
 | **vLLM** | ⭐ 30k+ | High-throughput LLM inference | [github.com/vllm-project/vllm](https://github.com/vllm-project/vllm) |
+| **Llama Guard (PurpleLlama)** | ⭐ 2k+ | Safety classifier for LLM inputs and outputs | [github.com/meta-llama/PurpleLlama](https://github.com/meta-llama/PurpleLlama) |
+| **Guardrails AI** | ⭐ 4k+ | Structured guardrails for LLMs | [github.com/guardrails-ai/guardrails](https://github.com/guardrails-ai/guardrails) |
 | **transformers** | ⭐ 140k+ | Hugging Face Transformers library | [github.com/huggingface/transformers](https://github.com/huggingface/transformers) |
 
 #### 📝 Interactive Notebooks & Tutorials
@@ -877,7 +1114,7 @@ Week 12: Fine-Tuning & Inference
 | **GPT-2 Training Tutorial** | [Hugging Face](https://huggingface.co/blog/how-to-train) | Train your own GPT-2 |
 | **Fine-Tuning LLaMA-2** | [YouTube (Sam Witteveen)](https://www.youtube.com/watch?v=3fsn19OIqNc) | Practical fine-tuning guide |
 
-#### 🛠️ Phase 3 Projects
+#### 🛠️ Phase 4 Projects
 
 | Project | Skills | Dataset/Model | Difficulty |
 |---------|--------|---------------|------------|
@@ -898,7 +1135,7 @@ Week 12: Fine-Tuning & Inference
 
 ---
 
-### 🔍 Phase 4: Retrieval-Augmented Generation (RAG) (Weeks 13-15)
+### 🔍 Phase 5: Retrieval-Augmented Generation (RAG) (Weeks 13-15)
 
 > **Goal**: Build systems that combine LLMs with external knowledge. No more hallucinations.
 
@@ -970,7 +1207,7 @@ Week 15: Cutting-Edge RAG
 | **RAGAS** | ⭐ 7k+ | RAG evaluation framework | [github.com/explodinggradients/ragas](https://github.com/explodinggradients/ragas) |
 | **txtai** | ⭐ 10k+ | All-in-one embeddings database | [github.com/neuml/txtai](https://github.com/neuml/txtai) |
 
-#### 🛠️ Phase 4 Projects
+#### 🛠️ Phase 5 Projects
 
 | Project | Skills | Tech Stack | Difficulty |
 |---------|--------|------------|------------|
@@ -990,7 +1227,7 @@ Week 15: Cutting-Edge RAG
 
 ---
 
-### 🤖 Phase 5: Agentic AI & Autonomous Systems (Weeks 16-19)
+### 🤖 Phase 6: Agentic AI & Autonomous Systems (Weeks 16-19)
 
 > **Goal**: Build AI agents that can reason, plan, use tools, and act autonomously.
 
@@ -1074,7 +1311,7 @@ Week 19: Production Agent Systems
 | **Browser Use** | ⭐ 30k+ | AI agents that control browsers | [github.com/browser-use/browser-use](https://github.com/browser-use/browser-use) |
 | **SWE-agent** | ⭐ 15k+ | Agent that fixes GitHub issues | [github.com/princeton-nlp/SWE-agent](https://github.com/princeton-nlp/SWE-agent) |
 
-#### 🛠️ Phase 5 Projects
+#### 🛠️ Phase 6 Projects
 
 | Project | Skills | Tech Stack | Difficulty |
 |---------|--------|------------|------------|
@@ -1094,7 +1331,7 @@ Week 19: Production Agent Systems
 
 ---
 
-### 🏭 Phase 6: Production AI & MLOps (Weeks 20-24)
+### 🏭 Phase 7: Production AI & MLOps (Weeks 20-24)
 
 > **Goal**: Deploy AI systems that are reliable, scalable, and maintainable in production.
 
@@ -1185,7 +1422,7 @@ Week 24: Scaling & Advanced Topics
 | **OpenLLMetry** | ⭐ 5k+ | LLM observability | [github.com/traceloop/openllmetry](https://github.com/traceloop/openllmetry) |
 | **Guardrails AI** | ⭐ 5k+ | Guardrails for LLMs | [github.com/guardrails-ai/guardrails](https://github.com/guardrails-ai/guardrails) |
 
-#### 🛠️ Phase 6 Projects
+#### 🛠️ Phase 7 Projects
 
 | Project | Skills | Tech Stack | Difficulty |
 |---------|--------|------------|------------|
@@ -1218,7 +1455,18 @@ Week 24: Scaling & Advanced Topics
 
 ### 📋 Complete Project List
 
-#### Phase 1 Projects (ML Foundations)
+#### Phase 0 Projects (AI Fundamentals)
+
+| # | Project | What You'll Learn | Dataset | Difficulty |
+|---|---------|-------------------|---------|------------|
+| 1 | ⚖️ **Bias Audit: Loan Approval** | Fairness metrics, demographic parity, Fairlearn/AIF360 | [UCI Adult Income](https://archive.ics.uci.edu/dataset/2/adult) | ⭐⭐ |
+| 2 | 🔍 **Explainable House Price Predictor** | SHAP, LIME, model cards | [Kaggle House Prices](https://www.kaggle.com/c/house-prices-advanced-regression-techniques) | ⭐⭐ |
+| 3 | 🛡️ **Differentially Private MNIST Classifier** | DP-SGD, privacy accounting, Opacus | [MNIST](https://www.openml.org/d/554) | ⭐⭐⭐ |
+| 4 | 🎯 **Adversarial Robustness Evaluation** | FGSM, PGD, adversarial training, ART | [CIFAR-10](https://www.cs.toronto.edu/~kriz/cifar.html) | ⭐⭐⭐ |
+| 5 | 📋 **AI Governance Checklist** | EU AI Act risk tiers, NIST RMF, audit trails | N/A (case study) | ⭐⭐ |
+| 6 | 🔒 **Federated Learning Simulation** | FedAvg, secure aggregation, PySyft/Flower | [MNIST](https://www.openml.org/d/554) | ⭐⭐⭐⭐ |
+
+#### Phase 2 Projects (ML Foundations)
 
 | # | Project | What You'll Learn | Dataset | Difficulty |
 |---|---------|-------------------|---------|------------|
@@ -1231,7 +1479,7 @@ Week 24: Scaling & Advanced Topics
 | 7 | 🏦 **Loan Default Prediction** | Risk modeling, feature importance | [LendingClub](https://www.kaggle.com/datasets/wordsforthewise/lending-club) | ⭐⭐⭐ |
 | 8 | 🌸 **Iris Flower Classifier** | Multi-class, visualization (classic!) | [UCI Iris](https://archive.ics.uci.edu/ml/datasets/iris) | ⭐ |
 
-#### Phase 2 Projects (Deep Learning)
+#### Phase 3 Projects (Deep Learning)
 
 | # | Project | What You'll Learn | Dataset | Difficulty |
 |---|---------|-------------------|---------|------------|
@@ -1244,7 +1492,7 @@ Week 24: Scaling & Advanced Topics
 | 15 | 🎨 **Style Transfer App** | CNN features, optimization | [COCO](https://cocodataset.org/) | ⭐⭐⭐⭐ |
 | 16 | 🔊 **Speech Emotion Recognition** | Audio features, CNN/RNN | [RAVDESS](https://zenodo.org/record/1188976) | ⭐⭐⭐⭐ |
 
-#### Phase 3 Projects (LLMs)
+#### Phase 4 Projects (LLMs)
 
 | # | Project | What You'll Learn | Model/Dataset | Difficulty |
 |---|---------|-------------------|---------------|------------|
@@ -1257,7 +1505,7 @@ Week 24: Scaling & Advanced Topics
 | 23 | 📝 **Code Completion Model** | Code LLMs, tokenization | [The Stack](https://huggingface.co/datasets/bigcode/the-stack) | ⭐⭐⭐⭐⭐ |
 | 24 | 🗣️ **Speech-to-Text Fine-tuning** | Whisper, audio processing | [Common Voice](https://commonvoice.mozilla.org/) | ⭐⭐⭐⭐ |
 
-#### Phase 4 Projects (RAG)
+#### Phase 5 Projects (RAG)
 
 | # | Project | What You'll Learn | Tech Stack | Difficulty |
 |---|---------|-------------------|------------|------------|
@@ -1270,7 +1518,7 @@ Week 24: Scaling & Advanced Topics
 | 31 | 📊 **Financial Report Analyzer** | Table extraction, structured data | Unstructured.io + Pandas + LLM | ⭐⭐⭐⭐ |
 | 32 | 🔍 **Legal Document Search** | Domain-specific embeddings, long documents | Legal-BERT + Pinecone + Reranker | ⭐⭐⭐⭐⭐ |
 
-#### Phase 5 Projects (Agentic AI)
+#### Phase 6 Projects (Agentic AI)
 
 | # | Project | What You'll Learn | Tech Stack | Difficulty |
 |---|---------|-------------------|------------|------------|
@@ -1283,7 +1531,7 @@ Week 24: Scaling & Advanced Topics
 | 39 | 🛒 **Shopping Agent** | Price comparison, recommendations | Multi-agent + Scraping + APIs | ⭐⭐⭐⭐ |
 | 40 | 📅 **Meeting Scheduler Agent** | NLP, calendar APIs, conflict resolution | ReAct + Google Calendar + Zoom API | ⭐⭐⭐⭐ |
 
-#### Phase 6 Projects (Production)
+#### Phase 7 Projects (Production)
 
 | # | Project | What You'll Learn | Tech Stack | Difficulty |
 |---|---------|-------------------|------------|------------|
@@ -1359,6 +1607,13 @@ Week 24: Scaling & Advanced Topics
 | **Made With ML** | 🎓 Course | End-to-end ML | [madewithml.com](https://madewithml.com/) |
 | **Coursera ML by Andrew Ng** | 🎓 Course | ML fundamentals | [coursera.org/learn/machine-learning](https://www.coursera.org/learn/machine-learning) |
 | **Coursera Deep Learning** | 🎓 Specialization | DL specialization | [coursera.org/specializations/deep-learning](https://www.coursera.org/specializations/deep-learning) |
+| **OpenAI Spinning Up in Deep RL** | 🎓 Course | Reinforcement learning | [spinningup.openai.com](https://spinningup.openai.com/) |
+| **Full Stack Deep Learning** | 🎓 Course | Productionizing ML and LLMs | [fullstackdeeplearning.com](https://fullstackdeeplearning.com/) |
+| **Stanford CS25: Transformers United** | 🎓 Course | Transformers, frontier research | [web.stanford.edu/class/cs25](https://web.stanford.edu/class/cs25/) |
+| **Hugging Face Agents Course** | 🎓 Course | AI agents, tool use | [huggingface.co/learn/agents-course](https://huggingface.co/learn/agents-course) |
+| **Hugging Face Deep RL Course** | 🎓 Course | Deep reinforcement learning | [huggingface.co/learn/deep-rl-course](https://huggingface.co/learn/deep-rl-course) |
+| **Seeing Theory** | 🌐 Interactive | Probability and statistics | [seeing-theory.brown.edu](https://seeing-theory.brown.edu/) |
+| **TensorFlow Neural Network Playground** | 🌐 Interactive | Neural network intuition | [playground.tensorflow.org](https://playground.tensorflow.org/) |
 
 ---
 
@@ -1426,62 +1681,62 @@ Week 24: Scaling & Advanced Topics
 #### Python ML/DL Stack
 ```python
 # Core Data Science
-numpy     # Numerical computing
-pandas     # Data manipulation
-matplotlib   # Plotting
-seaborn    # Statistical visualization
-plotly     # Interactive plots
+numpy          # Numerical computing
+pandas         # Data manipulation
+matplotlib     # Plotting
+seaborn        # Statistical visualization
+plotly         # Interactive plots
 
 # Machine Learning
-scikit-learn  # ML algorithms
-xgboost    # Gradient boosting
-lightgbm    # Fast gradient boosting
-catboost    # Categorical boosting
-optuna     # Hyperparameter optimization
+scikit-learn   # ML algorithms
+xgboost        # Gradient boosting
+lightgbm       # Fast gradient boosting
+catboost       # Categorical boosting
+optuna         # Hyperparameter optimization
 
 # Deep Learning
-pytorch    # Deep learning framework
-torchvision  # Computer vision tools
-torchaudio   # Audio processing
-transformers  # Hugging Face models
-datasets    # Hugging Face datasets
-accelerate   # Distributed training
-deepspeed   # Microsoft's training optimization
+pytorch        # Deep learning framework
+torchvision    # Computer vision tools
+torchaudio     # Audio processing
+transformers   # Hugging Face models
+datasets       # Hugging Face datasets
+accelerate     # Distributed training
+deepspeed      # Microsoft's training optimization
 
 # LLM & RAG
-langchain   # LLM application framework
-langgraph   # Agent workflows
-llama-index  # Data framework for LLMs
-chromadb    # Vector database
-faiss-cpu   # Facebook AI Similarity Search
-sentence-transformers # Embeddings
-openai     # OpenAI API
-anthropic   # Claude API
-cohere     # Cohere API
+langchain      # LLM application framework
+langgraph      # Agent workflows
+llama-index    # Data framework for LLMs
+chromadb       # Vector database
+faiss-cpu      # Facebook AI Similarity Search
+sentence-transformers  # Embeddings
+openai         # OpenAI API
+anthropic      # Claude API
+cohere         # Cohere API
 
 # Agentic AI
-crewai     # Multi-agent framework
-autogen    # Microsoft's agent framework
-smolagents   # Hugging Face agents
-phidata    # AI assistants
-browser-use  # Browser automation agents
+crewai         # Multi-agent framework
+autogen        # Microsoft's agent framework
+smolagents     # Hugging Face agents
+phidata        # AI assistants
+browser-use    # Browser automation agents
 
 # MLOps
-mlflow     # Experiment tracking
-wandb     # Weights & Biases
-dvc      # Data version control
-prefect    # Workflow orchestration
-fastapi    # API framework
-gradio     # ML demos
-streamlit   # Data apps
-docker     # Containerization
+mlflow         # Experiment tracking
+wandb          # Weights & Biases
+dvc            # Data version control
+prefect        # Workflow orchestration
+fastapi        # API framework
+gradio         # ML demos
+streamlit      # Data apps
+docker         # Containerization
 
 # Utilities
-jupyter    # Notebooks
-pytest     # Testing
-black     # Code formatting
-ruff      # Fast Python linter
-pre-commit   # Git hooks
+jupyter        # Notebooks
+pytest         # Testing
+black          # Code formatting
+ruff           # Fast Python linter
+pre-commit     # Git hooks
 ```
 
 #### Cloud Platforms
@@ -1550,6 +1805,12 @@ pre-commit   # Git hooks
 | **Made With ML Community** | Slack | End-to-end ML |
 | **AI Twitter/X** | Twitter | Latest research, hot takes |
 | **LinkedIn AI Groups** | LinkedIn | Professional networking |
+| **AI Alignment Forum** | Web | Technical AI alignment discussions |
+| **LessWrong (AI)** | Web | AI safety and rationality community |
+| **AI Safety Community** | Web | AI safety research and careers |
+| **FAR AI** | Web | AI safety research lab |
+| **METR** | Web | AI evaluations and safety |
+| **Apollo Research** | Web | Mechanistic interpretability research |
 
 ---
 
@@ -1569,6 +1830,9 @@ pre-commit   # Git hooks
 | **TLDR AI** | TLDR | Daily | [tldr.tech/ai](https://tldr.tech/ai) |
 | **Alpha Signal** | Alpha Signal | Weekly | [alphasignal.ai](https://alphasignal.ai/) |
 | **One Useful Thing** | Ethan Mollick | Weekly | [oneusefulthing.substack.com](https://oneusefulthing.substack.com/) |
+| **AI Safety Newsletter** | Center for AI Safety | Weekly | [safe.ai](https://safe.ai/) |
+| **Don't Worry About the Vase** | Zvi Mowshowitz | Weekly | [thezvi.substack.com](https://thezvi.substack.com/) |
+| **AXRP (AI X-risk Podcast)** | Daniel Filan | Monthly | [axrp.net](https://axrp.net/) |
 
 ---
 
@@ -1586,6 +1850,40 @@ pre-commit   # Git hooks
 ---
 
 ## 🎯 Learning Tips from Experts
+
+### 🛡️ Ethics-First Development
+
+```
+DON'T: Build first, think about ethics later
+DO:    Start every project with an ethics impact assessment
+
+DON'T: Assume fairness is just about balanced datasets
+DO:    Consider historical bias, deployment context, and stakeholder impact
+
+DON'T: Treat explainability as an afterthought
+DO:    Design for interpretability from the architecture phase
+
+DON'T: Ignore privacy regulations
+DO:    Implement privacy by design (GDPR, CCPA, EU AI Act)
+
+DON'T: Deploy without adversarial testing
+DO:    Red team your models before production
+
+DON'T: Work in isolation on AI safety
+DO:    Join AI safety communities, share findings, collaborate
+```
+
+**Weekly Study Schedule for Phase 0 (Pre-Phase, Week -1):**
+
+```
+Week -1: AI Fundamentals
+├── Day 1-2: Bias & Fairness (Fairlearn tutorials, AIF360)
+├── Day 3-4: Transparency & Explainability (SHAP, LIME, model cards)
+├── Day 5-6: Accountability & Governance (EU AI Act, NIST RMF)
+├── Day 7:   Privacy & Security (differential privacy, Opacus)
+├── Weekend: Robustness & Safety (ART, adversarial examples)
+└── Ongoing: Responsible AI (Constitutional AI, red teaming)
+```
 
 ### 🧠 How to Actually Learn (Not Just Watch)
 
@@ -1609,12 +1907,12 @@ pre-commit   # Git hooks
 ### 📅 Weekly Study Schedule (15-20 hrs/week)
 
 ```
-Monday  (3 hrs): Watch video lectures / Read papers
-Tuesday  (3 hrs): Code along with tutorials
+Monday    (3 hrs): Watch video lectures / Read papers
+Tuesday   (3 hrs): Code along with tutorials
 Wednesday (3 hrs): Work on your project
-Thursday (3 hrs): Read documentation / Blogs
-Friday  (3 hrs): Experiment / Debug / Optimize
-Weekend  (5 hrs): Build something new / Write about what you learned
+Thursday  (3 hrs): Read documentation / Blogs
+Friday    (3 hrs): Experiment / Debug / Optimize
+Weekend   (5 hrs): Build something new / Write about what you learned
 ```
 
 ### 📝 Note-Taking System
@@ -1679,7 +1977,7 @@ For every concept you learn:
 | **Framework First** | Black box syndrome | Always implement from scratch first |
 | **No Portfolio** | Can't prove your skills | GitHub + blog + deployed projects |
 | **Isolating Yourself** | Miss feedback and networking | Join communities, find study buddies |
-| **Skipping Fundamentals** | Struggle with advanced topics | Don't skip Phase 1 & 2 |
+| **Skipping Fundamentals** | Struggle with advanced topics | Don't skip Phase 2 & 3 |
 | **Perfectionism** | Never finish projects | Ship MVP, iterate later |
 | **No Documentation** | Future you won't understand | Write READMEs, comments, docstrings |
 
@@ -1700,48 +1998,51 @@ For every concept you learn:
 ## 🗺️ Visual Learning Roadmap
 
 ```
+MONTH 0: Responsible AI Foundations
+└── AI Fundamentals: Ethics, Fairness, Privacy, Safety (Week -1)
+
 MONTH 1-2: Foundations
 ├── Python & Tools (Week 0)
 ├── Math Refreshers (Ongoing)
 └── ML Fundamentals (Weeks 1-4)
-  ├── Linear/Logistic Regression
-  ├── Classification Algorithms
-  ├── Unsupervised Learning
-  └── Feature Engineering & Pipelines
+    ├── Linear/Logistic Regression
+    ├── Classification Algorithms
+    ├── Unsupervised Learning
+    └── Feature Engineering & Pipelines
 
 MONTH 3-4: Deep Learning
 └── Deep Learning from Scratch (Weeks 5-8)
-  ├── Neural Network Fundamentals
-  ├── CNNs for Computer Vision
-  ├── RNNs for Sequences
-  └── Transformers Architecture
+    ├── Neural Network Fundamentals
+    ├── CNNs for Computer Vision
+    ├── RNNs for Sequences
+    └── Transformers Architecture
 
 MONTH 5-6: Large Language Models
 └── Transformers & LLMs (Weeks 9-12)
-  ├── Self-Attention Deep Dive
-  ├── Tokenization & Embeddings
-  ├── Training & Fine-tuning
-  └── Inference Optimization
+    ├── Self-Attention Deep Dive
+    ├── Tokenization & Embeddings
+    ├── Training & Fine-tuning
+    └── Inference Optimization
 
 MONTH 7-8: RAG & Knowledge Systems
 └── Retrieval-Augmented Generation (Weeks 13-15)
-  ├── Vector Databases & Embeddings
-  ├── Basic & Advanced RAG
-  └── Graph RAG & Multi-Modal
+    ├── Vector Databases & Embeddings
+    ├── Basic & Advanced RAG
+    └── Graph RAG & Multi-Modal
 
 MONTH 9-10: Agentic AI
 └── Autonomous Systems (Weeks 16-19)
-  ├── ReAct & Tool Use
-  ├── Planning & Reasoning
-  ├── Multi-Agent Systems
-  └── Production Agents
+    ├── ReAct & Tool Use
+    ├── Planning & Reasoning
+    ├── Multi-Agent Systems
+    └── Production Agents
 
 MONTH 11-12: Production & Beyond
 └── MLOps & Scaling (Weeks 20-24)
-  ├── Experiment Tracking
-  ├── Model Deployment
-  ├── Monitoring & Observability
-  └── Distributed Systems
+    ├── Experiment Tracking
+    ├── Model Deployment
+    ├── Monitoring & Observability
+    └── Distributed Systems
 
 ONGOING:
 ├── Read Papers (arXiv daily)
@@ -1817,7 +2118,7 @@ This roadmap wouldn't exist without the incredible open-source AI community:
 > **"The best time to start learning AI was 5 years ago. The second best time is now."**
 
 You don't need a PhD. You don't need a supercomputer. You need:
-- 💻 A laptop (even an old one works for Phase 1-3)
+- 💻 A laptop (even an old one works for Phase 2-4)
 - ⏰ 15-20 hours per week
 - 🧠 Curiosity and persistence
 - 🤝 A community to learn with
