@@ -100,18 +100,6 @@ The consequence: if two labels point at the same *mutable* object, changing it t
 A taxonomy of Python's built-in data types, grouped by whether they can be changed in place:
 
 ```mermaid
-%%{init: {
- "theme": "base",
- "themeVariables": {
-  "background": "#0d1117",
-  "primaryColor": "#1f2937",
-  "primaryTextColor": "#000000",
-  "primaryBorderColor": "#60a5fa",
-  "lineColor": "#94a3b8",
-  "textColor": "#000000"
- }
-}}%%
-
 mindmap
   root((Python Data Types))
     Immutable

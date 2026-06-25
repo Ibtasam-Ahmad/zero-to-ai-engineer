@@ -40,7 +40,7 @@ flowchart LR
     E --> F[Insight<br/>conclusions to act on]
 ```
 
-The notebooks in this folder follow exactly this arc: `01_data_preprocessing` covers cleaning and transforming, `02_numpy` and `03_pandas` give you the tools, `04`–`06` cover visualization, `07_eda` covers exploration, and `08_statistics` covers rigorous reasoning. The rest of this guide walks through each in turn.
+The notebooks in this folder follow exactly this arc: `01_data_preprocessing` covers cleaning and transforming, `02_numpy` and `03_pandas` give you the tools, `04`-`06` cover visualization, `07_eda` covers exploration, and `08_statistics` covers rigorous reasoning. The rest of this guide walks through each in turn.
 
 ---
 
@@ -84,7 +84,7 @@ Once detected, outliers can be:
 
 ### 2.3 Scaling and Normalization
 
-Different columns live on wildly different scales: age ranges 0–100, income ranges 0–1,000,000. Many algorithms are confused by this, treating the large-magnitude column as more important purely because its numbers are bigger. **Scaling** (also called **normalization**) rescales every column to a comparable range so each feature gets a fair vote.
+Different columns live on wildly different scales: age ranges 0-100, income ranges 0-1,000,000. Many algorithms are confused by this, treating the large-magnitude column as more important purely because its numbers are bigger. **Scaling** (also called **normalization**) rescales every column to a comparable range so each feature gets a fair vote.
 
 The main scalers, all demonstrated in the notebook:
 
@@ -93,7 +93,7 @@ The main scalers, all demonstrated in the notebook:
 | **StandardScaler** | Subtracts the mean, divides by the standard deviation | Mean 0, std 1 | Roughly normal data; linear models, neural networks |
 | **MinMaxScaler** | Squeezes values into a fixed window | Usually 0 to 1 | Image data; bounded inputs (sensitive to outliers) |
 | **RobustScaler** | Centers on the median, scales by the IQR | Centered, robust | Data with outliers (ignores extreme values) |
-| **PowerTransformer** | Applies a mathematical transform (Yeo–Johnson) | Approximately normal | Skewed data you want to make bell-shaped |
+| **PowerTransformer** | Applies a mathematical transform (Yeo-Johnson) | Approximately normal | Skewed data you want to make bell-shaped |
 | **QuantileTransformer** | Maps values by their rank | Uniform or normal | Strongly non-normal distributions |
 
 There is one rule about scaling that, if violated, quietly ruins everything: **fit on the training data only.** "Fitting" a scaler means computing the mean and standard deviation it will use. You must compute those from the training data alone, then apply (transform) the same numbers to the test data. If you compute them from the whole dataset, information about the test set leaks into training a mistake called **data leakage** that makes your model look better in testing than it ever will in reality.
@@ -469,7 +469,7 @@ EDA shows you patterns; **statistics** tells you whether to *believe* them. Stat
 
 A **probability distribution** describes how likely each possible value is. Recognizing the distribution behind your data lets you reason about it precisely. The notebook covers the essentials:
 
-- The **normal (Gaussian) distribution** the famous symmetric bell curve, described by its mean and standard deviation. It is everywhere because of the Central Limit Theorem (below). Its **68–95–99.7 rule** states that about 68% of values fall within one standard deviation of the mean, 95% within two, and 99.7% within three. The **standard normal** is the normal distribution centered at 0 with standard deviation 1, obtained by computing the **z-score** of each value.
+- The **normal (Gaussian) distribution** the famous symmetric bell curve, described by its mean and standard deviation. It is everywhere because of the Central Limit Theorem (below). Its **68-95-99.7 rule** states that about 68% of values fall within one standard deviation of the mean, 95% within two, and 99.7% within three. The **standard normal** is the normal distribution centered at 0 with standard deviation 1, obtained by computing the **z-score** of each value.
 - The **binomial distribution** the number of successes in a fixed number of independent yes/no trials (e.g., heads in 10 coin flips).
 - The **Poisson distribution** the number of events in a fixed interval of time or space (e.g., arrivals per hour).
 - The **exponential distribution** the waiting time between such events.
@@ -531,3 +531,21 @@ The notebook closes the loop by connecting statistics to the models that follow:
 Data analysis is a single connected craft, and these eight notebooks trace its full arc. You **load and inspect** data, **preprocess** it into a clean and consistent form (`01`), wielding **NumPy** for fast numerical computation (`02`) and **pandas** for labeled tabular manipulation (`03`). You make it visible with **matplotlib** for precise static charts (`04`), **seaborn** for fast statistical graphics (`05`), and **plotly** for interactive exploration (`06`). You investigate it through **exploratory data analysis** to surface its patterns (`07`), and you validate those patterns with **statistics** to know which ones to trust (`08`).
 
 Master this pipeline and you can take any raw, messy dataset and turn it into reliable understanding which is precisely the skill every later stage of machine learning and AI engineering depends upon.
+
+---
+
+## 9. Polars: Modern DataFrame Library
+
+Polars is a Rust-based DataFrame library designed for speed and modern workflows. It is 10 to 100 times faster than pandas on many operations because it uses lazy evaluation, parallel execution across CPU cores, and a columnar memory layout (Apache Arrow format).
+
+Key differences from pandas: Polars uses an expression API (pl.col(), .filter(), .with_columns()) rather than inplace mutation. Lazy mode (pl.scan_csv, .lazy()) builds a query plan that is optimized before execution. This means chaining 10 operations costs the same as running the optimal single pass.
+
+When to use Polars: datasets larger than 100MB where pandas is slow, production data pipelines needing speed, any project using Parquet files, and new projects where you can choose your stack.
+
+## 10. DuckDB: SQL on Everything
+
+DuckDB is an in-process analytical database. It runs inside your Python process, requires no server, and can query CSV, Parquet, pandas DataFrames, and Polars DataFrames directly using standard SQL. It uses columnar, vectorized execution designed for analytics (OLAP), not row-by-row transactions (OLTP).
+
+Key pattern: import duckdb; result = duckdb.sql("SELECT * FROM 'data.parquet' WHERE year > 2020").df()
+
+This single line reads a Parquet file and returns a pandas DataFrame, using SQL with no setup. DuckDB is now the standard tool for local analytical workloads that previously required Spark or a database server.
