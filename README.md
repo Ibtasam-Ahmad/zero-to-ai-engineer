@@ -44,7 +44,7 @@
 
 ## 📂 Repository Structure
 
-> **164 Jupyter notebooks** covering the complete AI/ML stack from Python basics to production deployment. Every notebook contains markdown explanations with LaTeX math formulas, code (scratch → library → production), and an Additional Learning Resources section.
+> **208 Jupyter notebooks** covering the complete AI/ML stack from Python basics to production deployment. Every notebook contains markdown explanations with LaTeX math formulas, code (scratch → library → production), and an Additional Learning Resources section.
 >
 > 🆕 Each section folder also has a **`notes/` sub-folder** with a comprehensive, plain-English **conceptual study guide** (with diagrams) see [Conceptual Study Notes](#-conceptual-study-notes-with-diagrams). Every notebook has been **executed and verified to run** on a current Python 3.12 stack, with a root **`requirements.txt`** pinning the full environment see [Verified Runnable](#-all-notebooks-verified-runnable).
 
@@ -75,11 +75,14 @@ zero-to-ai-engineer/
 │   ├── 05_seaborn.ipynb                      # Statistical visualization, heatmaps, pair plots
 │   ├── 06_plotly.ipynb                       # Interactive plots, dashboards, 3D charts
 │   ├── 07_eda.ipynb                          # Exploratory data analysis, profiling, storytelling
-│   └── 08_statistics.ipynb                   # 13+ distributions with PDF/PMF, hypothesis tests
+│   ├── 08_statistics.ipynb                   # 13+ distributions with PDF/PMF, hypothesis tests
+│   ├── 09_polars.ipynb                       # Polars DataFrame operations, expressions, lazy evaluation, streaming
+│   ├── 10_duckdb.ipynb                       # DuckDB SQL analytics, OLAP queries, Python integration
 │   └── notes/
 │
 ├── 03_Machine_Learning/
 │   ├── 01_supervised/
+│   │   ├── 00_preprocessing.ipynb            # Feature preprocessing, TargetEncoder, encoders, scalers, pipelines
 │   │   ├── 01_linear_regression.ipynb        # Ridge, Lasso, Elastic Net, polynomial
 │   │   ├── 02_logistic_regression.ipynb      # Binary, multi-class, regularization
 │   │   ├── 03_decision_trees.ipynb           # CART, ID3, C4.5, pruning
@@ -88,6 +91,11 @@ zero-to-ai-engineer/
 │   │   ├── 06_naive_bayes.ipynb              # Gaussian, Multinomial, Complement, Bernoulli
 │   │   ├── 07_knn.ipynb                      # k-NN, LVQ, distance metrics
 │   │   ├── 08_generalized_linear_models.ipynb # Poisson, Negative Binomial, Ordinal, Probit, Tobit, GDA, QDA
+│   │   ├── 09_pipeline_and_leakage.ipynb     # Pipeline construction, data leakage prevention, XGBoost pipelines
+│   │   ├── 10_end_to_end_project.ipynb       # End-to-end supervised ML project workflow
+│   │   ├── 11_survival_analysis.ipynb        # Survival analysis, Kaplan-Meier, Cox proportional hazards, lifelines
+│   │   ├── 12_learning_to_rank.ipynb         # Learning to rank, LambdaMART, NDCG, ranking metrics
+│   │   ├── 13_model_calibration.ipynb        # Platt scaling, isotonic regression, reliability diagrams, ECE
 │   │   └── notes/
 │   ├── 02_unsupervised/
 │   │   ├── 01_clustering.ipynb               # KMeans++, DBSCAN, HDBSCAN, GMM, Spectral, BIRCH
@@ -106,9 +114,11 @@ zero-to-ai-engineer/
 │   │   └── notes/
 │   ├── 06_model_evaluation/
 │   │   ├── 01_model_evaluation.ipynb         # All CV strategies, all metrics, Optuna HPO
+│   │   ├── 02_hyperparameter_optimization.ipynb  # Bayesian optimization, TPE, Hyperband, Optuna, CMA-ES
 │   │   └── notes/
 │   ├── 07_explainability/
 │   │   ├── 01_explainability.ipynb           # SHAP (Shapley), LIME, PDP, ICE, GRAD-CAM
+│   │   ├── 02_interpretable_models.ipynb     # EBMs (InterpretML), GAMs, RuleFit, monotone constraints, FIGS
 │   │   └── notes/
 │   ├── 08_anomaly_detection/
 │   │   ├── 01_anomaly_detection.ipynb        # Isolation Forest, LOF, Mahalanobis, PyOD, Deep SVDD
@@ -116,6 +126,18 @@ zero-to-ai-engineer/
 │   ├── 09_recommendation_systems/
 │   │   ├── 01_recommendation_systems.ipynb   # CF, matrix factorization, NCF, LightGCN
 │   │   └── notes/
+│   ├── 10_causal_inference/
+│   │   └── 01_causal_inference.ipynb         # DoWhy, EconML, causal DAGs, propensity scoring, CATE estimation
+│   ├── 11_ab_testing/
+│   │   └── 01_ab_testing.ipynb               # Power analysis, sequential testing, CUPED, multi-armed bandits
+│   ├── 12_online_learning/
+│   │   └── 01_online_learning.ipynb          # River, concept drift, incremental SGD, passive-aggressive, ADWIN
+│   ├── 13_active_learning/
+│   │   └── 01_active_learning.ipynb          # Uncertainty sampling, query-by-committee, modAL, diversity sampling
+│   ├── 14_conformal_prediction/
+│   │   └── 01_conformal_prediction.ipynb     # Split conformal, normalised CP, APS, MAPIE, coverage guarantee
+│   ├── 15_synthetic_tabular_data/
+│   │   └── 01_synthetic_tabular_data.ipynb   # CTGAN, TVAE, statistical synthesis, privacy metrics, SDMetrics
 │   ├── 10_evaluation_metrics_comprehensive.ipynb  # Every metric: classification/regression/ranking/clustering/NLP/CV/TS/RAG
 │   └── projects/
 │       ├── 01_titanic_survival.py
@@ -132,6 +154,7 @@ zero-to-ai-engineer/
 │   ├── 07_multivariate_forecasting.ipynb     # VARMAX, multivariate LSTM, cross-series dependencies
 │   ├── 08_garch_volatility_models.ipynb      # ARCH, GARCH, EGARCH, GJR-GARCH, DCC-GARCH, VaR
 │   ├── 09_probabilistic_forecasting.ipynb    # Conformal prediction, DeepAR, GP, quantile regression, ensembles
+│   ├── 10_ts_anomaly_detection.ipynb         # Matrix Profile (stumpy), CUSUM, isolation forest, statistical process control
 │   ├── notes/
 │   └── projects/
 │       ├── 01_stock_forecast.py
@@ -152,6 +175,8 @@ zero-to-ai-engineer/
 │   ├── 11_distributed_training.ipynb         # ZeRO 1/2/3, FSDP, DeepSpeed, Megatron-LM, pipeline parallelism
 │   ├── 12_advanced_peft.ipynb                # DoRA, Prefix Tuning, P-Tuning v1/v2, Adapters, IA³, BitFit, ReLoRA
 │   ├── 13_quantization_and_compression_advanced.ipynb  # GPTQ, AWQ, SmoothQuant, GGUF, SpQR, AQLM, HQQ, NAS
+│   ├── 14_tabular_deep_learning.ipynb        # FT-Transformer, TabNet, entity embeddings, SAINT, TabPFN
+│   ├── 15_multi_task_learning.ipynb          # Hard/soft parameter sharing, uncertainty weighting, MTL benchmarks
 │   ├── lora-sst2/                        # LoRA fine-tuning output folder
 │   ├── peft_comparison.png               # PEFT methods comparison image
 │   ├── notes/
@@ -170,6 +195,7 @@ zero-to-ai-engineer/
 │   ├── 07_ocr_and_pose.ipynb                 # PaddleOCR, TrOCR, Donut, MediaPipe, RTMPose, DWPose
 │   ├── 08_video_analysis.ipynb               # I3D, SlowFast, VideoMAE, ByteTrack, Video-LLaMA, Sora
 │   ├── 09_3d_vision.ipynb                    # NeRF, Instant-NGP, 3D Gaussian Splatting, PointNet, BEVFormer
+│   ├── 10_medical_image_analysis.ipynb       # Medical imaging, DICOM, MONAI, segmentation, classification, pydicom
 │   ├── notes/
 │   └── projects/
 │       ├── 01_face_detector.py
@@ -187,6 +213,7 @@ zero-to-ai-engineer/
 │   ├── 08_speech_and_audio.ipynb             # Whisper, wav2vec2, HuBERT, MusicGen, TTS (XTTS, StyleTTS2)
 │   ├── 09_sentence_embeddings_advanced.ipynb # SBERT, E5, BGE/M3, GTE, Jina, Nomic, GritLM, MRL
 │   ├── 10_advanced_nlp_tasks.ipynb           # POS, dep. parsing, coreference, relation/event extraction, style transfer
+│   ├── 11_multilingual_nlp.ipynb             # Multilingual models, LASER embeddings, XLM-RoBERTa, langdetect, translation
 │   ├── notes/
 │   └── projects/
 │       ├── 01_sentiment_analyzer.py
@@ -235,6 +262,9 @@ zero-to-ai-engineer/
 │   ├── 13_inference_optimization.ipynb       # Speculative decoding, vLLM, FlashAttention, PagedAttention, GPTQ/AWQ
 │   ├── 14_llm_architecture_innovations.ipynb # GQA, MQA, MoE, RoPE, Mamba, RWKV, SwiGLU, RMSNorm
 │   ├── 15_specialized_llms.ipynb             # Code/Math/Medical/Legal/Scientific/Financial/Reasoning LLMs
+│   ├── 16_llm_security.ipynb                 # LLM security, prompt injection defense, jailbreak mitigations, red teaming
+│   ├── 17_structured_outputs.ipynb           # Structured LLM outputs, Instructor, JSON mode, schema validation
+│   ├── 18_reasoning_models.ipynb             # Chain-of-thought scaling, o1/o3/R1 architecture, inference-time compute
 │   └── projects/
 │       ├── 01_local_rag.py
 │       ├── 02_llm_benchmark.py
@@ -260,6 +290,7 @@ zero-to-ai-engineer/
 │   ├── 05_mcp_and_tools.ipynb                # MCP protocol, servers, clients, tool schemas
 │   ├── 06_agent_observability.ipynb          # LangSmith, tracing, evaluation, cost tracking
 │   ├── 07_advanced_agent_frameworks.ipynb    # MetaGPT, OpenAI Agents SDK, BabyAGI, MemGPT, AutoGPT
+│   ├── 08_agent_security.ipynb               # Agent security, adversarial prompts, guardrails, sandboxing, trust boundaries
 │   ├── notes/
 │   └── projects/
 │       ├── 01_research_agent.py
@@ -303,7 +334,9 @@ zero-to-ai-engineer/
 │   ├── 03_vector_db/01_vector_databases.ipynb # FAISS, Chroma, Pinecone, Qdrant, Weaviate, pgvector, HNSW
 │   ├── 04_orm/01_orm.ipynb                   # SQLAlchemy 2.0, SQLModel, Alembic migrations
 │   ├── 05_db_in_ai/01_databases_in_ai.ipynb  # Feature stores, Feast, online/offline stores
-│   └── 06_data_engineering/01_data_engineering.ipynb  # Spark, Kafka, dbt, data lakehouse
+│   ├── 06_data_engineering/01_data_engineering.ipynb  # Spark, Kafka, dbt, data lakehouse
+│   ├── 07_graph_databases/01_graph_databases.ipynb    # Neo4j, Cypher, graph algorithms, knowledge graphs, GDS
+│   ├── 08_time_series_databases/01_time_series_databases.ipynb  # InfluxDB, time series queries, DuckDB time series
 │   └── notes/
 │
 ├── 14_Mathematics/
@@ -312,7 +345,8 @@ zero-to-ai-engineer/
 │   ├── 03_probability.ipynb                  # 13 distributions with PDF/PMF LaTeX formulas
 │   ├── 04_statistics.ipynb                   # MLE, MAP, hypothesis tests, Bayesian inference
 │   ├── 05_information_theory.ipynb           # Entropy, KL divergence, cross-entropy, mutual info
-│   └── 06_optimization.ipynb                 # All optimizers with update equations, convergence proofs
+│   ├── 06_optimization.ipynb                 # All optimizers with update equations, convergence proofs
+│   ├── 07_bayesian_ml.ipynb                  # PyMC, MCMC, variational inference, Bayesian neural networks
 │   └── notes/
 │
 ├── 15_MLOps/
@@ -351,6 +385,8 @@ zero-to-ai-engineer/
 │   ├── 10_advanced_experiment_tracking.ipynb # Neptune, TensorBoard, Comet, Sacred, Aim, ClearML
 │   ├── 11_model_serving_advanced.ipynb       # BentoML, KServe, Seldon, Triton, Ray Serve, TorchServe
 │   ├── 12_feature_stores.ipynb               # Feast, Tecton, Hopsworks, Databricks, Fennel, point-in-time joins
+│   ├── 13_llmops.ipynb                       # LLMOps, prompt versioning, LLM monitoring, Langfuse, cost tracking
+│   ├── 14_data_contracts.ipynb               # Data contracts, Pandera, schema validation, data quality guarantees
 │   ├── notes/
 │   ├── mlflow.db                             # MLflow SQLite database (root)
 │   ├── mlruns/                               # MLflow runs directory (root)
@@ -361,12 +397,14 @@ zero-to-ai-engineer/
 │   ├── 01_deployment_concepts.ipynb          # ONNX, TorchScript, torch.compile, model optimization
 │   ├── 02_streamlit_gradio.ipynb             # Streamlit apps, Gradio interfaces, HF Spaces
 │   ├── 03_serverless_deployment.ipynb        # AWS Lambda, Modal, SageMaker serverless, Cloud Functions
+│   ├── 04_edge_deployment.ipynb              # Edge deployment, ONNX export, dynamic quantization, mobile inference
 │   ├── message_queues/01_message_queues.ipynb # Kafka, Celery, Redis Streams, async task queues
 │   └── notes/
 │
 ├── 17_Docker/
 │   ├── 01_docker_basics.ipynb                # Dockerfile, images, volumes, networks, compose
 │   ├── 02_docker_for_ml.ipynb                # Multi-stage builds, GPU support, ML-optimized images
+│   ├── 03_helm_and_gitops.ipynb              # Helm charts, GitOps workflows, ArgoCD, Flux, Kustomize
 │   ├── kubernetes/01_kubernetes.ipynb         # Pods, services, HPA, Kubeflow, KServe
 │   └── notes/
 │
@@ -382,13 +420,27 @@ zero-to-ai-engineer/
 │   ├── 02_adversarial_attacks.ipynb          # FGSM (x_adv = x + ε·sign(∇J)), PGD, adversarial training
 │   ├── 03_privacy.ipynb                      # DP-SGD, Laplace/Gaussian mechanism, federated privacy
 │   ├── 04_responsible_ai.ipynb               # EU AI Act, NIST RMF, model cards, RLHF safety
+│   ├── 05_ai_regulation_compliance.ipynb     # AI regulation, EU AI Act compliance, audit requirements, risk tiers
+│   ├── 06_copyright_and_ai.ipynb             # AI copyright, fair use, IP issues, training data rights, watermarking
+│   ├── 07_deepfake_detection.ipynb           # Deepfake detection, media forensics, digital watermarking, detection models
+│   ├── 08_mechanistic_interpretability.ipynb # Circuits, features, superposition, probing classifiers, monosemanticity
 │   └── notes/
 │
 ├── 20_Git_and_DevOps/
 │   ├── 01_git_basics.ipynb                   # Branching strategies, GitFlow, rebase vs merge
 │   ├── 02_git_for_ml.ipynb                   # Git LFS, DVC, MLflow+git, experiment branches
 │   ├── 03_github_actions_cicd.ipynb          # Full ML CI/CD pipeline YAML, model testing automation
+│   ├── 04_semantic_versioning.ipynb          # Semantic versioning, conventional commits, changelog automation, release workflows
 │   └── notes/
+│
+├── 22_ML_System_Design/                      # 7 notebooks: HLD, LLD, SQL, NoSQL, Vector DBs, ML Components, SWE for ML
+│   ├── 01_hld_ml_systems.ipynb               # System architecture: layers, patterns (Lambda, two-tower), CAP, scaling
+│   ├── 02_lld_ml_components.ipynb            # API design, class design, data schemas, design patterns
+│   ├── 03_relational_db_design.ipynb         # Normalization, ER diagrams, indexing, query optimization
+│   ├── 04_nosql_and_data_stores.ipynb        # Key-value, document, column-family, graph, time-series, lakehouse
+│   ├── 05_vector_databases.ipynb             # Distance metrics, curse of dimensionality, IVF, HNSW, PQ, Faiss
+│   ├── 06_ml_system_components.ipynb         # Feature stores, model registry, serving layer, monitoring
+│   └── 07_software_engineering_for_ml.ipynb  # Project structure, testing, CI/CD, Docker, structured logging
 │
 └── 21_Projects/                              # 6 end-to-end capstone projects (FastAPI + HTML/CSS/JS)
     ├── 01_ml_pipeline/                       # Scikit-learn pipeline API with train/predict/explain endpoints
@@ -442,20 +494,21 @@ zero-to-ai-engineer/
 
 | Category | Count |
 |----------|-------|
-| Total Jupyter Notebooks | **164** (164 executed & verified ✅) |
+| Total Jupyter Notebooks | **208** (208 executed & verified ✅) |
 | Conceptual Study Guides (`notes/`) | **66** |
 | Mermaid Diagrams in Guides | **254** |
 | AI Fundamentals | 6 |
-| ML & Data Science | 27 |
-| Deep Learning | 13 |
-| Computer Vision | 9 |
-| NLP | 10 |
-| LLM & RAG | 15 |
-| Forecasting | 9 |
-| Agents & RL | 13 |
-| MLOps & Deployment | 15 |
-| Databases & Cloud | 10 |
-| Mathematics & Ethics | 10 |
+| ML & Data Science | 43 |
+| Deep Learning | 15 |
+| Computer Vision | 10 |
+| NLP | 11 |
+| LLM & RAG | 18 |
+| Forecasting | 10 |
+| Agents & RL | 14 |
+| MLOps & Deployment | 19 |
+| Databases & Cloud | 12 |
+| Mathematics & Ethics | 15 |
+| ML System Design | 7 |
 | Capstone Projects (Python scripts) | 31 |
 | Full-Stack Web Projects | 6 |
 
@@ -493,7 +546,7 @@ Every section folder now contains a **`notes/` sub-folder** holding a comprehens
 
 ## ✅ All Notebooks Verified Runnable
 
-Every one of the **164 notebooks has been executed end-to-end and fixed** to run on a current **Python 3.12** stack (NumPy 2.x, pandas, scikit-learn 1.7, PyTorch, Transformers, and more). A root **`requirements.txt`** pins the complete environment.
+Every one of the **208 notebooks has been executed end-to-end and fixed** to run on a current **Python 3.12** stack (NumPy 2.x, pandas, scikit-learn 1.7, PyTorch, Transformers, and more). A root **`requirements.txt`** pins the complete environment.
 
 - **Version-compatibility fixes** applied throughout (NumPy 2, pandas 3, scikit-learn 1.7, Matplotlib, Transformers, etc.).
 - **API-key / cloud cells** (OpenAI, Anthropic, Gemini, AWS, …) are written against **current SDK documentation** so they execute as-is once you supply credentials.
@@ -582,20 +635,23 @@ Before writing a single line of ML code, you should understand the societal impa
 
 **Setup Your Environment:**
 ```bash
-# 1. Install Anaconda (includes Python + Jupyter)
+# Option A: Anaconda (recommended for beginners — includes Python + Jupyter)
 # Download from: https://www.anaconda.com/download
-
-# 2. Create a dedicated environment
 conda create -n ai-learning python=3.11
 conda activate ai-learning
 
-# 3a. Install core packages (enough for sections 01-03)
+# Option B: Python venv (lightweight, no Anaconda needed)
+python3 -m venv .venv
+source .venv/bin/activate        # Linux / macOS
+# .venv\Scripts\activate         # Windows
+
+# Install core packages (enough for sections 01-03)
 pip install numpy pandas matplotlib scikit-learn jupyter
 
-# 3b. OR install the full environment used across ALL 164 notebooks
+# OR install the full environment used across ALL 208 notebooks
 pip install -r requirements.txt
 
-# 4. Verify installation
+# Verify installation
 python -c "import numpy; print(numpy.__version__)"
 ```
 
