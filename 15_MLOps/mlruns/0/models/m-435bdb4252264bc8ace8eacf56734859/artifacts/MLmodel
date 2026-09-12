@@ -1,0 +1,37 @@
+artifact_path: /home/dell/Desktop/AI_Tasks/Additional_Data/AI/zero-to-ai-engineer/15_MLOps/mlruns/0/models/m-435bdb4252264bc8ace8eacf56734859/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.skops
+    predict_fn: predict
+    python_version: 3.12.3
+  sklearn:
+    code: null
+    pickled_model: model.skops
+    serialization_format: skops
+    sklearn_version: 1.9.0
+    skops_trusted_types: null
+is_signature_from_type_hint: false
+mlflow_version: 3.14.0
+model_id: m-435bdb4252264bc8ace8eacf56734859
+model_size_bytes: 1828303
+model_uuid: m-435bdb4252264bc8ace8eacf56734859
+prompts: null
+run_id: 5f07726f3fe84d76a81c0ba99b53a230
+saved_input_example_info:
+  artifact_path: input_example.json
+  pandas_orient: split
+  serving_input_path: serving_input_example.json
+  type: dataframe
+signature:
+  inputs: '[{"type": "double", "name": "sepal length (cm)", "required": true}, {"type":
+    "double", "name": "sepal width (cm)", "required": true}, {"type": "double", "name":
+    "petal length (cm)", "required": true}, {"type": "double", "name": "petal width
+    (cm)", "required": true}]'
+  outputs: '[{"type": "tensor", "tensor-spec": {"dtype": "int64", "shape": [-1]}}]'
+  params: null
+type_hint_from_example: false
+utc_time_created: '2026-06-19 11:29:27.838264'

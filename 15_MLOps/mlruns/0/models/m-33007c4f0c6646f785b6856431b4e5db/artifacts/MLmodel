@@ -1,0 +1,33 @@
+artifact_path: /home/dell/Desktop/AI_Tasks/Additional_Data/AI/zero-to-ai-engineer/15_MLOps/mlruns/0/models/m-33007c4f0c6646f785b6856431b4e5db/artifacts
+flavors:
+  python_function:
+    artifacts:
+      sklearn_model:
+        path: artifacts/rf_model.pkl
+        uri: /tmp/tmprkb69my4/rf_model.pkl
+    cloudpickle_version: 3.1.2
+    code: null
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.pyfunc.model
+    python_model: python_model.pkl
+    python_version: 3.12.3
+    streamable: false
+is_signature_from_type_hint: false
+mlflow_version: 3.14.0
+model_id: m-33007c4f0c6646f785b6856431b4e5db
+model_size_bytes: 189452
+model_uuid: m-33007c4f0c6646f785b6856431b4e5db
+prompts: null
+run_id: dbe06dd01e3d4360a6810739c2ce5276
+signature:
+  inputs: '[{"type": "double", "name": "sepal length (cm)", "required": true}, {"type":
+    "double", "name": "sepal width (cm)", "required": true}, {"type": "double", "name":
+    "petal length (cm)", "required": true}, {"type": "double", "name": "petal width
+    (cm)", "required": true}]'
+  outputs: '[{"type": "long", "name": "prediction", "required": true}, {"type": "double",
+    "name": "max_prob", "required": true}]'
+  params: null
+type_hint_from_example: false
+utc_time_created: '2026-06-19 11:30:33.417774'

@@ -1,0 +1,23 @@
+artifact_path: /home/dell/Desktop/AI_Tasks/Additional_Data/AI/zero-to-ai-engineer/15_MLOps/01_experiment_tracking/mlruns/1/models/m-7a9debef057d4bcebd341fbf5383192b/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.skops
+    predict_fn: predict
+    python_version: 3.12.3
+  sklearn:
+    code: null
+    pickled_model: model.skops
+    serialization_format: skops
+    sklearn_version: 1.9.0
+    skops_trusted_types: null
+mlflow_version: 3.14.0
+model_id: m-7a9debef057d4bcebd341fbf5383192b
+model_size_bytes: 1936070
+model_uuid: m-7a9debef057d4bcebd341fbf5383192b
+prompts: null
+run_id: 0838361af128405294c3575d454ce910
+utc_time_created: '2026-06-19 11:26:54.145005'

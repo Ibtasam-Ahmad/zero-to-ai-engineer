@@ -1,0 +1,29 @@
+artifact_path: /home/dell/Desktop/AI_Tasks/Additional_Data/AI/zero-to-ai-engineer/15_MLOps/01_experiment_tracking/mlruns/1/models/m-e0cc8d44acf9421e8a6d74627aec1638/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.12.3
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.9.0
+    skops_trusted_types: null
+is_signature_from_type_hint: false
+mlflow_version: 3.14.0
+model_id: m-e0cc8d44acf9421e8a6d74627aec1638
+model_size_bytes: 421004
+model_uuid: m-e0cc8d44acf9421e8a6d74627aec1638
+prompts: null
+run_id: a0cbbbf0716240858a8f20861501e3f4
+signature:
+  inputs: '[{"type": "tensor", "tensor-spec": {"dtype": "float64", "shape": [-1, 10]}}]'
+  outputs: '[{"type": "tensor", "tensor-spec": {"dtype": "float64", "shape": [-1]}}]'
+  params: null
+type_hint_from_example: false
+utc_time_created: '2026-06-19 11:28:43.021160'

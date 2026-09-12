@@ -1,0 +1,3 @@
+{
+  "GradientBoostingRegressor_score_X_test": "GradientBoostingRegressor.score(X=X_test, y=y_test)"
+}
