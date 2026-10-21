@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Forecasting Dashboard</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<style>
+  body{background:#0d1117;color:#e6edf3;font-family:'Segoe UI',sans-serif;}
+  .card{background:#161b22;border:1px solid #30363d;border-radius:12px;}
+  .card-header{background:#21262d;border-bottom:1px solid #30363d;font-weight:600;}
+  .form-control,.form-select{background:#0d1117;border:1px solid #30363d;color:#e6edf3;}
+  .form-control:focus,.form-select:focus{background:#0d1117;border-color:#58a6ff;color:#e6edf3;box-shadow:none;}
+  .form-check-input:checked{background:#58a6ff;border-color:#58a6ff;}
+  .btn-primary{background:#58a6ff;border:none;color:#000;font-weight:600;}
+  .btn-primary:hover{background:#79b8ff;}
+  table{font-size:.87rem;}
+  th{color:#8b949e;font-weight:600;border-color:#30363d!important;}
+  td{border-color:#21262d!important;}
+  .metric-chip{background:#21262d;border:1px solid #30363d;border-radius:6px;padding:4px 10px;font-size:.8rem;margin:2px;display:inline-block;}
+</style>
+</head>
+<body>
+<div class="container-fluid py-4 px-4">
+  <div class="mb-4">
+    <h1 class="fw-bold">📈 Forecasting <span style="color:#58a6ff">Dashboard</span></h1>
+    <p class="text-secondary mb-0">Compare ARIMA, Prophet, LSTM, and XGBoost forecasts</p>
+  </div>
+
+  <div class="row g-4">
+    <!-- Controls -->
+    <div class="col-md-3">
+      <div class="card p-3">
+        <div class="fw-semibold mb-3">⚙️ Controls</div>
+
+        <label class="form-label small">Forecast Horizon (days)</label>
+        <input type="range" class="form-range mb-1" id="horizon" min="7" max="90" value="30" oninput="document.getElementById('h-val').textContent=this.value"/>
+        <div class="text-secondary small mb-3">Horizon: <strong id="h-val">30</strong> days</div>
+
+        <label class="form-label small">Models</label>
+        <div id="model-checks">
+          <div class="form-check"><input class="form-check-input" type="checkbox" value="arima"   id="m-arima"   checked/><label class="form-check-label small" for="m-arima">ARIMA</label></div>
+          <div class="form-check"><input class="form-check-input" type="checkbox" value="prophet" id="m-prophet" checked/><label class="form-check-label small" for="m-prophet">Prophet</label></div>
+          <div class="form-check"><input class="form-check-input" type="checkbox" value="xgboost" id="m-xgboost" checked/><label class="form-check-label small" for="m-xgboost">XGBoost</label></div>
+          <div class="form-check"><input class="form-check-input" type="checkbox" value="lstm"    id="m-lstm"    checked/><label class="form-check-label small" for="m-lstm">LSTM</label></div>
+        </div>
+
+        <hr style="border-color:#30363d"/>
+        <button class="btn btn-primary w-100 mb-2" onclick="runForecast()">▶ Forecast</button>
+        <label class="form-label small mt-1">Upload CSV (ds, y)</label>
+        <input type="file" class="form-control form-control-sm" id="csv-input" accept=".csv" onchange="uploadCSV(event)"/>
+        <div class="text-secondary small mt-1" id="upload-status"></div>
+      </div>
+    </div>
+
+    <!-- Chart -->
+    <div class="col-md-9">
+      <div class="card mb-4">
+        <div class="card-header">📊 Historical + Forecast</div>
+        <div class="card-body"><canvas id="forecast-chart" height="100"></canvas></div>
+      </div>
+
+      <!-- Comparison Table -->
+      <div class="card">
+        <div class="card-header">📋 Model Comparison</div>
+        <div class="card-body p-0">
+          <table class="table table-dark mb-0" id="cmp-table">
+            <thead><tr><th>Model</th><th>MAE</th><th>Last Forecast</th><th>Note</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const COLORS = {ARIMA:'#58a6ff', Prophet:'#3fb950', XGBoost:'#f78166', LSTM:'#d2a8ff'};
+let chart = null;
+let histDates = [], histVals = [];
+
+async function loadHistory(){
+  const r = await fetch('/sample-data');
+  const d = await r.json();
+  histDates = d.dates; histVals = d.values;
+  renderChart([], []);
+}
+
+function renderChart(forecasts, dates){
+  const ctx = document.getElementById('forecast-chart').getContext('2d');
+  if(chart) chart.destroy();
+
+  const datasets = [{
+    label:'Historical', data:histVals, borderColor:'#8b949e',
+    borderWidth:1.5, pointRadius:0, tension:0.2,
+  }];
+
+  forecasts.forEach(f=>{
+    const col = COLORS[f.model]||'#fff';
+    datasets.push({
+      label: f.model,
+      data: [...Array(histVals.length).fill(null), ...f.forecast],
+      borderColor: col, borderWidth:2, pointRadius:0, tension:0.3, borderDash:[4,4],
+    });
+    datasets.push({
+      label: f.model+' CI',
+      data: [...Array(histVals.length).fill(null), ...f.upper],
+      borderColor:'transparent', backgroundColor: col+'22',
+      fill: datasets.length, pointRadius:0,
+    });
+  });
+
+  const allDates = [...histDates, ...dates];
+  chart = new Chart(ctx, {
+    type:'line',
+    data:{ labels:allDates, datasets },
+    options:{
+      responsive:true, interaction:{mode:'index',intersect:false},
+      plugins:{ legend:{labels:{color:'#8b949e',boxWidth:12}}, tooltip:{backgroundColor:'#21262d',titleColor:'#e6edf3',bodyColor:'#8b949e'}},
+      scales:{
+        x:{ticks:{color:'#8b949e',maxTicksLimit:12,maxRotation:0}, grid:{color:'#21262d'}},
+        y:{ticks:{color:'#8b949e'}, grid:{color:'#21262d'}},
+      },
+    }
+  });
+}
+
+async function runForecast(){
+  const horizon = +document.getElementById('horizon').value;
+  const models  = [...document.querySelectorAll('#model-checks input:checked')].map(i=>i.value);
+  if(!models.length){alert('Select at least one model');return;}
+
+  document.querySelector('#cmp-table tbody').innerHTML='<tr><td colspan="4" class="text-secondary text-center py-3">⏳ Running...</td></tr>';
+
+  const r = await fetch('/forecast',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({horizon,models})});
+  const d = await r.json();
+
+  const startDate = new Date(histDates[histDates.length-1]);
+  const fcDates = Array.from({length:horizon},(_,i)=>{
+    const dt=new Date(startDate); dt.setDate(dt.getDate()+i+1);
+    return dt.toISOString().slice(0,10);
+  });
+
+  renderChart(d.results, fcDates);
+
+  // Table
+  const tbody = document.querySelector('#cmp-table tbody');
+  tbody.innerHTML = d.results.map(f=>`
+    <tr>
+      <td><span style="color:${COLORS[f.model]||'#fff'}">${f.model}</span></td>
+      <td>${f.mae!==null?f.mae:'—'}</td>
+      <td>${f.forecast[f.forecast.length-1].toFixed(2)}</td>
+      <td class="text-secondary small">${f.note||'✅'}</td>
+    </tr>`).join('');
+}
+
+async function uploadCSV(e){
+  const file=e.target.files[0]; if(!file)return;
+  const fd=new FormData(); fd.append('file',file);
+  const r=await fetch('/upload-data',{method:'POST',body:fd});
+  const d=await r.json();
+  if(d.dates){ histDates=d.dates; histVals=d.values; renderChart([],[]); document.getElementById('upload-status').textContent=`✅ ${d.rows} rows loaded`; }
+  else document.getElementById('upload-status').textContent='❌ '+d.detail;
+}
+
+loadHistory();
+</script>
+</body></html>

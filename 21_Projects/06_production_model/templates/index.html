@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Sentiment Analysis Production</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<style>
+  body{background:#0d1117;color:#e6edf3;font-family:'Segoe UI',sans-serif;}
+  .card{background:#161b22;border:1px solid #30363d;border-radius:12px;}
+  .nav-tabs .nav-link{color:#8b949e;border:none;border-bottom:2px solid transparent;}
+  .nav-tabs .nav-link.active{color:#58a6ff;background:transparent;border-bottom:2px solid #58a6ff;}
+  .form-control,.form-select{background:#0d1117;border:1px solid #30363d;color:#e6edf3;}
+  .form-control:focus,.form-select:focus{background:#0d1117;border-color:#58a6ff;color:#e6edf3;box-shadow:none;}
+  .btn-predict{background:#58a6ff;border:none;color:#000;font-weight:700;border-radius:8px;padding:9px 28px;}
+  .btn-predict:hover{background:#79b8ff;}
+  .result-badge{display:inline-block;padding:6px 18px;border-radius:20px;font-weight:700;font-size:1.1rem;}
+  .badge-positive{background:#1a3a2a;color:#3fb950;border:1px solid #238636;}
+  .badge-negative{background:#3a1a1a;color:#f78166;border:1px solid #da3633;}
+  .conf-bar{height:12px;background:#21262d;border-radius:6px;overflow:hidden;}
+  .conf-fill{height:100%;border-radius:6px;transition:width .7s ease;}
+  .metric-box{background:#21262d;border:1px solid #30363d;border-radius:8px;padding:12px;text-align:center;}
+  .metric-val{font-size:1.5rem;font-weight:700;color:#58a6ff;}
+  .metric-lbl{font-size:.75rem;color:#8b949e;margin-top:2px;}
+  textarea{background:#0d1117;border:1px solid #30363d;color:#e6edf3;border-radius:8px;resize:none;}
+  textarea:focus{border-color:#58a6ff;box-shadow:none;background:#0d1117;color:#e6edf3;}
+  .request-id{font-family:monospace;color:#8b949e;font-size:.78rem;}
+  table{font-size:.85rem;}
+  th{color:#8b949e;border-color:#30363d!important;}
+  td{border-color:#21262d!important;}
+</style>
+</head>
+<body>
+<div class="container py-5" style="max-width:860px">
+  <div class="text-center mb-4">
+    <h1 class="fw-bold">💬 Sentiment <span style="color:#58a6ff">Analysis API</span></h1>
+    <p class="text-secondary mb-0">Production-grade text sentiment classifier with monitoring</p>
+  </div>
+
+  <!-- Tabs -->
+  <ul class="nav nav-tabs mb-4">
+    <li class="nav-item"><a class="nav-link active" href="#" onclick="showTab('single',this)">Single Predict</a></li>
+    <li class="nav-item"><a class="nav-link" href="#" onclick="showTab('batch',this)">Batch Mode</a></li>
+    <li class="nav-item"><a class="nav-link" href="#" onclick="showTab('metrics',this);loadMetrics()">📊 Metrics</a></li>
+  </ul>
+
+  <!-- Single -->
+  <div id="tab-single">
+    <div class="card p-4 mb-4">
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Text</label>
+        <textarea id="text-input" class="form-control" rows="3" placeholder="Enter text to analyze sentiment...">This product exceeded all my expectations. Truly remarkable quality!</textarea>
+      </div>
+      <div class="row g-3 mb-3">
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Model</label>
+          <select class="form-select" id="model-select">
+            <option value="baseline">Baseline (TF-IDF + LogReg)</option>
+            <option value="bert">DistilBERT (if trained)</option>
+          </select>
+        </div>
+      </div>
+      <div class="text-center">
+        <button class="btn-predict" onclick="predict()">🔍 Analyze</button>
+      </div>
+    </div>
+
+    <div class="card p-4" id="result-card" style="display:none">
+      <div class="text-center mb-3">
+        <div class="result-badge" id="result-badge">—</div>
+      </div>
+      <div class="mb-2 small text-secondary">Confidence</div>
+      <div class="conf-bar mb-3"><div class="conf-fill" id="conf-fill" style="width:0%"></div></div>
+      <div class="row g-2 text-center">
+        <div class="col-4"><div class="metric-box"><div class="metric-val" id="r-conf">—</div><div class="metric-lbl">Confidence %</div></div></div>
+        <div class="col-4"><div class="metric-box"><div class="metric-val" id="r-lat">—</div><div class="metric-lbl">Latency ms</div></div></div>
+        <div class="col-4"><div class="metric-box"><div class="metric-val" id="r-model" style="font-size:.9rem">—</div><div class="metric-lbl">Model</div></div></div>
+      </div>
+      <div class="mt-3 request-id" id="r-id"></div>
+    </div>
+  </div>
+
+  <!-- Batch -->
+  <div id="tab-batch" style="display:none">
+    <div class="card p-4 mb-4">
+      <label class="form-label fw-semibold">Texts (one per line)</label>
+      <textarea id="batch-input" class="form-control mb-3" rows="6" placeholder="I love this product!&#10;This was a terrible experience.&#10;Average quality, nothing special."></textarea>
+      <select class="form-select mb-3" id="batch-model-select" style="max-width:300px">
+        <option value="baseline">Baseline</option>
+        <option value="bert">DistilBERT</option>
+      </select>
+      <button class="btn-predict" onclick="predictBatch()">🔍 Analyze All</button>
+    </div>
+    <div class="card p-0" id="batch-results" style="display:none">
+      <table class="table table-dark mb-0">
+        <thead><tr><th>Text</th><th>Sentiment</th><th>Confidence</th><th>Latency</th></tr></thead>
+        <tbody id="batch-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Metrics -->
+  <div id="tab-metrics" style="display:none">
+    <div class="row g-3 mb-4" id="metrics-boxes">
+      <div class="col-md-3"><div class="metric-box"><div class="metric-val" id="m-total">—</div><div class="metric-lbl">Total Predictions</div></div></div>
+      <div class="col-md-3"><div class="metric-box"><div class="metric-val" id="m-pos">—</div><div class="metric-lbl">Positive Rate</div></div></div>
+      <div class="col-md-3"><div class="metric-box"><div class="metric-val" id="m-lat">—</div><div class="metric-lbl">Avg Latency ms</div></div></div>
+      <div class="col-md-3"><div class="metric-box"><div class="metric-val" id="m-conf">—</div><div class="metric-lbl">Avg Confidence %</div></div></div>
+    </div>
+    <div class="card p-4">
+      <div class="fw-semibold mb-2">🔍 Drift Monitor</div>
+      <div id="drift-info" class="text-secondary small">Loading...</div>
+    </div>
+  </div>
+
+  <div class="alert alert-danger mt-3 d-none" id="err-box"></div>
+</div>
+
+<script>
+function showTab(name, el){
+  ['single','batch','metrics'].forEach(t=>document.getElementById('tab-'+t).style.display='none');
+  document.querySelectorAll('.nav-tabs .nav-link').forEach(a=>a.classList.remove('active'));
+  document.getElementById('tab-'+name).style.display='block';
+  el.classList.add('active');
+}
+
+async function predict(){
+  const text  = document.getElementById('text-input').value.trim();
+  const model = document.getElementById('model-select').value;
+  if(!text) return;
+  document.getElementById('err-box').classList.add('d-none');
+  try{
+    const r = await fetch('/predict',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text,model_version:model})});
+    if(!r.ok) throw new Error((await r.json()).detail||'Prediction failed');
+    const d = await r.json();
+    showResult(d);
+  }catch(e){
+    document.getElementById('err-box').textContent='❌ '+e.message;
+    document.getElementById('err-box').classList.remove('d-none');
+  }
+}
+
+function showResult(d){
+  const card  = document.getElementById('result-card');
+  const badge = document.getElementById('result-badge');
+  const isPos = d.label === 'positive';
+  badge.textContent = (isPos ? '😊 ' : '😞 ') + d.label.toUpperCase();
+  badge.className = 'result-badge ' + (isPos ? 'badge-positive' : 'badge-negative');
+
+  const fill = document.getElementById('conf-fill');
+  fill.style.width = d.confidence + '%';
+  fill.style.background = isPos ? '#3fb950' : '#f78166';
+
+  document.getElementById('r-conf').textContent  = d.confidence.toFixed(1) + '%';
+  document.getElementById('r-lat').textContent   = d.inference_ms.toFixed(1);
+  document.getElementById('r-model').textContent = d.model_version;
+  document.getElementById('r-id').textContent    = 'Request ID: ' + d.request_id;
+  card.style.display='block';
+}
+
+async function predictBatch(){
+  const raw   = document.getElementById('batch-input').value;
+  const texts = raw.split('\n').map(t=>t.trim()).filter(Boolean);
+  const model = document.getElementById('batch-model-select').value;
+  if(!texts.length) return;
+  const r = await fetch('/predict/batch',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({texts,model_version:model})});
+  const d = await r.json();
+  const tbody = document.getElementById('batch-tbody');
+  tbody.innerHTML = d.results.map(res=>`
+    <tr>
+      <td style="max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${res.text_preview}</td>
+      <td><span class="${res.label==='positive'?'text-success':'text-danger'}">${res.label==='positive'?'😊':'😞'} ${res.label}</span></td>
+      <td>${res.confidence.toFixed(1)}%</td>
+      <td>${res.inference_ms.toFixed(1)}ms</td>
+    </tr>`).join('');
+  document.getElementById('batch-results').style.display='block';
+}
+
+async function loadMetrics(){
+  const r = await fetch('/metrics');
+  const d = await r.json();
+  const s = d.summary;
+  document.getElementById('m-total').textContent = s.total_predictions||0;
+  document.getElementById('m-pos').textContent   = s.positive_rate !== undefined ? (s.positive_rate*100).toFixed(1)+'%' : '—';
+  document.getElementById('m-lat').textContent   = s.avg_latency_ms||'—';
+  document.getElementById('m-conf').textContent  = s.avg_confidence||'—';
+  const drift = d.drift;
+  document.getElementById('drift-info').innerHTML = drift.drift_detected
+    ? `<span class="text-warning">⚠ Drift detected avg confidence: ${drift.avg_confidence}% (threshold: ${drift.threshold}%). ${drift.recommendation}</span>`
+    : `<span class="text-success">✅ No drift detected avg confidence: ${drift.avg_confidence||'N/A'}%</span>`;
+}
+</script>
+</body></html>

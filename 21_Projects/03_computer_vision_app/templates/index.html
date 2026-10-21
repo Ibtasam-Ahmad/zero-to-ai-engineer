@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Computer Vision App</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<style>
+  body{background:#0d1117;color:#e6edf3;font-family:'Segoe UI',sans-serif;}
+  .card{background:#161b22;border:1px solid #30363d;border-radius:12px;}
+  .nav-tabs .nav-link{color:#8b949e;border:none;border-bottom:2px solid transparent;}
+  .nav-tabs .nav-link.active{color:#58a6ff;background:transparent;border-bottom:2px solid #58a6ff;}
+  #drop-zone{border:2px dashed #30363d;border-radius:12px;padding:40px;text-align:center;cursor:pointer;transition:.2s;}
+  #drop-zone:hover,#drop-zone.drag-over{border-color:#58a6ff;background:#161b22;}
+  #preview{max-width:100%;max-height:300px;border-radius:8px;display:none;}
+  canvas{max-width:100%;border-radius:8px;display:none;}
+  .conf-bar{height:10px;background:#21262d;border-radius:5px;overflow:hidden;margin-top:4px;}
+  .conf-fill{height:100%;background:linear-gradient(90deg,#238636,#58a6ff);border-radius:5px;}
+  .label-row{display:flex;justify-content:space-between;font-size:.85rem;margin-top:8px;}
+  .btn-run{background:#58a6ff;border:none;color:#000;font-weight:600;border-radius:8px;padding:9px 28px;}
+  .btn-run:hover{opacity:.85;}
+  .badge-box{background:#21262d;border:1px solid #30363d;border-radius:6px;padding:3px 8px;font-size:.78rem;margin:2px;}
+</style>
+</head>
+<body>
+<div class="container py-5" style="max-width:900px">
+  <div class="text-center mb-5">
+    <h1 class="fw-bold">👁️ Computer Vision <span style="color:#58a6ff">App</span></h1>
+    <p class="text-secondary">Classify, detect objects, or segment images using state-of-the-art models</p>
+  </div>
+
+  <!-- Upload -->
+  <div class="card mb-4 p-4">
+    <div id="drop-zone" onclick="document.getElementById('img-input').click()">
+      <div style="font-size:2.5rem">📸</div>
+      <div class="mt-2">Drop an image here or click to upload</div>
+      <div class="text-secondary small mt-1">Supports JPG, PNG, WebP</div>
+    </div>
+    <input type="file" id="img-input" accept="image/*" style="display:none" onchange="handleFile(event)"/>
+    <div class="text-center mt-3">
+      <img id="preview"/>
+      <canvas id="det-canvas"></canvas>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <ul class="nav nav-tabs mb-4" id="modeTabs">
+    <li class="nav-item"><a class="nav-link active" href="#" onclick="setMode('classify',this)">🏷️ Classify</a></li>
+    <li class="nav-item"><a class="nav-link" href="#" onclick="setMode('detect',this)">🎯 Detect</a></li>
+    <li class="nav-item"><a class="nav-link" href="#" onclick="setMode('segment',this)">✂️ Segment</a></li>
+  </ul>
+
+  <div class="text-center mb-4">
+    <button class="btn-run" onclick="runInference()">▶ Run Inference</button>
+  </div>
+
+  <div id="results-area"></div>
+  <div class="alert alert-danger mt-3 d-none" id="err-box"></div>
+</div>
+
+<script>
+let currentFile = null;
+let currentMode = 'classify';
+const API = '';
+
+function setMode(mode, el){
+  currentMode = mode;
+  document.querySelectorAll('#modeTabs .nav-link').forEach(a=>a.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('results-area').innerHTML = '';
+  const canvas = document.getElementById('det-canvas');
+  const preview = document.getElementById('preview');
+  if(currentFile){ canvas.style.display='none'; preview.style.display='block'; }
+}
+
+function handleFile(e){
+  currentFile = e.target.files[0];
+  if(!currentFile) return;
+  const url = URL.createObjectURL(currentFile);
+  const preview = document.getElementById('preview');
+  preview.src = url; preview.style.display = 'block';
+  document.getElementById('det-canvas').style.display='none';
+  document.getElementById('results-area').innerHTML='';
+}
+
+const dz = document.getElementById('drop-zone');
+dz.addEventListener('dragover',(e)=>{e.preventDefault();dz.classList.add('drag-over');});
+dz.addEventListener('dragleave',()=>dz.classList.remove('drag-over'));
+dz.addEventListener('drop',(e)=>{
+  e.preventDefault(); dz.classList.remove('drag-over');
+  const f=e.dataTransfer.files[0]; if(!f)return;
+  currentFile=f;
+  const inp=document.getElementById('img-input'); inp.files=e.dataTransfer.files;
+  handleFile({target:{files:[f]}});
+});
+
+async function runInference(){
+  if(!currentFile){alert('Please upload an image first');return;}
+  document.getElementById('err-box').classList.add('d-none');
+  document.getElementById('results-area').innerHTML='<div class="text-center text-secondary py-4">⏳ Running inference...</div>';
+
+  const fd = new FormData();
+  fd.append('file', currentFile);
+
+  try{
+    const r = await fetch(API+'/'+currentMode, {method:'POST', body:fd});
+    if(!r.ok) throw new Error((await r.json()).detail||'Inference failed');
+    const d = await r.json();
+
+    if(currentMode==='classify') renderClassify(d.predictions);
+    else if(currentMode==='detect') renderDetect(d.detections);
+    else renderSegment(d);
+  }catch(e){
+    document.getElementById('results-area').innerHTML='';
+    document.getElementById('err-box').textContent='❌ '+e.message;
+    document.getElementById('err-box').classList.remove('d-none');
+  }
+}
+
+function renderClassify(preds){
+  let html='<div class="card p-4"><h5 class="mb-3">🏷️ Top Predictions</h5>';
+  preds.forEach((p,i)=>{
+    html+=`<div class="label-row"><span>${i+1}. ${p.label}</span><strong>${p.confidence.toFixed(1)}%</strong></div>
+           <div class="conf-bar"><div class="conf-fill" style="width:${p.confidence}%"></div></div>`;
+  });
+  document.getElementById('results-area').innerHTML=html+'</div>';
+}
+
+function renderDetect(dets){
+  const preview = document.getElementById('preview');
+  const canvas  = document.getElementById('det-canvas');
+  const ctx     = canvas.getContext('2d');
+  const img     = new Image();
+  img.onload = ()=>{
+    canvas.width=img.naturalWidth; canvas.height=img.naturalHeight;
+    ctx.drawImage(img,0,0);
+    ctx.strokeStyle='#58a6ff'; ctx.lineWidth=3;
+    ctx.font='bold 16px Segoe UI'; ctx.fillStyle='#58a6ff';
+    dets.forEach(d=>{
+      const b=d.box;
+      ctx.strokeRect(b.x1,b.y1,b.x2-b.x1,b.y2-b.y1);
+      ctx.fillRect(b.x1,b.y1-22,ctx.measureText(`${d.label} ${d.confidence.toFixed(0)}%`).width+8,22);
+      ctx.fillStyle='#000';
+      ctx.fillText(`${d.label} ${d.confidence.toFixed(0)}%`,b.x1+4,b.y1-5);
+      ctx.fillStyle='#58a6ff';
+    });
+    preview.style.display='none'; canvas.style.display='block';
+  };
+  img.src=URL.createObjectURL(currentFile);
+
+  let html=`<div class="card p-4 mt-3"><h5>🎯 Detections (${dets.length})</h5>`;
+  dets.forEach(d=>{ html+=`<span class="badge-box">${d.label} ${d.confidence.toFixed(1)}%</span>`; });
+  document.getElementById('results-area').innerHTML=html+'</div>';
+}
+
+function renderSegment(d){
+  let html=`<div class="card p-4"><h5>✂️ Segmentation ${d.num_masks} masks detected</h5>
+            <p class="text-secondary small">Image: ${d.width}×${d.height}px</p>`;
+  d.masks.forEach(m=>{
+    html+=`<div class="label-row"><span>Mask ${m.mask_id}</span><span class="badge-box">Area: ${m.area.toLocaleString()}px</span></div>`;
+  });
+  if(d.note) html+=`<div class="text-warning small mt-2">⚠ ${d.note}</div>`;
+  document.getElementById('results-area').innerHTML=html+'</div>';
+}
+</script>
+</body></html>

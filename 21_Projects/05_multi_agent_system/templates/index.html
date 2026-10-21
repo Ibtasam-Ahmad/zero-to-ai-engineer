@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Multi-Agent Research</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<style>
+  body{background:#0d1117;color:#e6edf3;font-family:'Segoe UI',sans-serif;}
+  .card{background:#161b22;border:1px solid #30363d;border-radius:12px;}
+  .agent-card{border-radius:10px;padding:14px;border:1px solid #30363d;transition:.3s;}
+  .agent-idle{background:#161b22;opacity:.5;}
+  .agent-active{background:#1f3a5f;border-color:#388bfd;opacity:1;animation:pulse 1.5s infinite;}
+  .agent-done{background:#1a3a2a;border-color:#238636;opacity:1;}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(56,139,253,.4)}50%{box-shadow:0 0 0 8px rgba(56,139,253,0)}}
+  .log-item{font-size:.82rem;padding:4px 0;border-bottom:1px solid #21262d;color:#8b949e;}
+  .log-item:last-child{color:#3fb950;}
+  #report-output{background:#0d1117;border:1px solid #30363d;border-radius:8px;padding:16px;font-size:.88rem;line-height:1.7;white-space:pre-wrap;max-height:500px;overflow-y:auto;}
+  .btn-research{background:linear-gradient(135deg,#388bfd,#58a6ff);border:none;color:#000;font-weight:700;border-radius:8px;padding:10px 32px;font-size:1rem;}
+  .progress{height:6px;background:#21262d;border-radius:3px;}
+  .progress-bar{background:linear-gradient(90deg,#388bfd,#3fb950);}
+  textarea{background:#0d1117;border:1px solid #30363d;color:#e6edf3;border-radius:8px;resize:none;}
+  textarea:focus{border-color:#58a6ff;box-shadow:none;background:#0d1117;color:#e6edf3;}
+</style>
+</head>
+<body>
+<div class="container py-5" style="max-width:1000px">
+  <div class="text-center mb-5">
+    <h1 class="fw-bold">🤖 Multi-Agent <span style="color:#58a6ff">Research System</span></h1>
+    <p class="text-secondary">Three specialized agents collaborate to research, write, and review your report</p>
+  </div>
+
+  <!-- Input -->
+  <div class="card p-4 mb-4">
+    <label class="form-label fw-semibold">Research Topic</label>
+    <textarea id="topic-input" class="form-control mb-3" rows="2" placeholder="e.g. The impact of large language models on software development in 2024"></textarea>
+    <div class="text-center">
+      <button class="btn-research" onclick="startResearch()">🚀 Start Research</button>
+    </div>
+  </div>
+
+  <!-- Agent Status Cards -->
+  <div class="row g-3 mb-4" id="agent-row">
+    <div class="col-md-4">
+      <div class="agent-card agent-idle" id="card-research">
+        <div class="d-flex align-items-center gap-2 mb-2"><span style="font-size:1.5rem">🔍</span><strong>Research Agent</strong></div>
+        <div class="text-secondary small" id="status-research">Idle</div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="agent-card agent-idle" id="card-writer">
+        <div class="d-flex align-items-center gap-2 mb-2"><span style="font-size:1.5rem">✍️</span><strong>Writer Agent</strong></div>
+        <div class="text-secondary small" id="status-writer">Idle</div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="agent-card agent-idle" id="card-reviewer">
+        <div class="d-flex align-items-center gap-2 mb-2"><span style="font-size:1.5rem">🔎</span><strong>Reviewer Agent</strong></div>
+        <div class="text-secondary small" id="status-reviewer">Idle</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Progress + Log -->
+  <div class="card mb-4 p-3">
+    <div class="d-flex justify-content-between mb-2"><span class="fw-semibold small">Progress</span><span class="text-secondary small" id="prog-label">0%</span></div>
+    <div class="progress mb-3"><div class="progress-bar" id="prog-bar" style="width:0%"></div></div>
+    <div class="fw-semibold small mb-2">📋 Activity Log</div>
+    <div id="log-area" style="max-height:150px;overflow-y:auto;"></div>
+  </div>
+
+  <!-- Report Output -->
+  <div class="card p-4" id="report-section" style="display:none">
+    <div class="fw-semibold mb-3">📄 Final Report</div>
+    <div id="report-output"></div>
+    <button class="btn btn-sm mt-3" style="background:#238636;color:#fff;border:none;border-radius:6px;" onclick="copyReport()">📋 Copy Report</button>
+  </div>
+</div>
+
+<script>
+let ws = null;
+let taskId = null;
+
+const agentStages = {
+  'Research complete': 'research',
+  'Draft report':      'writer',
+  'reviewed':          'reviewer',
+};
+
+function setAgentState(agentId, state, msg){
+  const card = document.getElementById('card-'+agentId);
+  const stat = document.getElementById('status-'+agentId);
+  card.className = 'agent-card agent-'+state;
+  stat.textContent = msg;
+}
+
+function addLog(msg){
+  const d = document.createElement('div');
+  d.className='log-item'; d.textContent=msg;
+  const la=document.getElementById('log-area');
+  la.appendChild(d); la.scrollTop=la.scrollHeight;
+}
+
+function setProgress(pct){
+  document.getElementById('prog-bar').style.width=pct+'%';
+  document.getElementById('prog-label').textContent=pct+'%';
+}
+
+async function startResearch(){
+  const topic=document.getElementById('topic-input').value.trim();
+  if(!topic){alert('Enter a research topic');return;}
+
+  // Reset
+  ['research','writer','reviewer'].forEach(a=>setAgentState(a,'idle','Idle'));
+  document.getElementById('log-area').innerHTML='';
+  document.getElementById('report-section').style.display='none';
+  setProgress(0);
+
+  const r = await fetch('/research',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({topic})});
+  const d = await r.json();
+  taskId = d.task_id;
+  addLog(`🚀 Task started: ${taskId.slice(0,8)}...`);
+  setAgentState('research','active','Searching the web...');
+  setProgress(10);
+
+  // Connect WebSocket for live updates
+  const wsUrl = `ws://${location.host}/ws/${taskId}`;
+  ws = new WebSocket(wsUrl);
+
+  ws.onmessage = (e)=>{
+    const msg = JSON.parse(e.data);
+    if(msg.type==='log'){
+      addLog(msg.message);
+      updateAgentFromLog(msg.message);
+    } else if(msg.type==='done'){
+      setProgress(100);
+      ['research','writer','reviewer'].forEach(a=>setAgentState(a,'done','Done ✅'));
+      showReport(msg.report);
+    }
+  };
+  ws.onerror = ()=>{ addLog('⚠ WebSocket error polling instead'); pollStatus(); };
+}
+
+function updateAgentFromLog(msg){
+  if(msg.includes('Research complete')||msg.includes('research_done')){
+    setAgentState('research','done','Research complete ✅');
+    setAgentState('writer','active','Writing report...');
+    setProgress(40);
+  } else if(msg.includes('Draft')||msg.includes('draft')){
+    setAgentState('writer','done','Draft complete ✅');
+    setAgentState('reviewer','active','Reviewing...');
+    setProgress(75);
+  } else if(msg.includes('review')||msg.includes('finalized')){
+    setAgentState('reviewer','done','Review complete ✅');
+    setProgress(90);
+  }
+}
+
+async function pollStatus(){
+  if(!taskId) return;
+  const r = await fetch(`/task/${taskId}`);
+  const d = await r.json();
+  d.log.forEach(addLog);
+  if(d.status==='complete'){
+    const rr = await fetch(`/report/${taskId}`);
+    const rd = await rr.json();
+    setProgress(100);
+    showReport(rd.report);
+  } else if(d.status!=='error'){
+    setTimeout(pollStatus, 2000);
+  }
+}
+
+function showReport(text){
+  const sec = document.getElementById('report-section');
+  document.getElementById('report-output').textContent = text||'No report generated.';
+  sec.style.display='block';
+  sec.scrollIntoView({behavior:'smooth'});
+}
+
+function copyReport(){
+  navigator.clipboard.writeText(document.getElementById('report-output').textContent);
+}
+</script>
+</body></html>

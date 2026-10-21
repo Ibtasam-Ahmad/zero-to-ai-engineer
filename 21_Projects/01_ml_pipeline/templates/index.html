@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Diabetes Prediction</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <style>
+    body { background: #0d1117; color: #e6edf3; font-family: 'Segoe UI', sans-serif; }
+    .card { background: #161b22; border: 1px solid #30363d; border-radius: 12px; }
+    .card-header { background: #21262d; border-bottom: 1px solid #30363d; border-radius: 12px 12px 0 0 !important; }
+    .form-control, .form-label { color: #e6edf3; }
+    .form-control { background: #0d1117; border: 1px solid #30363d; color: #e6edf3; }
+    .form-control:focus { background: #0d1117; border-color: #388bfd; color: #e6edf3; box-shadow: 0 0 0 3px rgba(56,139,253,0.25); }
+    .btn-predict { background: linear-gradient(135deg, #238636, #2ea043); border: none; padding: 10px 32px; font-size: 1rem; border-radius: 8px; }
+    .btn-predict:hover { background: linear-gradient(135deg, #2ea043, #3fb950); }
+    #result-card { display: none; }
+    .result-value { font-size: 2.5rem; font-weight: 700; color: #58a6ff; }
+    .confidence-bar { height: 8px; border-radius: 4px; background: #21262d; }
+    .confidence-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, #238636, #58a6ff); transition: width 0.8s ease; }
+    .metric-badge { background: #21262d; border: 1px solid #30363d; border-radius: 8px; padding: 8px 16px; display: inline-block; margin: 4px; }
+    .spinner-border { width: 1.5rem; height: 1.5rem; }
+    h1 span { color: #58a6ff; }
+  </style>
+</head>
+<body>
+<div class="container py-5" style="max-width:860px">
+  <div class="text-center mb-5">
+    <h1 class="fw-bold">🩺 Diabetes <span>Progression Predictor</span></h1>
+    <p class="text-secondary">Enter patient features to predict disease progression score (target range: 25–346)</p>
+  </div>
+
+  <!-- Model Info -->
+  <div class="card mb-4">
+    <div class="card-header fw-semibold">📊 Model Information</div>
+    <div class="card-body" id="model-info-body">
+      <div class="text-secondary">Loading model info...</div>
+    </div>
+  </div>
+
+  <!-- Input Form -->
+  <div class="card mb-4">
+    <div class="card-header fw-semibold">🔢 Patient Features</div>
+    <div class="card-body">
+      <form id="predict-form">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Age (normalized)</label>
+            <input type="number" step="0.001" class="form-control" id="age" value="0.038" required/>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Sex (normalized)</label>
+            <input type="number" step="0.001" class="form-control" id="sex" value="0.050" required/>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">BMI (normalized)</label>
+            <input type="number" step="0.001" class="form-control" id="bmi" value="0.062" required/>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Blood Pressure (normalized)</label>
+            <input type="number" step="0.001" class="form-control" id="bp" value="-0.025" required/>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Serum S1</label>
+            <input type="number" step="0.001" class="form-control" id="s1" value="-0.044" required/>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Serum S2</label>
+            <input type="number" step="0.001" class="form-control" id="s2" value="-0.034" required/>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Serum S3</label>
+            <input type="number" step="0.001" class="form-control" id="s3" value="-0.043" required/>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Serum S4</label>
+            <input type="number" step="0.001" class="form-control" id="s4" value="-0.002" required/>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Serum S5</label>
+            <input type="number" step="0.001" class="form-control" id="s5" value="0.019" required/>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Serum S6</label>
+            <input type="number" step="0.001" class="form-control" id="s6" value="-0.017" required/>
+          </div>
+        </div>
+        <div class="mt-4 text-center">
+          <button type="submit" class="btn btn-predict text-white fw-semibold">
+            <span id="btn-text">🔮 Predict</span>
+            <span id="btn-spinner" class="spinner-border ms-2 d-none" role="status"></span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Result -->
+  <div class="card" id="result-card">
+    <div class="card-header fw-semibold">📈 Prediction Result</div>
+    <div class="card-body text-center">
+      <div class="mb-2 text-secondary">Disease Progression Score</div>
+      <div class="result-value" id="pred-value">—</div>
+      <div class="text-secondary mt-2 mb-3" id="pred-range">—</div>
+      <div class="confidence-bar mb-4" style="max-width:400px;margin:0 auto">
+        <div class="confidence-fill" id="conf-fill" style="width:0%"></div>
+      </div>
+      <div id="metrics-badges"></div>
+      <div class="mt-3 text-secondary small" id="model-used-label"></div>
+    </div>
+  </div>
+
+  <div class="alert alert-danger mt-3 d-none" id="error-box"></div>
+</div>
+
+<script>
+const API = '';
+
+async function loadModelInfo() {
+  try {
+    const r = await fetch(API + '/model-info');
+    if (!r.ok) throw new Error('Model not loaded');
+    const d = await r.json();
+    const m = d.metrics;
+    document.getElementById('model-info-body').innerHTML = `
+      <div class="row g-2">
+        <div class="col-auto"><span class="metric-badge">🤖 <strong>${d.model_name}</strong></span></div>
+        <div class="col-auto"><span class="metric-badge">MAE: <strong>${m.MAE.toFixed(2)}</strong></span></div>
+        <div class="col-auto"><span class="metric-badge">RMSE: <strong>${m.RMSE.toFixed(2)}</strong></span></div>
+        <div class="col-auto"><span class="metric-badge">R²: <strong>${m.R2.toFixed(4)}</strong></span></div>
+      </div>`;
+  } catch(e) {
+    document.getElementById('model-info-body').innerHTML = '<span class="text-warning">⚠ Model not loaded yet run <code>python main.py</code> first.</span>';
+  }
+}
+
+document.getElementById('predict-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  document.getElementById('btn-text').textContent = 'Predicting...';
+  document.getElementById('btn-spinner').classList.remove('d-none');
+  document.getElementById('error-box').classList.add('d-none');
+
+  const payload = {
+    age: +document.getElementById('age').value,
+    sex: +document.getElementById('sex').value,
+    bmi: +document.getElementById('bmi').value,
+    bp:  +document.getElementById('bp').value,
+    s1:  +document.getElementById('s1').value,
+    s2:  +document.getElementById('s2').value,
+    s3:  +document.getElementById('s3').value,
+    s4:  +document.getElementById('s4').value,
+    s5:  +document.getElementById('s5').value,
+    s6:  +document.getElementById('s6').value,
+  };
+
+  try {
+    const r = await fetch(API + '/predict', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(payload),
+    });
+    if (!r.ok) throw new Error((await r.json()).detail || 'Prediction failed');
+    const d = await r.json();
+
+    document.getElementById('pred-value').textContent = d.prediction.toFixed(1);
+    document.getElementById('pred-range').textContent = `95% CI: ${d.prediction_lower.toFixed(1)} – ${d.prediction_upper.toFixed(1)}`;
+    document.getElementById('model-used-label').textContent = `Model: ${d.model_used}`;
+
+    // confidence bar: map 25-346 to 0-100%
+    const pct = Math.min(100, Math.max(0, ((d.prediction - 25) / 321) * 100));
+    document.getElementById('conf-fill').style.width = pct + '%';
+
+    document.getElementById('result-card').style.display = 'block';
+  } catch(err) {
+    document.getElementById('error-box').textContent = '❌ ' + err.message;
+    document.getElementById('error-box').classList.remove('d-none');
+  } finally {
+    document.getElementById('btn-text').textContent = '🔮 Predict';
+    document.getElementById('btn-spinner').classList.add('d-none');
+  }
+});
+
+loadModelInfo();
+</script>
+</body>
+</html>
