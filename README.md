@@ -22,6 +22,7 @@
 
 - [📂 Repository Structure](#-repository-structure)
 - [📝 Conceptual Study Notes (with Diagrams)](#-conceptual-study-notes-with-diagrams)
+- [🏭 Industry Practice Notebooks](#-industry-practice-notebooks)
 - [✅ All Notebooks Verified Runnable](#-all-notebooks-verified-runnable)
 - [🌟 Why This Roadmap?](#-why-this-roadmap)
 - [🚀 Quick Start for Absolute Beginners](#-quick-start-for-absolute-beginners)
@@ -44,7 +45,9 @@
 
 ## 📂 Repository Structure
 
-> **208 Jupyter notebooks** covering the complete AI/ML stack from Python basics to production deployment. Every notebook contains markdown explanations with LaTeX math formulas, code (scratch → library → production), and an Additional Learning Resources section.
+> **250 Jupyter notebooks** covering the complete AI/ML stack from Python basics to production deployment. Every notebook contains markdown explanations with LaTeX math formulas, code (scratch → library → production), and an Additional Learning Resources section.
+>
+> 🏭 **42 of them are industry-practice companions** (`NN_industry_<topic>.ipynb`, marked 🏭 below), placed next to the theory notebooks in every section. They show how each topic is done at a real company, with beginner-friendly markdown and heavily commented code see [Industry Practice Notebooks](#-industry-practice-notebooks).
 >
 > 🆕 Each section folder also has a **`notes/` sub-folder** with a comprehensive, plain-English **conceptual study guide** (with diagrams) see [Conceptual Study Notes](#-conceptual-study-notes-with-diagrams). Every notebook has been **executed and verified to run** on a current Python 3.12 stack, with a root **`requirements.txt`** pinning the full environment see [Verified Runnable](#-all-notebooks-verified-runnable).
 
@@ -58,6 +61,7 @@ zero-to-ai-engineer/
 │   ├── 04_privacy_and_security.ipynb           # Differential privacy, DP-SGD, federated learning, Opacus
 │   ├── 05_robustness_and_safety.ipynb        # Adversarial attacks (FGSM, PGD), ART, certified defenses
 │   ├── 06_responsible_ai_and_ethics.ipynb    # Constitutional AI, RLHF safety, red teaming, AI alignment
+│   ├── 07_industry_responsible_ai_product_review.ipynb # 🏭 Industry: pre-launch responsible-AI review: fairness audit, risk register, model card
 │   └── notes/
 │       └── 00_AI_Fundamentals.md             # Conceptual study guide with Mermaid diagrams
 │
@@ -65,6 +69,7 @@ zero-to-ai-engineer/
 │   ├── 01_basic.ipynb                        # Variables, OOP, comprehensions, file I/O, error handling
 │   ├── 02_industrial.ipynb                   # Decorators, type hints, Pydantic, logging, testing, async
 │   ├── 03_advanced.ipynb                     # Metaclasses, descriptors, generators, memory, concurrency
+│   ├── 04_industry_from_notebook_to_production_code.ipynb # 🏭 Industry: messy script → typed package, config, logging, CLI, pytest, wheel
 │   └── notes/
 │
 ├── 02_Data_Analysis/
@@ -78,6 +83,7 @@ zero-to-ai-engineer/
 │   ├── 08_statistics.ipynb                   # 13+ distributions with PDF/PMF, hypothesis tests
 │   ├── 09_polars.ipynb                       # Polars DataFrame operations, expressions, lazy evaluation, streaming
 │   ├── 10_duckdb.ipynb                       # DuckDB SQL analytics, OLAP queries, Python integration
+│   ├── 11_industry_eda_report_for_stakeholders.ipynb # 🏭 Industry: data-quality report, KPIs, cohorts, Pareto, auto-generated memo
 │   └── notes/
 │
 ├── 03_Machine_Learning/
@@ -96,48 +102,64 @@ zero-to-ai-engineer/
 │   │   ├── 11_survival_analysis.ipynb        # Survival analysis, Kaplan-Meier, Cox proportional hazards, lifelines
 │   │   ├── 12_learning_to_rank.ipynb         # Learning to rank, LambdaMART, NDCG, ranking metrics
 │   │   ├── 13_model_calibration.ipynb        # Platt scaling, isotonic regression, reliability diagrams, ECE
+│   │   ├── 14_industry_churn_prediction.ipynb # 🏭 Industry: churn model end-to-end: data contract, cost-based threshold, serving, drift, tests
+│   │   ├── 15_industry_house_price_regression.ipynb # 🏭 Industry: price model with $ errors, error analysis, conformal prediction intervals
 │   │   └── notes/
 │   ├── 02_unsupervised/
 │   │   ├── 01_clustering.ipynb               # KMeans++, DBSCAN, HDBSCAN, GMM, Spectral, BIRCH
 │   │   ├── 02_dimensionality_reduction.ipynb # PCA, t-SNE, UMAP, ICA, NMF, Isomap, LLE, MDS
 │   │   ├── 03_association_rules.ipynb        # Apriori, FP-Growth, ECLAT, SPADE, PrefixSpan
+│   │   ├── 04_industry_customer_segmentation.ipynb # 🏭 Industry: RFM segmentation, naming segments, stability check, marketing playbook
 │   │   └── notes/
 │   ├── 03_semi_supervised/
 │   │   ├── 01_semi_supervised_learning.ipynb # Label propagation, FixMatch, MixMatch, ReMixMatch, VAT
+│   │   ├── 02_industry_ticket_labeling_with_few_labels.ipynb # 🏭 Industry: pseudo-labeling support tickets with ~150 labels
 │   │   └── notes/
 │   ├── 04_uncommon_models/
 │   │   ├── 01_uncommon_ml_models.ipynb       # GP, HMM (Viterbi), RBM, SOM, Hopfield, ELM, MARS, CapsNet
+│   │   ├── 02_industry_gaussian_process_process_optimization.ipynb # 🏭 Industry: Bayesian optimization of factory settings with a GP
 │   │   └── notes/
 │   ├── 05_feature_engineering/
 │   │   ├── 01_feature_engineering.ipynb      # All scalers, encoders, feature selection (Boruta, SHAP)
 │   │   ├── 02_imbalanced_data.ipynb          # SMOTE, ADASYN, Borderline-SMOTE, NearMiss, SMOTE-Tomek
+│   │   ├── 03_industry_feature_engineering_pipeline.ipynb # 🏭 Industry: point-in-time features, TargetEncoder, ablation, leakage demos
 │   │   └── notes/
 │   ├── 06_model_evaluation/
 │   │   ├── 01_model_evaluation.ipynb         # All CV strategies, all metrics, Optuna HPO
 │   │   ├── 02_hyperparameter_optimization.ipynb  # Bayesian optimization, TPE, Hyperband, Optuna, CMA-ES
+│   │   ├── 03_industry_model_comparison_and_selection.ipynb # 🏭 Industry: out-of-time validation, corrected t-test, champion/challenger report
 │   │   └── notes/
 │   ├── 07_explainability/
 │   │   ├── 01_explainability.ipynb           # SHAP (Shapley), LIME, PDP, ICE, GRAD-CAM
 │   │   ├── 02_interpretable_models.ipynb     # EBMs (InterpretML), GAMs, RuleFit, monotone constraints, FIGS
+│   │   ├── 03_industry_explaining_loan_decisions.ipynb # 🏭 Industry: SHAP reason codes, monotonic constraints, fairness screen, model card
 │   │   └── notes/
 │   ├── 08_anomaly_detection/
 │   │   ├── 01_anomaly_detection.ipynb        # Isolation Forest, LOF, Mahalanobis, PyOD, Deep SVDD
+│   │   ├── 02_industry_fraud_detection.ipynb # 🏭 Industry: card fraud: point-in-time features, alert budget, reason codes
 │   │   └── notes/
 │   ├── 09_recommendation_systems/
 │   │   ├── 01_recommendation_systems.ipynb   # CF, matrix factorization, NCF, LightGCN
+│   │   ├── 02_industry_product_recommender.ipynb # 🏭 Industry: implicit feedback, time split, precision/NDCG@k, cold start
 │   │   └── notes/
 │   ├── 10_causal_inference/
-│   │   └── 01_causal_inference.ipynb         # DoWhy, EconML, causal DAGs, propensity scoring, CATE estimation
+│   │   ├── 01_causal_inference.ipynb         # DoWhy, EconML, causal DAGs, propensity scoring, CATE estimation
+│   │   └── 02_industry_marketing_uplift_modeling.ipynb # 🏭 Industry: who should get a coupon: T/X-learners, Qini curves, profit
 │   ├── 11_ab_testing/
-│   │   └── 01_ab_testing.ipynb               # Power analysis, sequential testing, CUPED, multi-armed bandits
+│   │   ├── 01_ab_testing.ipynb               # Power analysis, sequential testing, CUPED, multi-armed bandits
+│   │   └── 02_industry_ab_test_analysis_report.ipynb # 🏭 Industry: SRM check, CUPED, guardrails, novelty effect, decision memo
 │   ├── 12_online_learning/
-│   │   └── 01_online_learning.ipynb          # River, concept drift, incremental SGD, passive-aggressive, ADWIN
+│   │   ├── 01_online_learning.ipynb          # River, concept drift, incremental SGD, passive-aggressive, ADWIN
+│   │   └── 02_industry_streaming_model_updates.ipynb # 🏭 Industry: partial_fit on a drifting stream, drift detector, rollback
 │   ├── 13_active_learning/
-│   │   └── 01_active_learning.ipynb          # Uncertainty sampling, query-by-committee, modAL, diversity sampling
+│   │   ├── 01_active_learning.ipynb          # Uncertainty sampling, query-by-committee, modAL, diversity sampling
+│   │   └── 02_industry_labeling_budget_optimization.ipynb # 🏭 Industry: spend the annotation budget wisely, stopping rules, export batches
 │   ├── 14_conformal_prediction/
-│   │   └── 01_conformal_prediction.ipynb     # Split conformal, normalised CP, APS, MAPIE, coverage guarantee
+│   │   ├── 01_conformal_prediction.ipynb     # Split conformal, normalised CP, APS, MAPIE, coverage guarantee
+│   │   └── 02_industry_prediction_sets_with_human_review.ipynb # 🏭 Industry: confident label or route to a human, per-class coverage
 │   ├── 15_synthetic_tabular_data/
-│   │   └── 01_synthetic_tabular_data.ipynb   # CTGAN, TVAE, statistical synthesis, privacy metrics, SDMetrics
+│   │   ├── 01_synthetic_tabular_data.ipynb   # CTGAN, TVAE, statistical synthesis, privacy metrics, SDMetrics
+│   │   └── 02_industry_synthetic_test_data_for_development.ipynb # 🏭 Industry: privacy-safer synthetic copy with utility/privacy release gates
 │   ├── 10_evaluation_metrics_comprehensive.ipynb  # Every metric: classification/regression/ranking/clustering/NLP/CV/TS/RAG
 │   └── projects/
 │       ├── 01_titanic_survival.py
@@ -155,6 +177,8 @@ zero-to-ai-engineer/
 │   ├── 08_garch_volatility_models.ipynb      # ARCH, GARCH, EGARCH, GJR-GARCH, DCC-GARCH, VaR
 │   ├── 09_probabilistic_forecasting.ipynb    # Conformal prediction, DeepAR, GP, quantile regression, ensembles
 │   ├── 10_ts_anomaly_detection.ipynb         # Matrix Profile (stumpy), CUSUM, isolation forest, statistical process control
+│   ├── 11_industry_retail_demand_forecasting.ipynb # 🏭 Industry: M5-style global LightGBM, backtesting, quantiles → order quantities
+│   ├── 12_industry_call_center_staffing_forecast.ipynb # 🏭 Industry: SARIMAX/MSTL forecasts → Erlang C staffing plan
 │   ├── notes/
 │   └── projects/
 │       ├── 01_stock_forecast.py
@@ -177,6 +201,8 @@ zero-to-ai-engineer/
 │   ├── 13_quantization_and_compression_advanced.ipynb  # GPTQ, AWQ, SmoothQuant, GGUF, SpQR, AQLM, HQQ, NAS
 │   ├── 14_tabular_deep_learning.ipynb        # FT-Transformer, TabNet, entity embeddings, SAINT, TabPFN
 │   ├── 15_multi_task_learning.ipynb          # Hard/soft parameter sharing, uncertainty weighting, MTL benchmarks
+│   ├── 16_industry_pytorch_training_pipeline.ipynb # 🏭 Industry: professional training loop: checkpoints, resume, early stopping, sanity checks
+│   ├── 17_industry_model_export_and_inference.ipynb # 🏭 Industry: TorchScript/ONNX export, parity checks, quantization, latency benchmarks
 │   ├── lora-sst2/                        # LoRA fine-tuning output folder
 │   ├── peft_comparison.png               # PEFT methods comparison image
 │   ├── notes/
@@ -196,6 +222,8 @@ zero-to-ai-engineer/
 │   ├── 08_video_analysis.ipynb               # I3D, SlowFast, VideoMAE, ByteTrack, Video-LLaMA, Sora
 │   ├── 09_3d_vision.ipynb                    # NeRF, Instant-NGP, 3D Gaussian Splatting, PointNet, BEVFormer
 │   ├── 10_medical_image_analysis.ipynb       # Medical imaging, DICOM, MONAI, segmentation, classification, pydicom
+│   ├── 11_industry_visual_defect_inspection.ipynb # 🏭 Industry: factory defect detection with transfer learning, Grad-CAM, cost threshold
+│   ├── 12_industry_visual_product_search.ipynb # 🏭 Industry: search by photo: CNN embeddings + FAISS (Flat/IVF/HNSW), duplicates
 │   ├── notes/
 │   └── projects/
 │       ├── 01_face_detector.py
@@ -214,6 +242,8 @@ zero-to-ai-engineer/
 │   ├── 09_sentence_embeddings_advanced.ipynb # SBERT, E5, BGE/M3, GTE, Jina, Nomic, GritLM, MRL
 │   ├── 10_advanced_nlp_tasks.ipynb           # POS, dep. parsing, coreference, relation/event extraction, style transfer
 │   ├── 11_multilingual_nlp.ipynb             # Multilingual models, LASER embeddings, XLM-RoBERTa, langdetect, translation
+│   ├── 12_industry_support_ticket_routing.ipynb # 🏭 Industry: PII masking, TF-IDF vs embeddings, human-triage threshold, monitoring
+│   ├── 13_industry_semantic_search_engine.ipynb # 🏭 Industry: BM25 vs dense vs hybrid, re-ranking, no-answer detection
 │   ├── notes/
 │   └── projects/
 │       ├── 01_sentiment_analyzer.py
@@ -265,6 +295,8 @@ zero-to-ai-engineer/
 │   ├── 16_llm_security.ipynb                 # LLM security, prompt injection defense, jailbreak mitigations, red teaming
 │   ├── 17_structured_outputs.ipynb           # Structured LLM outputs, Instructor, JSON mode, schema validation
 │   ├── 18_reasoning_models.ipynb             # Chain-of-thought scaling, o1/o3/R1 architecture, inference-time compute
+│   ├── 19_industry_rag_pipeline.ipynb        # 🏭 Industry: production RAG: version filters, citations, refusals, evaluation (local LLM)
+│   ├── 20_industry_llm_application_patterns.ipynb # 🏭 Industry: structured output + retries, guardrails, fallbacks, cost, eval harness
 │   └── projects/
 │       ├── 01_local_rag.py
 │       ├── 02_llm_benchmark.py
@@ -275,6 +307,7 @@ zero-to-ai-engineer/
 │   ├── 02_techniques.ipynb                   # CoT, Zero-Shot CoT, Self-Consistency, ToT, ReAct, Reflexion
 │   ├── 03_advanced.ipynb                     # DSPy, Instructor, Program-of-Thoughts, Step-Back
 │   ├── 04_adversarial.ipynb                  # Prompt injection, jailbreaks, red-teaming, defenses
+│   ├── 05_industry_prompt_development_workflow.ipynb # 🏭 Industry: prompts as software: eval set, versions, regression gate, registry
 │   ├── notes/
 │   └── ai_tools/
 │       ├── 01_claude.ipynb                   # Claude API, extended thinking, tool use, artifacts
@@ -291,6 +324,7 @@ zero-to-ai-engineer/
 │   ├── 06_agent_observability.ipynb          # LangSmith, tracing, evaluation, cost tracking
 │   ├── 07_advanced_agent_frameworks.ipynb    # MetaGPT, OpenAI Agents SDK, BabyAGI, MemGPT, AutoGPT
 │   ├── 08_agent_security.ipynb               # Agent security, adversarial prompts, guardrails, sandboxing, trust boundaries
+│   ├── 09_industry_tool_using_agent.ipynb    # 🏭 Industry: support agent: validated tools, human approval, audit log, scenario evals
 │   ├── notes/
 │   └── projects/
 │       ├── 01_research_agent.py
@@ -305,6 +339,7 @@ zero-to-ai-engineer/
 │   ├── 05_policy_gradient.ipynb              # REINFORCE, PPO (clipped objective), SAC (entropy max)
 │   ├── 06_advanced_rl.ipynb                  # Model-based RL, MBPO, Dreamer, RLHF, RLAIF
 │   ├── 07_multi_armed_bandits.ipynb          # UCB1, Thompson sampling, contextual bandits
+│   ├── 08_industry_inventory_control_with_rl.ipynb # 🏭 Industry: custom Gymnasium env, PPO vs tuned (s,S) policy, shadow mode
 │   ├── notes/
 │   └── projects/
 │       ├── 01_cartpole_dqn.py
@@ -317,6 +352,7 @@ zero-to-ai-engineer/
 │   ├── 01_fastapi_intro.ipynb                # Routes, Pydantic models, path/query params, CRUD
 │   ├── 02_advanced_fastapi.ipynb             # JWT auth, WebSockets, middleware, background tasks
 │   ├── 03_ml_serving_with_fastapi.ipynb      # Model endpoints, async inference, batching, health checks
+│   ├── 04_industry_production_ml_api.ipynb   # 🏭 Industry: versioned routes, auth, request IDs, health checks, TestClient tests
 │   ├── Dockerfile.example                    # Example Dockerfile for FastAPI ML service
 │   ├── requirements_example.txt             # Example requirements file
 │   ├── iris_model.pkl                        # Pre-trained Iris classification model
@@ -330,6 +366,7 @@ zero-to-ai-engineer/
 │
 ├── 13_Databases/
 │   ├── 01_sql/01_sql_fundamentals.ipynb      # PostgreSQL, joins, indexes, window functions, CTEs
+│   ├── 01_sql/02_industry_sql_for_ml_feature_extraction.ipynb # 🏭 Industry: point-in-time SQL features, indexes/EXPLAIN, injection safety
 │   ├── 02_nosql/01_nosql_databases.ipynb     # MongoDB, Redis, Cassandra, CAP theorem
 │   ├── 03_vector_db/01_vector_databases.ipynb # FAISS, Chroma, Pinecone, Qdrant, Weaviate, pgvector, HNSW
 │   ├── 04_orm/01_orm.ipynb                   # SQLAlchemy 2.0, SQLModel, Alembic migrations
@@ -347,6 +384,7 @@ zero-to-ai-engineer/
 │   ├── 05_information_theory.ipynb           # Entropy, KL divergence, cross-entropy, mutual info
 │   ├── 06_optimization.ipynb                 # All optimizers with update equations, convergence proofs
 │   ├── 07_bayesian_ml.ipynb                  # PyMC, MCMC, variational inference, Bayesian neural networks
+│   ├── 08_industry_math_in_practice.ipynb    # 🏭 Industry: float pitfalls, stable softmax, solve vs inv, gradient checking
 │   └── notes/
 │
 ├── 15_MLOps/
@@ -387,6 +425,7 @@ zero-to-ai-engineer/
 │   ├── 12_feature_stores.ipynb               # Feast, Tecton, Hopsworks, Databricks, Fennel, point-in-time joins
 │   ├── 13_llmops.ipynb                       # LLMOps, prompt versioning, LLM monitoring, Langfuse, cost tracking
 │   ├── 14_data_contracts.ipynb               # Data contracts, Pandera, schema validation, data quality guarantees
+│   ├── 15_industry_end_to_end_mlops_pipeline.ipynb # 🏭 Industry: validate → train → MLflow registry gate → drift → retrain
 │   ├── notes/
 │   ├── mlflow.db                             # MLflow SQLite database (root)
 │   ├── mlruns/                               # MLflow runs directory (root)
@@ -398,6 +437,7 @@ zero-to-ai-engineer/
 │   ├── 02_streamlit_gradio.ipynb             # Streamlit apps, Gradio interfaces, HF Spaces
 │   ├── 03_serverless_deployment.ipynb        # AWS Lambda, Modal, SageMaker serverless, Cloud Functions
 │   ├── 04_edge_deployment.ipynb              # Edge deployment, ONNX export, dynamic quantization, mobile inference
+│   ├── 05_industry_safe_model_rollout_strategies.ipynb # 🏭 Industry: shadow, canary with auto-rollback, blue-green, A/B, runbook
 │   ├── message_queues/01_message_queues.ipynb # Kafka, Celery, Redis Streams, async task queues
 │   └── notes/
 │
@@ -405,6 +445,7 @@ zero-to-ai-engineer/
 │   ├── 01_docker_basics.ipynb                # Dockerfile, images, volumes, networks, compose
 │   ├── 02_docker_for_ml.ipynb                # Multi-stage builds, GPU support, ML-optimized images
 │   ├── 03_helm_and_gitops.ipynb              # Helm charts, GitOps workflows, ArgoCD, Flux, Kustomize
+│   ├── 04_industry_containerizing_an_ml_service.ipynb # 🏭 Industry: generated Dockerfile/compose + best-practice linter (no Docker run needed)
 │   ├── kubernetes/01_kubernetes.ipynb         # Pods, services, HPA, Kubeflow, KServe
 │   └── notes/
 │
@@ -412,7 +453,8 @@ zero-to-ai-engineer/
 │   ├── 01_aws_for_ai.ipynb                   # SageMaker, Bedrock, boto3, S3, Lambda
 │   ├── 02_gcp_for_ai.ipynb                   # Vertex AI, BigQuery ML, Colab Enterprise
 │   ├── 03_azure_for_ai.ipynb                 # Azure ML, Azure OpenAI, Cognitive Services
-│   └── 04_cloud_cost_optimization.ipynb      # Spot instances, reserved capacity, cost monitoring
+│   ├── 04_cloud_cost_optimization.ipynb      # Spot instances, reserved capacity, cost monitoring
+│   ├── 05_industry_cloud_ml_architecture_and_cost_planning.ipynb # 🏭 Industry: serverless vs endpoint vs K8s cost model, autoscaling
 │   └── notes/
 │
 ├── 19_AI_Ethics_and_Safety/
@@ -424,6 +466,7 @@ zero-to-ai-engineer/
 │   ├── 06_copyright_and_ai.ipynb             # AI copyright, fair use, IP issues, training data rights, watermarking
 │   ├── 07_deepfake_detection.ipynb           # Deepfake detection, media forensics, digital watermarking, detection models
 │   ├── 08_mechanistic_interpretability.ipynb # Circuits, features, superposition, probing classifiers, monosemanticity
+│   ├── 09_industry_ai_incident_response_and_red_teaming.ipynb # 🏭 Industry: red-team suite, monitoring alerts, incident report, fix + regression gate
 │   └── notes/
 │
 ├── 20_Git_and_DevOps/
@@ -431,16 +474,18 @@ zero-to-ai-engineer/
 │   ├── 02_git_for_ml.ipynb                   # Git LFS, DVC, MLflow+git, experiment branches
 │   ├── 03_github_actions_cicd.ipynb          # Full ML CI/CD pipeline YAML, model testing automation
 │   ├── 04_semantic_versioning.ipynb          # Semantic versioning, conventional commits, changelog automation, release workflows
+│   ├── 05_industry_team_git_workflow_for_ml.ipynb # 🏭 Industry: branches, conflicts, hooks, CI YAML, release tags (sandbox repo)
 │   └── notes/
 │
-├── 22_ML_System_Design/                      # 7 notebooks: HLD, LLD, SQL, NoSQL, Vector DBs, ML Components, SWE for ML
+├── 22_ML_System_Design/                      # 8 notebooks: HLD, LLD, SQL, NoSQL, Vector DBs, ML Components, SWE for ML, industry case study
 │   ├── 01_hld_ml_systems.ipynb               # System architecture: layers, patterns (Lambda, two-tower), CAP, scaling
 │   ├── 02_lld_ml_components.ipynb            # API design, class design, data schemas, design patterns
 │   ├── 03_relational_db_design.ipynb         # Normalization, ER diagrams, indexing, query optimization
 │   ├── 04_nosql_and_data_stores.ipynb        # Key-value, document, column-family, graph, time-series, lakehouse
 │   ├── 05_vector_databases.ipynb             # Distance metrics, curse of dimensionality, IVF, HNSW, PQ, Faiss
 │   ├── 06_ml_system_components.ipynb         # Feature stores, model registry, serving layer, monitoring
-│   └── 07_software_engineering_for_ml.ipynb  # Project structure, testing, CI/CD, Docker, structured logging
+│   ├── 07_software_engineering_for_ml.ipynb  # Project structure, testing, CI/CD, Docker, structured logging
+│   └── 08_industry_system_design_case_study.ipynb # 🏭 Industry: real-time fraud scoring design: capacity, latency budget, simulation
 │
 └── 21_Projects/                              # 6 end-to-end capstone projects (FastAPI + HTML/CSS/JS)
     ├── 01_ml_pipeline/                       # Scikit-learn pipeline API with train/predict/explain endpoints
@@ -494,7 +539,8 @@ zero-to-ai-engineer/
 
 | Category | Count |
 |----------|-------|
-| Total Jupyter Notebooks | **208** (208 executed & verified ✅) |
+| Total Jupyter Notebooks | **250** (250 executed & verified ✅) |
+| 🏭 Industry Practice Notebooks (included above) | **42** (in every section) |
 | Conceptual Study Guides (`notes/`) | **66** |
 | Mermaid Diagrams in Guides | **254** |
 | AI Fundamentals | 6 |
@@ -544,13 +590,85 @@ Every section folder now contains a **`notes/` sub-folder** holding a comprehens
 
 ---
 
+## 🏭 Industry Practice Notebooks
+
+Most notebooks in this repo teach **how an algorithm works** (math, from-scratch code, toy data). The **42 industry notebooks** teach **how companies actually use it**: they start from a business problem and walk through the real workflow, from messy data, validation and honest splits to baselines, business metrics, error analysis, saving and serving the model, monitoring and tests.
+
+They are written for **first-time learners**:
+- plain-English markdown before every step (*what* we do, *why* companies do it, *what goes wrong* otherwise),
+- comments on almost every line of code,
+- a summary table, practice exercises, resources and links to the related theory notebooks at the end,
+- **honest results**: when the fancy method loses to a simple baseline, the notebook says so and explains why.
+
+Each one sits **next to the theory notebooks of its topic** and is named `NN_industry_<topic>.ipynb`.
+
+| Section | Industry notebook | Real-world scenario |
+|---------|-------------------|---------------------|
+| AI Fundamentals | `00_AI_Fundamentals/07_industry_responsible_ai_product_review.ipynb` | Responsible-AI review before launching a CV-screening feature |
+| Python | `01_Python/04_industry_from_notebook_to_production_code.ipynb` | Turning a messy script into a tested, packaged CLI |
+| Data Analysis | `02_Data_Analysis/11_industry_eda_report_for_stakeholders.ipynb` | EDA report and recommendations memo for a manager |
+| ML · Supervised | `03_Machine_Learning/01_supervised/14_industry_churn_prediction.ipynb` | Who should the retention team call? |
+| ML · Supervised | `03_Machine_Learning/01_supervised/15_industry_house_price_regression.ipynb` | House value estimates with a calibrated price range |
+| ML · Unsupervised | `03_Machine_Learning/02_unsupervised/04_industry_customer_segmentation.ipynb` | Customer segments and a marketing playbook |
+| ML · Semi-supervised | `03_Machine_Learning/03_semi_supervised/02_industry_ticket_labeling_with_few_labels.ipynb` | Routing tickets with only ~150 labels |
+| ML · Uncommon models | `03_Machine_Learning/04_uncommon_models/02_industry_gaussian_process_process_optimization.ipynb` | Tuning factory settings with few expensive experiments |
+| ML · Feature engineering | `03_Machine_Learning/05_feature_engineering/03_industry_feature_engineering_pipeline.ipynb` | Leakage-free feature pipeline with ablation |
+| ML · Model evaluation | `03_Machine_Learning/06_model_evaluation/03_industry_model_comparison_and_selection.ipynb` | Champion/challenger model selection report |
+| ML · Explainability | `03_Machine_Learning/07_explainability/03_industry_explaining_loan_decisions.ipynb` | "Why was my loan declined?" reason codes |
+| ML · Anomaly detection | `03_Machine_Learning/08_anomaly_detection/02_industry_fraud_detection.ipynb` | Card fraud with a limited analyst review budget |
+| ML · Recommenders | `03_Machine_Learning/09_recommendation_systems/02_industry_product_recommender.ipynb` | "Recommended for you" with cold-start fallback |
+| ML · Causal inference | `03_Machine_Learning/10_causal_inference/02_industry_marketing_uplift_modeling.ipynb` | Who should receive a coupon (uplift)? |
+| ML · A/B testing | `03_Machine_Learning/11_ab_testing/02_industry_ab_test_analysis_report.ipynb` | Analysing a checkout-redesign experiment |
+| ML · Online learning | `03_Machine_Learning/12_online_learning/02_industry_streaming_model_updates.ipynb` | Click model on a drifting data stream |
+| ML · Active learning | `03_Machine_Learning/13_active_learning/02_industry_labeling_budget_optimization.ipynb` | Spending an annotation budget wisely |
+| ML · Conformal prediction | `03_Machine_Learning/14_conformal_prediction/02_industry_prediction_sets_with_human_review.ipynb` | Automate or send to a human reviewer |
+| ML · Synthetic data | `03_Machine_Learning/15_synthetic_tabular_data/02_industry_synthetic_test_data_for_development.ipynb` | Privacy-safer test data for developers |
+| Forecasting | `04_Forecasting/11_industry_retail_demand_forecasting.ipynb` | Store × product demand forecasts → order quantities |
+| Forecasting | `04_Forecasting/12_industry_call_center_staffing_forecast.ipynb` | Call volume forecasts → agents needed per hour |
+| Deep Learning | `05_Deep_Learning/16_industry_pytorch_training_pipeline.ipynb` | The professional PyTorch training loop |
+| Deep Learning | `05_Deep_Learning/17_industry_model_export_and_inference.ipynb` | Exporting, quantizing and benchmarking a model for production |
+| Computer Vision | `06_Computer_Vision/11_industry_visual_defect_inspection.ipynb` | Detecting defective parts on a production line |
+| Computer Vision | `06_Computer_Vision/12_industry_visual_product_search.ipynb` | "Find similar products" from a shopper's photo |
+| NLP | `07_NLP/12_industry_support_ticket_routing.ipynb` | Routing support tickets to the right team |
+| NLP | `07_NLP/13_industry_semantic_search_engine.ipynb` | Help-center search engine |
+| LLM | `08_LLM/19_industry_rag_pipeline.ipynb` | RAG assistant over internal company docs |
+| LLM | `08_LLM/20_industry_llm_application_patterns.ipynb` | Reliable field extraction from customer emails |
+| Prompt Engineering | `09_Prompt_Engineering/05_industry_prompt_development_workflow.ipynb` | Developing and versioning prompts like software |
+| Agents | `10_Agents/09_industry_tool_using_agent.ipynb` | Customer-support agent with tools and human approval |
+| Reinforcement Learning | `11_Reinforcement_Learning/08_industry_inventory_control_with_rl.ipynb` | Warehouse inventory policy: PPO vs a tuned heuristic |
+| FastAPI | `12_FastAPI/04_industry_production_ml_api.ipynb` | Production-grade prediction API with tests |
+| Databases | `13_Databases/01_sql/02_industry_sql_for_ml_feature_extraction.ipynb` | Point-in-time feature extraction in SQL |
+| Mathematics | `14_Mathematics/08_industry_math_in_practice.ipynb` | Numerical bugs that break real ML code |
+| MLOps | `15_MLOps/15_industry_end_to_end_mlops_pipeline.ipynb` | Train → registry gate → drift → retrain loop with MLflow |
+| Deployment | `16_Deployment/05_industry_safe_model_rollout_strategies.ipynb` | Shipping a new model version safely |
+| Docker | `17_Docker/04_industry_containerizing_an_ml_service.ipynb` | Production Dockerfile and compose, with a linter |
+| Cloud | `18_Cloud/05_industry_cloud_ml_architecture_and_cost_planning.ipynb` | Choosing a cloud architecture by cost |
+| AI Ethics & Safety | `19_AI_Ethics_and_Safety/09_industry_ai_incident_response_and_red_teaming.ipynb` | Red-teaming a content filter and handling an incident |
+| Git & DevOps | `20_Git_and_DevOps/05_industry_team_git_workflow_for_ml.ipynb` | Team Git workflow for an ML project |
+| ML System Design | `22_ML_System_Design/08_industry_system_design_case_study.ipynb` | Designing a real-time fraud-scoring system |
+
+**Running them**
+- They run on a normal laptop CPU with **no GPU and no API keys**. Datasets are bundled with scikit-learn or generated inside the notebook, so nothing large is downloaded.
+- The LLM, prompt and agent notebooks use a **small local model** (`Qwen/Qwen2.5-0.5B-Instruct`, ~1 GB, downloaded once) through a small `LLMClient`. If you set `ANTHROPIC_API_KEY` or `OPENAI_API_KEY` and install that SDK, they can use a hosted model instead.
+- Files they produce (models, databases, MLflow runs, temporary git repos) are written to temporary folders, so running them never adds files to the repo.
+- Nothing is containerised by default: the Docker notebook generates and checks the files, and only builds an image if you set `RUN_DOCKER=1`.
+- Most finish in under 2 minutes; the slowest (ticket routing, the tool-using agent, the LLM notebooks) take about 3-10 minutes on CPU.
+- Besides `requirements.txt`, a few of them need these extra packages (versions they were tested with):
+
+```bash
+pip install opencv-python-headless==5.0.0.93 gymnasium==1.4.0 stable-baselines3==2.9.0 rank-bm25==0.2.2 nltk==3.10.3 pytest==9.1.1
+```
+
+---
+
 ## ✅ All Notebooks Verified Runnable
 
-Every one of the **208 notebooks has been executed end-to-end and fixed** to run on a current **Python 3.12** stack (NumPy 2.x, pandas, scikit-learn 1.7, PyTorch, Transformers, and more). A root **`requirements.txt`** pins the complete environment.
+Every one of the **250 notebooks has been executed end-to-end and fixed** to run on a current **Python 3.12** stack (NumPy 2.x, pandas, scikit-learn 1.7, PyTorch, Transformers, and more). A root **`requirements.txt`** pins the complete environment.
 
 - **Version-compatibility fixes** applied throughout (NumPy 2, pandas 3, scikit-learn 1.7, Matplotlib, Transformers, etc.).
 - **API-key / cloud cells** (OpenAI, Anthropic, Gemini, AWS, …) are written against **current SDK documentation** so they execute as-is once you supply credentials.
 - **GPU-only notebooks** (large 7B-32B model loads) are correct but require a GPU to run.
+- **The 42 🏭 industry notebooks** were executed end-to-end from a fresh kernel on **CPU only** (scikit-learn 1.9, PyTorch 2.12 CPU, Transformers 5.12) and need **no GPU and no API key**.
 
 ```bash
 # Install the full environment used across all notebooks
@@ -648,7 +766,7 @@ source .venv/bin/activate        # Linux / macOS
 # Install core packages (enough for sections 01-03)
 pip install numpy pandas matplotlib scikit-learn jupyter
 
-# OR install the full environment used across ALL 208 notebooks
+# OR install the full environment used across ALL 250 notebooks
 pip install -r requirements.txt
 
 # Verify installation
