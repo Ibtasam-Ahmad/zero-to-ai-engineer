@@ -12,7 +12,7 @@ from sklearn.datasets import load_diabetes
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import LinearRegression, Ridge
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import cross_val_predict, train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
@@ -42,7 +42,7 @@ def main():
                         help="Output path for saved model")
     args = parser.parse_args()
 
-    data = load_diabetes()
+    data = load_diabetes(as_frame=True)  # keep column names, like main.py (api.py sends named columns)
     X, y = data.data, data.target
     feature_names = data.feature_names
 
@@ -65,6 +65,12 @@ def main():
 
     logger.info(f"Results MAE: {mae:.2f} | RMSE: {rmse:.2f} | R²: {r2:.4f}")
 
+    # 90% prediction interval from cross-validated residuals (same method as compute_interval in main.py)
+    residuals = np.asarray(y_train) - cross_val_predict(pipeline, X_train, y_train, cv=5)
+    low, high = np.quantile(residuals, [0.05, 0.95])
+    covered = float(((y_test >= preds + low) & (y_test <= preds + high)).mean())
+    logger.info(f"90% interval: pred {low:+.1f} .. pred {high:+.1f} (covered {covered:.0%} of test patients)")
+
     import os; os.makedirs(os.path.dirname(args.output), exist_ok=True)
     joblib.dump(pipeline, args.output)
     joblib.dump({
@@ -72,7 +78,8 @@ def main():
         "metrics": {"MAE": mae, "RMSE": rmse, "R2": r2},
         "feature_names": list(feature_names),
         "all_results": {args.model_type: {"MAE": mae, "RMSE": rmse, "R2": r2}},
-    }, args.output.replace(".joblib", "_meta.joblib").replace("best_model", "model_meta"))
+        "interval": {"level": 0.90, "lower_offset": float(low), "upper_offset": float(high), "test_coverage": covered},
+    }, os.path.join(os.path.dirname(args.output), "model_meta.joblib"))  # the file name api.py loads
 
     logger.info(f"Model saved to {args.output}")
 

@@ -71,11 +71,37 @@ def extractive_summary(text: str, ratio: float = 0.3) -> str:
 _abstractive_pipeline = None
 
 def get_abstractive_pipeline(model_name: str = "facebook/bart-large-cnn"):
+    """Return a callable summarizer(text, max_length=..., min_length=..., do_sample=...).
+
+    Transformers 5 removed the "summarization" pipeline task
+    (pipeline("summarization") raises "Unknown task summarization"), so we load the
+    seq2seq model directly and call generate(). The returned function keeps the old
+    pipeline's call style and output format: [{"summary_text": ...}].
+    """
     global _abstractive_pipeline
     if _abstractive_pipeline is None:
-        from transformers import pipeline
+        from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
         print(f"Loading {model_name}...")
-        _abstractive_pipeline = pipeline("summarization", model=model_name)
+        tokenizer = AutoTokenizer.from_pretrained(model_name)
+        model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
+        model.eval()
+        # T5-family models need a task prefix; BART/Pegasus do not
+        prefix = "summarize: " if "t5" in model_name.lower() else ""
+
+        def summarize(text: str, max_length: int = 150, min_length: int = 40, do_sample: bool = False):
+            inputs = tokenizer(prefix + text, return_tensors="pt", truncation=True,
+                               max_length=min(tokenizer.model_max_length, 1024))
+            output_ids = model.generate(
+                **inputs,
+                max_new_tokens=max_length,
+                min_new_tokens=min_length,
+                do_sample=do_sample,
+                num_beams=1 if do_sample else 4,
+                early_stopping=not do_sample,
+            )
+            return [{"summary_text": tokenizer.decode(output_ids[0], skip_special_tokens=True)}]
+
+        _abstractive_pipeline = summarize
     return _abstractive_pipeline
 
 def chunk_text(text: str, max_tokens: int = 900) -> List[str]:

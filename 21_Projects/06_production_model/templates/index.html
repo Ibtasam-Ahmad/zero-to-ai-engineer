@@ -164,6 +164,7 @@ async function predictBatch(){
   if(!texts.length) return;
   const r = await fetch('/predict/batch',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({texts,model_version:model})});
   const d = await r.json();
+  if(!r.ok){ alert('❌ ' + (typeof d.detail==='string' ? d.detail : JSON.stringify(d.detail))); return; }
   const tbody = document.getElementById('batch-tbody');
   tbody.innerHTML = d.results.map(res=>`
     <tr>

@@ -24,7 +24,7 @@ The notebook traces the lineage from a single 2017 idea to today's crowded field
 - **2018-2020 scaling up.** GPT-1, BERT, GPT-2, then GPT-3 (175 billion parameters) showed that making Transformers bigger and feeding them more data produced steadily more capable models.
 - **2022 the chat era.** InstructGPT and ChatGPT demonstrated that instruction tuning and human-feedback alignment turn a raw text predictor into a useful assistant. Meta's first LLaMA brought strong open models.
 - **2023 the explosion.** GPT-4, LLaMA-2, Mistral, Claude-2, Gemini, Falcon, and Mixtral arrived, splitting the field into competing open and closed families.
-- **2024-2025 maturity and reasoning.** Multimodal models (GPT-4o, Claude 3, Gemini 1.5), much longer context windows, dedicated **reasoning models** that "think" before answering, and the current generation the Claude 4.x family, GPT-5, Llama 4, Gemini 2, and DeepSeek's reasoning models.
+- **2024-2025 maturity and reasoning.** Multimodal models (GPT-4o, Claude 3, Gemini 1.5), much longer context windows, dedicated **reasoning models** that "think" before answering, and the 2025 generation the Claude 4.x family, GPT-5, Llama 4, Gemini 2, and DeepSeek's reasoning models (as of Oct 2026 the closed-model generation is Claude 5.5, GPT-6 and Gemini 3.x / 4).
 
 The throughline: bigger models trained on more data kept getting better, until the frontier broadened from raw capability into efficiency, long context, multimodality, and explicit reasoning.
 
@@ -76,28 +76,28 @@ mindmap
 
 ### Anthropic Claude
 
-Claude is Anthropic's family, known for strong coding, careful reasoning, and following nuanced instructions. The current generation is the **Claude 4.x family**, organized into three tiers by the capability/speed/cost trade-off (as shown in the notebook's `claude_models` listing):
+Claude is Anthropic's family, known for strong coding, careful reasoning, and following nuanced instructions. The current generation (Oct 2026) is the **Claude 5.5 family**, organized into three tiers by the capability/speed/cost trade-off (as shown in the notebook's `claude_models` listing):
 
-- **Claude Opus 4.x** (`claude-opus-4-8`) the **most capable** tier, with the strongest reasoning. Best for the hardest problems where quality matters most.
-- **Claude Sonnet 4.x** (`claude-sonnet-4-6`) the **best balance** of intelligence and speed. The workhorse for most production use, especially coding and general reasoning.
-- **Claude Haiku 4.x** (`claude-haiku-4-5`) the **fastest and cheapest** tier, for high-volume, latency-sensitive tasks.
+- **Claude Opus 5.5** (`claude-opus-5-5`) the **most capable** tier, with the strongest reasoning. Best for the hardest problems where quality matters most.
+- **Claude Sonnet 5.5** (`claude-sonnet-5-5`) the **best balance** of intelligence and speed. The workhorse for most production use, especially coding and general reasoning.
+- **Claude Haiku 5.5** (`claude-haiku-5-5`) the **fastest and cheapest** tier, for high-volume, latency-sensitive tasks.
 
-This Opus / Sonnet / Haiku naming repeats across generations: Opus = most powerful, Sonnet = balanced, Haiku = fastest. Claude offers a large context window (on the order of 200K tokens, with extended options) and is multimodal (handles images). You call it through the Anthropic API: your code sends a `system` instruction plus a list of `messages` and gets back the model's text reply.
+This Opus / Sonnet / Haiku naming repeats across generations: Opus = most powerful, Sonnet = balanced, Haiku = fastest. Claude offers a large context window (1M tokens on the 5.5 models) and is multimodal (handles images). You call it through the Anthropic API: your code sends a `system` instruction plus a list of `messages` and gets back the model's text reply.
 
 ### OpenAI GPT and the "o" reasoning models
 
 OpenAI offers two related lines (from the notebook's `openai_models`):
 
-- **GPT-4o** the flagship general-purpose, multimodal model (text + images), with a 128K context window. Versatile and widely used.
-- **GPT-4o-mini** a cheaper, faster version that is good enough for most everyday tasks.
-- **The "o" series (o1, o3-mini)** **reasoning models** that internally "think" step by step before producing an answer, trading extra time and cost for much better performance on math, logic, and hard problems.
+- **GPT-6 Astra** the flagship general-purpose, multimodal model (text + images), with a ~1M-token context window. Versatile and widely used.
+- **GPT-6.1 Sol / GPT-6 Luna** cheaper, faster versions that is good enough for most everyday tasks.
+- **The "o" series (o1, o3-mini)** earlier **reasoning models** (GPT-6 models now have reasoning built in) that internally "think" step by step before producing an answer, trading extra time and cost for much better performance on math, logic, and hard problems.
 - **GPT-3.5-turbo** an older, cheapest, fastest option.
 
-You call these through the OpenAI API with a similar `messages` structure (a `system` message setting behavior, then `user` messages). The notebook's later cells reference **GPT-5** as the current frontier generation.
+You call these through the OpenAI API with a similar `messages` structure (a `system` message setting behavior, then `user` messages). As of Oct 2026 the current generation is **GPT-6**.
 
 ### Google Gemini
 
-Gemini is Google's multimodal family. Its standout feature is **enormous context windows** Gemini 1.5 Pro offered up to **1 million tokens**, making it the go-to for very long documents, large codebases, or even video. Google offers a fast/cheap tier (**Gemini Flash**) and more capable tiers, accessed via Google AI Studio / the Gemini API. The current generation referenced is **Gemini 2**.
+Gemini is Google's multimodal family. Its standout feature is **enormous context windows** Gemini 1.5 Pro offered up to **1 million tokens**, making it the go-to for very long documents, large codebases, or even video. Google offers a fast/cheap tier (**Gemini Flash**) and more capable tiers, accessed via Google AI Studio / the Gemini API. As of Oct 2026 the current generation is **Gemini 3.x / Gemini 4** (Python SDK: `google-genai`).
 
 ### Meta Llama
 
@@ -173,7 +173,7 @@ A normal ("dense") model runs *every* parameter for *every* token expensive. A *
 The notebook walks through four access paths:
 
 1. **OpenAI API** for GPT and the "o" models. Send a list of `messages` (a `system` instruction plus `user` turns); receive the reply.
-2. **Anthropic API** for Claude. Send a `system` prompt, a `max_tokens` limit, and `messages`; receive the reply. The model is selected by id (e.g., `claude-sonnet-4-6`).
+2. **Anthropic API** for Claude. Send a `system` prompt, a `max_tokens` limit, and `messages`; receive the reply. The model is selected by id (e.g., `claude-sonnet-5-5`).
 3. **Ollama** a tool for running **open models locally** with one command. You `pull` a model (e.g., `llama3.2`, `mistral`, `phi4`, `gemma2`, `qwen2.5`, `deepseek-r1`) and chat with it entirely on your own machine no internet, no per-token cost, full privacy.
 4. **Hugging Face Transformers** a Python library to load essentially **any open model** from the Hugging Face Hub directly into your code, giving maximum flexibility (and requiring the hardware to run it). The notebook lists loadable instruct models from Llama, Mistral, Mixtral, Phi, Gemma, Qwen, DeepSeek, Falcon, and Yi.
 
@@ -200,14 +200,14 @@ No single model is best at everything. Selection is about balancing capability, 
 
 ### Cost and latency
 
-- **Latency** is how long you wait for a response. Bigger models and reasoning models are slower. Speed-tier models (Haiku, GPT-4o-mini, Gemini Flash) answer fastest.
+- **Latency** is how long you wait for a response. Bigger models and reasoning models are slower. Speed-tier models (Haiku, GPT-6 Luna, Gemini Flash) answer fastest.
 - **Cost** for API models is charged **per token**, usually split into a (cheaper) input-token price and a (pricier) output-token price, quoted per 1,000 or per million tokens. Smaller/cheaper tiers can be many times less expensive than flagships for the same task so don't pay for a flagship when a mini model suffices.
 - **Local/open models** have near-zero marginal cost after you own the hardware, but you pay upfront in equipment and setup.
 - **Reasoning models** cost and wait more because they generate hidden "thinking" tokens worth it for hard problems, wasteful for simple ones.
 
 ### Context window
 
-Pick a context window large enough for your longest input. For analyzing book-length documents or whole codebases, the very-long-context models (Gemini's 1M, Claude's ~200K) matter; for short chats, even a small window is fine. Bigger context also costs more (more input tokens) and can slow responses.
+Pick a context window large enough for your longest input. For analyzing book-length documents or whole codebases, the very-long-context models (Gemini's and Claude's 1M) matter; for short chats, even a small window is fine. Bigger context also costs more (more input tokens) and can slow responses.
 
 ### Capability vs. task fit
 
@@ -215,15 +215,15 @@ Match the model to the job rather than always grabbing the most powerful one. Th
 
 | Task | Good fit |
 |------|----------|
-| General chat / reasoning | Claude Sonnet, GPT-4o |
-| Coding | Claude Sonnet, GPT-4o, DeepSeek-Coder |
+| General chat / reasoning | Claude Sonnet, GPT-6.1 Sol |
+| Coding | Claude Sonnet, GPT-6 Astra, DeepSeek-Coder |
 | Math / hard reasoning | Reasoning models (o-series, DeepSeek-R1), Claude |
 | Very long documents (>100K tokens) | Gemini Pro, Claude Opus |
-| Cost-efficient / high-volume | GPT-4o-mini, Claude Haiku, Gemini Flash |
+| Cost-efficient / high-volume | GPT-6 Luna, Claude Haiku, Gemini Flash |
 | Local / private | Llama 8B, Mistral 7B (via Ollama) |
 | Local but powerful | Llama 70B+, Mixtral |
 | Multilingual | Qwen2.5, Gemini, Claude |
-| Image understanding | GPT-4o, Claude, Gemini |
+| Image understanding | GPT-6, Claude, Gemini |
 | Embeddings | dedicated embedding models (e.g., text-embedding-3, bge, e5) |
 | Base model for fine-tuning | Llama 8B, Mistral 7B, Phi-4 (open, runnable, customizable) |
 
@@ -242,7 +242,7 @@ Because every provider claims to be best, the notebook points to neutral, public
 ## Summary
 
 - The field splits into **closed/API models** (most capable, metered, your data leaves your machine GPT, Claude, Gemini) and **open/downloadable models** (private, controllable, run-it-yourself Llama, Mistral, DeepSeek, Qwen).
-- **Anthropic's Claude 4.x** family tiers as **Opus** (most capable) / **Sonnet** (balanced) / **Haiku** (fastest); **OpenAI** offers GPT plus dedicated **reasoning** "o" models; **Google's Gemini** leads on **context length** (up to 1M tokens); **Meta's Llama** anchors the open ecosystem.
+- **Anthropic's Claude 5.5** family tiers as **Opus** (most capable) / **Sonnet** (balanced) / **Haiku** (fastest); **OpenAI** offers GPT plus dedicated **reasoning** "o" models; **Google's Gemini** leads on **context length** (up to 1M tokens); **Meta's Llama** anchors the open ecosystem.
 - **Mixture-of-Experts** models (Mixtral, DeepSeek-V3) get big-model quality at small-model compute by activating only a few experts per token; **scaling laws** (Chinchilla) showed data matters as much as size.
 - Access closed models via **APIs** and open models via **Ollama** (easy local) or **Hugging Face Transformers** (flexible).
 - Choosing a model means balancing **capability, cost (per-token), latency, context window, privacy, and modality** match the model to the task, use neutral leaderboards to compare, and don't pay flagship prices when a cheaper tier or a local model will do.

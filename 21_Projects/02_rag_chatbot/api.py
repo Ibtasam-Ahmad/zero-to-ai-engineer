@@ -1,6 +1,7 @@
 """FastAPI server for the RAG chatbot."""
 
 import io
+import os
 import uuid
 from typing import List, Optional
 
@@ -8,6 +9,7 @@ from fastapi import FastAPI, File, HTTPException, UploadFile, WebSocket, WebSock
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
+import fitz  # PyMuPDF, used to check that an upload really is a PDF
 
 import main as rag
 
@@ -48,15 +50,24 @@ async def chat(req: ChatRequest):
 
 @app.post("/upload-doc")
 async def upload_doc(file: UploadFile = File(...)):
-    if not file.filename.endswith(".pdf"):
+    # Keep only the bare file name: "../x.pdf" must not be written outside docs/
+    name = os.path.basename((file.filename or "").replace("\\", "/"))
+    if not name or name.startswith("."):
+        raise HTTPException(status_code=400, detail="Invalid file name")
+    if os.path.splitext(name)[1] not in {".pdf"}:  # extension whitelist
         raise HTTPException(status_code=400, detail="Only PDF files supported")
-    path = f"./docs/{file.filename}"
     content = await file.read()
+    try:  # check it really is a PDF *before* saving it
+        fitz.open(stream=content, filetype="pdf").close()
+    except Exception:
+        raise HTTPException(status_code=400, detail="This file is not a valid PDF")
+    os.makedirs("./docs", exist_ok=True)
+    path = os.path.join("./docs", name)
     with open(path, "wb") as f:
         f.write(content)
-    # Re-ingest this file
-    chunks_added = rag.ingest_documents("./docs")
-    return {"filename": file.filename, "chunks_ingested": chunks_added}
+    # Ingest only this file
+    chunks_added = rag.ingest_file(path)
+    return {"filename": name, "chunks_ingested": chunks_added}
 
 
 @app.get("/sessions")

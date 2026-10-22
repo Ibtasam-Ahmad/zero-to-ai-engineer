@@ -6,7 +6,8 @@ Handles class imbalance with SMOTE, uses XGBoost, explains with SHAP.
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split, StratifiedKFold, cross_val_score
+from sklearn.model_selection import train_test_split, StratifiedKFold, cross_val_score, cross_val_predict
+from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.metrics import (classification_report, confusion_matrix,
                               roc_auc_score, precision_recall_curve, f1_score)
@@ -21,7 +22,8 @@ except ImportError:
     from sklearn.ensemble import GradientBoostingClassifier as XGBClassifier
 
 try:
-    from imblearn.over_sampling import SMOTE
+    from imblearn.over_sampling import SMOTENC
+    from imblearn.pipeline import Pipeline as ImbPipeline
     SMOTE_AVAILABLE = True
 except ImportError:
     print("imbalanced-learn not found, skipping SMOTE")
@@ -83,12 +85,13 @@ def generate_churn_data(n=5000, churn_rate=0.15, seed=42):
 
 
 def preprocess(df):
-    """Encode categoricals and engineer features."""
+    """Encode categoricals and engineer row-wise features (no statistics over the whole dataset)."""
     df = df.copy()
 
-    # Feature engineering
+    # Feature engineering (row-wise only, so it is safe to do before the split)
     df["charges_per_tenure"] = df["total_charges"] / (df["tenure"] + 1)
-    df["high_monthly"] = (df["monthly_charges"] > df["monthly_charges"].quantile(0.75)).astype(int)
+    # NOTE: "high_monthly" needs a 75% quantile. Computing it here, on the full dataset,
+    # would leak test-set information, so it is learned from training data by HighMonthlyFlag below.
 
     # Label encode categoricals
     cat_cols = df.select_dtypes(include="object").columns.tolist()
@@ -97,6 +100,23 @@ def preprocess(df):
         df[col] = le.fit_transform(df[col].astype(str))
 
     return df
+
+
+class HighMonthlyFlag(BaseEstimator, TransformerMixin):
+    """Adds high_monthly = monthly_charges > 75% quantile, with the quantile learned in fit()
+    (i.e. from the training data / training fold only)."""
+
+    def __init__(self, quantile=0.75):
+        self.quantile = quantile
+
+    def fit(self, X, y=None):
+        self.threshold_ = X["monthly_charges"].quantile(self.quantile)
+        return self
+
+    def transform(self, X):
+        X = X.copy()
+        X["high_monthly"] = (X["monthly_charges"] > self.threshold_).astype(int)
+        return X
 
 
 def optimize_threshold(y_true, y_prob):
@@ -147,24 +167,31 @@ if __name__ == "__main__":
 
     # Preprocess
     print("\n[2] Preprocessing...")
+    # Categorical columns (label-encoded below). Plain SMOTE would interpolate their codes, so a
+    # synthetic customer "between" code 0 and code 2 gets code 1, a category neither neighbour has.
+    # SMOTENC treats these columns as categories instead.
+    cat_cols = df.select_dtypes(include="object").columns.tolist() + ["senior_citizen", "high_monthly"]
     df = preprocess(df)
 
     X = df.drop(columns=["churn"])
     y = df["churn"]
     feature_names = X.columns.tolist()
+    # column positions after HighMonthlyFlag (which appends "high_monthly" as the last column)
+    cat_idx = [i for i, c in enumerate(feature_names + ["high_monthly"]) if c in cat_cols]
 
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42, stratify=y)
 
-    # Handle imbalance with SMOTE
+    # Handle imbalance with SMOTE.
+    # SMOTE lives INSIDE the pipeline, so it only ever oversamples the data a model is trained on
+    # (the training folds during cross-validation); validation folds and the test set stay real.
     print(f"\n[3] Before SMOTE: {y_train.value_counts().to_dict()}")
     if SMOTE_AVAILABLE:
-        smote = SMOTE(random_state=42)
-        X_train_res, y_train_res = smote.fit_resample(X_train, y_train)
-        print(f"After SMOTE: {pd.Series(y_train_res).value_counts().to_dict()}")
+        _, y_demo_res = SMOTENC(categorical_features=cat_idx, random_state=42).fit_resample(
+            HighMonthlyFlag().fit_transform(X_train), y_train)
+        print(f"After SMOTE (training data only, for illustration): {pd.Series(y_demo_res).value_counts().to_dict()}")
     else:
-        X_train_res, y_train_res = X_train, y_train
-        print("SMOTE skipped using class_weight='balanced' instead")
+        print("SMOTE skipped using scale_pos_weight instead")
 
     # Train XGBoost
     print("\n[4] Training XGBoost...")
@@ -178,17 +205,30 @@ if __name__ == "__main__":
     except TypeError:
         model = XGBClassifier(n_estimators=200, max_depth=5, random_state=42)
 
-    model.fit(X_train_res, y_train_res)
+    if SMOTE_AVAILABLE:
+        pipe = ImbPipeline([("high_monthly", HighMonthlyFlag()),
+                            ("smote", SMOTENC(categorical_features=cat_idx, random_state=42)),
+                            ("model", model)])
+    else:
+        pipe = Pipeline([("high_monthly", HighMonthlyFlag()), ("model", model)])
 
-    # Cross-validation
-    cv_scores = cross_val_score(model, X_train_res, y_train_res, cv=5, scoring="roc_auc")
+    # Cross-validation on the ORIGINAL training data: the quantile and SMOTE are re-fitted
+    # inside each training fold, and each validation fold contains only real customers.
+    cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+    cv_scores = cross_val_score(pipe, X_train, y_train, cv=cv, scoring="roc_auc")
     print(f"CV ROC-AUC: {cv_scores.mean():.4f} ± {cv_scores.std():.4f}")
 
-    # Predict with threshold optimization
-    print("\n[5] Threshold optimization...")
-    y_prob = model.predict_proba(X_test)[:, 1]
-    best_threshold, best_f1 = optimize_threshold(y_test, y_prob)
-    print(f"Optimal threshold: {best_threshold:.3f} | Best F1: {best_f1:.4f}")
+    pipe.fit(X_train, y_train)
+    model = pipe.named_steps["model"]
+
+    # Threshold optimization on out-of-fold predictions from the TRAINING data,
+    # so the test set is used only once, for the final report.
+    print("\n[5] Threshold optimization (out-of-fold, training data)...")
+    oof_prob = cross_val_predict(pipe, X_train, y_train, cv=cv, method="predict_proba")[:, 1]
+    best_threshold, best_f1 = optimize_threshold(y_train, oof_prob)
+    print(f"Optimal threshold: {best_threshold:.3f} | Best out-of-fold F1: {best_f1:.4f}")
+
+    y_prob = pipe.predict_proba(X_test)[:, 1]
 
     y_pred = (y_prob >= best_threshold).astype(int)
 
@@ -204,10 +244,20 @@ if __name__ == "__main__":
     # SHAP explanations
     if SHAP_AVAILABLE:
         print("\n[7] Computing SHAP values...")
-        explainer = shap.TreeExplainer(model)
-        shap_values = explainer.shap_values(X_test[:200])
+        X_test_feat = pipe.named_steps["high_monthly"].transform(X_test)  # same features the model saw
+        feature_names = X_test_feat.columns.tolist()
+        try:
+            explainer = shap.TreeExplainer(model)
+            shap_values = explainer.shap_values(X_test_feat[:200])
+        except ValueError:
+            # Older shap releases (< 0.48) cannot parse models saved by XGBoost >= 3.1
+            # ("could not convert string to float: '[5E-1]'"). XGBoost computes the same
+            # TreeSHAP values itself; the last column it returns is the bias term.
+            import xgboost
+            contribs = model.get_booster().predict(xgboost.DMatrix(X_test_feat[:200]), pred_contribs=True)
+            shap_values = contribs[:, :-1]
         plt.figure()
-        shap.summary_plot(shap_values, X_test[:200], feature_names=feature_names,
+        shap.summary_plot(shap_values, X_test_feat[:200], feature_names=feature_names,
                           show=False, max_display=15)
         plt.tight_layout()
         plt.savefig("churn_shap.png", dpi=100, bbox_inches="tight")

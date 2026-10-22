@@ -6,5 +6,5 @@ langchain==0.3.4
 langchain-openai==0.2.3
 langchain-community==0.3.3
 tavily-python==0.5.0
-duckduckgo-search==6.3.0
+ddgs==9.16.0   # keyless web search (successor of duckduckgo-search, which no longer works)
 websockets==13.1

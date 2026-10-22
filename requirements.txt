@@ -1,3 +1,11 @@
+# Full environment for every notebook in this repo (pinned).
+# Requires Python 3.12 or newer (e.g. scipy 1.18 needs >= 3.12).
+# Beginners: start with requirements-beginner.txt instead (smaller, works on Python 3.10-3.12).
+#
+# CPU builds of PyTorch come from the PyTorch package index (Linux/Windows).
+# On macOS the same command works (pip picks the macOS build). GPU users: see https://pytorch.org/get-started/locally/
+--extra-index-url https://download.pytorch.org/whl/cpu
+
 aiohappyeyeballs==2.6.2
 aiohttp==3.14.1
 aiosignal==1.4.0
@@ -47,9 +55,8 @@ defusedxml==0.7.1
 distro==1.9.0
 docker==7.1.0
 docstring_parser==0.18.0
-dowhy==0.14
+dowhy==0.14; python_version >= "3.13"  # on 3.12 dowhy 0.14 requires scipy<=1.15.3, which conflicts with scipy 1.18
 duckdb==1.5.4
-econml==0.16.0
 etuples==0.3.10
 executing==2.2.1
 Faker==40.23.0
@@ -88,8 +95,7 @@ importlib_metadata==9.0.0
 influxdb-client==1.50.0
 instructor==1.15.4
 interface_meta==2.0.1
-interpret-core==0.6.9
-interpret_community==0.32.0
+interpret-core==0.7.8
 ipykernel==7.3.0
 ipython==9.15.0
 ipython_pygments_lexers==1.1.1
@@ -117,7 +123,6 @@ kiwisolver==1.5.0
 langdetect==1.0.9
 langfuse==4.12.0
 lark==1.3.1
-laserembeddings==1.1.2
 lazy-loader==0.5
 lifelines==0.30.3
 lightgbm==4.6.0
@@ -154,7 +159,7 @@ notebook==7.6.0
 notebook_shim==0.2.4
 numba==0.65.1
 numpy==2.4.6
-nvidia-nccl-cu12==2.30.7
+nvidia-nccl-cu12==2.30.7; sys_platform == "linux"
 onnx==1.22.0
 onnx-ir==0.2.1
 onnxruntime==1.27.0
@@ -227,7 +232,7 @@ seaborn==0.13.2
 Send2Trash==2.1.0
 sentence-transformers==5.6.0
 setuptools==70.2.0
-shap==0.47.2
+shap==0.54.1
 shellingham==1.5.4
 six==1.17.0
 skops==0.14.0
@@ -250,8 +255,8 @@ threadpoolctl==3.6.0
 tinycss2==1.5.1
 tokenizers==0.22.2
 toolz==1.1.0
-torch==2.12.1+cpu
-torchvision==0.27.1+cpu
+torch==2.12.1
+torchvision==0.27.1
 tornado==6.5.7
 tqdm==4.68.3
 traitlets==5.15.1
@@ -276,3 +281,9 @@ xarray-einstats==0.10.0
 xgboost==3.3.0
 yarl==1.24.2
 zipp==4.1.0
+
+# --- Not installable together with the pins above (left out on purpose) ---
+# Install them in a separate environment only if you need them:
+#   econml==0.16.0   (needs scikit-learn<1.7)
+#   interpret_community==0.32.0   (needs shap<=0.46)
+#   laserembeddings==1.1.2   (needs numpy<2 and torch<2)

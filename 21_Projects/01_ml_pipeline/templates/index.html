@@ -159,11 +159,16 @@ document.getElementById('predict-form').addEventListener('submit', async (e) => 
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(payload),
     });
-    if (!r.ok) throw new Error((await r.json()).detail || 'Prediction failed');
+    if (!r.ok) {
+      const err = await r.json();  // validation errors (HTTP 422) are a list
+      throw new Error(Array.isArray(err.detail) ? err.detail.map(e => `${e.loc[e.loc.length - 1]}: ${e.msg}`).join('; ') : (err.detail || 'Prediction failed'));
+    }
     const d = await r.json();
 
     document.getElementById('pred-value').textContent = d.prediction.toFixed(1);
-    document.getElementById('pred-range').textContent = `95% CI: ${d.prediction_lower.toFixed(1)} – ${d.prediction_upper.toFixed(1)}`;
+    document.getElementById('pred-range').textContent = d.prediction_lower !== null
+      ? `${Math.round(d.interval_level * 100)}% prediction interval: ${d.prediction_lower.toFixed(1)} – ${d.prediction_upper.toFixed(1)}`
+      : 'No prediction interval (retrain with python main.py)';
     document.getElementById('model-used-label').textContent = `Model: ${d.model_used}`;
 
     // confidence bar: map 25-346 to 0-100%

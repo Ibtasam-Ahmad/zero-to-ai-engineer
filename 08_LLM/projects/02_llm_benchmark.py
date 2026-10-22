@@ -1,5 +1,5 @@
 """
-LLM Benchmark Tool Compare GPT-4o-mini, Claude Haiku, Ollama
+LLM Benchmark Tool Compare GPT-6 Luna, Claude Haiku, Ollama
 Requirements: openai anthropic requests pandas tabulate
 Usage:
   python 02_llm_benchmark.py
@@ -64,21 +64,21 @@ class BenchmarkResult:
     quality_score: float  # 0-1 based on keyword matching
     error: str = ""
 
-# Approximate pricing per 1M tokens (input/output)
+# Approximate pricing per 1M tokens (input/output), as of Oct 2026 -- check the provider's pricing page
 PRICING = {
-    "gpt-4o-mini":       (0.15,  0.60),
-    "claude-haiku-3":    (0.25,  1.25),
+    "gpt-6-luna":        (0.10,  0.50),
+    "claude-haiku-5-5":  (0.10,  0.50),
     "ollama":            (0.0,   0.0),
 }
 
-def call_openai(prompt: str, model: str = "gpt-4o-mini") -> dict:
+def call_openai(prompt: str, model: str = "gpt-6-luna") -> dict:
     import openai
     client = openai.OpenAI(api_key=os.environ.get("OPENAI_API_KEY", ""))
     t0 = time.time()
     resp = client.chat.completions.create(
         model=model,
         messages=[{"role": "user", "content": prompt}],
-        max_tokens=512,
+        max_completion_tokens=512,
     )
     latency = (time.time() - t0) * 1000
     return {
@@ -88,18 +88,18 @@ def call_openai(prompt: str, model: str = "gpt-4o-mini") -> dict:
         "output_tokens": resp.usage.completion_tokens,
     }
 
-def call_anthropic(prompt: str, model: str = "claude-haiku-4-5-20251001") -> dict:
+def call_anthropic(prompt: str, model: str = "claude-haiku-5-5") -> dict:
     import anthropic
     client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY", ""))
     t0 = time.time()
     msg = client.messages.create(
         model=model,
-        max_tokens=512,
+        max_tokens=2048,
         messages=[{"role": "user", "content": prompt}],
     )
     latency = (time.time() - t0) * 1000
     return {
-        "text": msg.content[0].text,
+        "text": next((b.text for b in msg.content if b.type == "text"), ""),  # may start with a thinking block
         "latency_ms": latency,
         "input_tokens": msg.usage.input_tokens,
         "output_tokens": msg.usage.output_tokens,
@@ -144,8 +144,8 @@ def run_benchmark(models_to_test: List[str], ollama_model: str = "llama3.2") -> 
     results = []
 
     model_fns = {
-        "openai":    ("gpt-4o-mini",        call_openai),
-        "anthropic": ("claude-haiku-3",     call_anthropic),
+        "openai":    ("gpt-6-luna",         call_openai),
+        "anthropic": ("claude-haiku-5-5",   call_anthropic),
         "ollama":    (ollama_model,          call_ollama),
     }
 

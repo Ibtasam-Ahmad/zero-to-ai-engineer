@@ -20,7 +20,8 @@ from transformers import (
 )
 
 # ── Config ────────────────────────────────────────────────────────────────────
-MODEL_NAME = "distilbert-base-uncased-finetuned-sst-2-english"  # pretrained baseline
+# Pretrained baseline; set SENTIMENT_MODEL to serve another model (e.g. your fine-tuned folder)
+MODEL_NAME = os.environ.get("SENTIMENT_MODEL", "distilbert-base-uncased-finetuned-sst-2-english")
 DEVICE = 0 if torch.cuda.is_available() else -1
 
 # ── Schemas ───────────────────────────────────────────────────────────────────
@@ -155,7 +156,7 @@ def finetune(output_dir: str = "./finetuned-sentiment", epochs: int = 1):
         num_train_epochs=epochs,
         per_device_train_batch_size=32,
         per_device_eval_batch_size=64,
-        evaluation_strategy="epoch",
+        eval_strategy="epoch",  # was evaluation_strategy (renamed; removed in transformers 5)
         save_strategy="epoch",
         load_best_model_at_end=True,
         logging_steps=100,
@@ -185,7 +186,8 @@ if __name__ == "__main__":
 
     if args.finetune:
         finetune()
-        MODEL_NAME = "./finetuned-sentiment"
+        # uvicorn re-imports this module, so pass the model path via the environment
+        os.environ["SENTIMENT_MODEL"] = "./finetuned-sentiment"
 
     print(f"Starting server at http://{args.host}:{args.port}")
     uvicorn.run("01_sentiment_analyzer:app", host=args.host, port=args.port, reload=False)

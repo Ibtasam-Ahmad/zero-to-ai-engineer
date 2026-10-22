@@ -35,7 +35,7 @@ Production ML is not a straight line; it is a loop that feeds back on itself. Th
 3. **Orchestrate the pipeline** (`03_pipeline_orchestration`) wire data → preprocess → train → evaluate into a reliable, scheduled DAG with Prefect, Airflow, or ZenML.
 4. **Test everything** (`07_testing_in_ml`) validate data, model quality, training code, and serving APIs.
 5. **Automate with CI/CD** (`04_ci_cd_for_ml`) run those tests and gates automatically on every change, and retrain on a schedule or on drift.
-6. **Register the model** (`05_model_registry`) version it, promote it through Staging to Production, keep lineage, enable rollback.
+6. **Register the model** (`05_model_registry`) version it, promote it with aliases (`@challenger` → `@champion`; the older Staging/Production stages are deprecated in MLflow), keep lineage, enable rollback.
 7. **Serve it** (advanced serving, below) expose it as a fast, scalable, observable service.
 8. **Monitor it** (`06_monitoring`) watch data drift, performance, and system health; alert; and trigger retraining closing the loop back to step 1.
 

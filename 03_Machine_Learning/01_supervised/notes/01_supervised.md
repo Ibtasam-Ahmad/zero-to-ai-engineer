@@ -243,7 +243,7 @@ When to prefer PR over ROC: use the PR curve when the positive class is rare and
 
 ### Model Calibration
 
-A model is calibrated if its predicted probability of 0.7 means the event actually occurs 70% of the time. Many classifiers are not calibrated by default. SVMs output scores rather than probabilities. Random forests tend to push probabilities toward 0 and 1. Poorly calibrated probabilities mislead any downstream system that uses them for risk assessment.
+A model is calibrated if its predicted probability of 0.7 means the event actually occurs 70% of the time. Many classifiers are not calibrated by default. SVMs output scores rather than probabilities. Random forests average the votes of many trees, so their probabilities tend to be pulled away from 0 and 1, toward the middle (under-confident); Naive Bayes, by contrast, tends to push probabilities toward 0 and 1 (over-confident). Poorly calibrated probabilities mislead any downstream system that uses them for risk assessment.
 
 Platt scaling fits a logistic regression on top of the model's outputs. Isotonic regression fits a non-parametric monotone function. Both are available through sklearn's `CalibratedClassifierCV` wrapper. Check calibration visually with a reliability diagram: plot mean predicted probability vs fraction of positives in each probability bin.
 

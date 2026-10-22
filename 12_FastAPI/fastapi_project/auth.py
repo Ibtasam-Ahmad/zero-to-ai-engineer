@@ -1,17 +1,32 @@
+import os
+import secrets
+import warnings
 from datetime import datetime, timedelta
 from typing import Optional
-from jose import JWTError, jwt
-from passlib.context import CryptContext
+import jwt  # PyJWT (replaces python-jose, which is no longer maintained)
+from pwdlib import PasswordHash  # replaces passlib (unmaintained, breaks with bcrypt>=4.1)
+from pwdlib.hashers.bcrypt import BcryptHasher
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from schemas import TokenData
 
-SECRET_KEY = "change-this-in-production-use-openssl-rand-hex-32"
+# Read the signing key from the environment, e.g.  export SECRET_KEY="$(openssl rand -hex 32)"
+SECRET_KEY = os.environ.get("SECRET_KEY")
+if not SECRET_KEY:
+    # Dev fallback: random key per process (tokens stop working after a restart and are
+    # not shared between workers), so always set SECRET_KEY in production.
+    SECRET_KEY = secrets.token_hex(32)
+    warnings.warn(
+        "SECRET_KEY env var is not set; using a random development key. "
+        "Set SECRET_KEY (e.g. `openssl rand -hex 32`) before deploying.",
+        RuntimeWarning,
+        stacklevel=2,
+    )
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 REFRESH_TOKEN_EXPIRE_DAYS = 7
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = PasswordHash((BcryptHasher(),))  # still verifies existing "$2b$..." bcrypt hashes
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
 
 
@@ -41,7 +56,7 @@ def decode_token(token: str) -> dict:
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         return payload
-    except JWTError:
+    except jwt.InvalidTokenError:  # also covers expired tokens
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Could not validate credentials",
@@ -51,6 +66,8 @@ def decode_token(token: str) -> dict:
 
 async def get_current_user_token(token: str = Depends(oauth2_scheme)) -> TokenData:
     payload = decode_token(token)
+    if payload.get("type") != "access":  # a refresh token must not be accepted as an access token
+        raise HTTPException(status_code=401, detail="Invalid token type")
     username: str = payload.get("sub")
     if username is None:
         raise HTTPException(status_code=401, detail="Invalid token")

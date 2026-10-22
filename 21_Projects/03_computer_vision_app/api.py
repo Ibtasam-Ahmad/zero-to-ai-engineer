@@ -1,8 +1,11 @@
 """FastAPI server for the Computer Vision app."""
 
-from fastapi import FastAPI, File, HTTPException, UploadFile
+import io
+
+from fastapi import FastAPI, File, HTTPException, Query, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
+from PIL import Image, UnidentifiedImageError
 
 import main as cv
 
@@ -12,15 +15,23 @@ app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], all
 ALLOWED_TYPES = {"image/jpeg", "image/png", "image/webp", "image/gif"}
 
 
-def check_image(file: UploadFile):
+def check_image(file: UploadFile) -> bytes:
     if file.content_type not in ALLOWED_TYPES:
         raise HTTPException(400, f"Unsupported file type: {file.content_type}")
+    data = file.file.read()
+    try:  # the content type is only what the client claims: check the bytes too
+        Image.open(io.BytesIO(data)).verify()
+    except (UnidentifiedImageError, OSError):
+        raise HTTPException(400, "The file is not a readable image")
+    return data
+
+
+# Plain `def` endpoints: FastAPI runs them in worker threads, so slow inference does not block the server
 
 
 @app.post("/classify")
-async def classify(file: UploadFile = File(...), top_k: int = 5):
-    check_image(file)
-    data = await file.read()
+def classify(file: UploadFile = File(...), top_k: int = Query(5, ge=1, le=20)):
+    data = check_image(file)
     try:
         results = cv.classify(data, top_k=top_k)
         return {"filename": file.filename, "predictions": results}
@@ -29,22 +40,20 @@ async def classify(file: UploadFile = File(...), top_k: int = 5):
 
 
 @app.post("/detect")
-async def detect(file: UploadFile = File(...)):
-    check_image(file)
-    data = await file.read()
+def detect(file: UploadFile = File(...)):
+    data = check_image(file)
     try:
-        boxes = cv.detect(data)
-        return {"filename": file.filename, "detections": boxes}
+        result = cv.detect(data)
+        return {"filename": file.filename, **result}
     except Exception as e:
         raise HTTPException(500, str(e))
 
 
 @app.post("/segment")
-async def segment(file: UploadFile = File(...)):
-    check_image(file)
-    data = await file.read()
+def segment(file: UploadFile = File(...), mode: str = Query("objects", pattern="^(objects|everything)$")):
+    data = check_image(file)
     try:
-        result = cv.segment(data)
+        result = cv.segment(data, mode=mode)
         return {"filename": file.filename, **result}
     except Exception as e:
         raise HTTPException(500, str(e))

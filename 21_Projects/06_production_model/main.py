@@ -7,11 +7,15 @@ Advanced: fine-tuned DistilBERT (if transformers available)
 import logging
 import os
 import pickle
+import random
+import shutil
+import sys
+import tarfile
 import time
-from typing import Dict, List, Tuple
+import urllib.request
+from typing import Dict, List, Optional, Tuple
 
 import numpy as np
-from sklearn.datasets import fetch_20newsgroups
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report
@@ -28,21 +32,63 @@ BASELINE_PATH = os.path.join(MODEL_DIR, "baseline.pkl")
 BERT_PATH     = os.path.join(MODEL_DIR, "bert_model")
 LABELS        = {0: "negative", 1: "positive"}
 
+# Real sentiment data: the Cornell "sentence polarity dataset v1.0" (Pang & Lee, 2005),
+# 5,331 positive + 5,331 negative movie-review snippets from Rotten Tomatoes. It is the
+# same data as the Hugging Face "rotten_tomatoes" dataset. ~0.5 MB, downloaded once.
+DATA_DIR      = "data"
+POLARITY_URL  = "https://www.cs.cornell.edu/people/pabo/movie-review-data/rt-polaritydata.tar.gz"
+POLARITY_TGZ  = os.path.join(DATA_DIR, "rt-polaritydata.tar.gz")
 
-def _make_sentiment_data(n: int = 2000) -> Tuple[List[str], List[int]]:
-    """Generate a simple labelled sentiment dataset from 20newsgroups proxies."""
-    pos_cats = ["rec.sport.baseball", "rec.autos", "sci.space"]
-    neg_cats = ["talk.politics.guns", "alt.atheism", "soc.religion.christian"]
-    pos = fetch_20newsgroups(subset="train", categories=pos_cats, remove=("headers","footers","quotes"))
-    neg = fetch_20newsgroups(subset="train", categories=neg_cats, remove=("headers","footers","quotes"))
-    texts  = pos.data[:n//2] + neg.data[:n//2]
-    labels = [1] * (n//2) + [0] * (n//2)
+
+def _download_polarity(retries: int = 5) -> None:
+    """Download the dataset once. Writes to a temporary file and renames it only when
+    complete, so an interrupted download never leaves a broken archive behind."""
+    if os.path.exists(POLARITY_TGZ):
+        return
+    os.makedirs(DATA_DIR, exist_ok=True)
+    tmp = POLARITY_TGZ + ".part"
+    for attempt in range(1, retries + 1):
+        try:
+            logger.info(f"Downloading sentiment dataset from {POLARITY_URL} (attempt {attempt}) ...")
+            # timeout: a stalled connection raises an error (and is retried) instead of hanging
+            with urllib.request.urlopen(POLARITY_URL, timeout=30) as resp, open(tmp, "wb") as f:
+                shutil.copyfileobj(resp, f)
+            with tarfile.open(tmp, "r:gz") as tar:  # make sure the archive is complete
+                tar.getmembers()
+            os.replace(tmp, POLARITY_TGZ)
+            return
+        except Exception as e:
+            logger.warning(f"Download failed: {e}")
+            if os.path.exists(tmp):
+                os.remove(tmp)
+            time.sleep(2 * attempt)
+    raise RuntimeError(f"Could not download {POLARITY_URL}. Check your internet connection, "
+                       f"or download it manually into {DATA_DIR}/")
+
+
+def _make_sentiment_data(n: Optional[int] = None, seed: int = 42) -> Tuple[List[str], List[int]]:
+    """Load a balanced, labelled sentiment dataset (1 = positive, 0 = negative).
+
+    n = total number of examples to return (half positive, half negative); None = all 10,662.
+    """
+    _download_polarity()
+    with tarfile.open(POLARITY_TGZ, "r:gz") as tar:
+        def read(name):
+            member = next(m for m in tar.getmembers() if m.name.endswith(name))
+            return [l.strip() for l in tar.extractfile(member).read().decode("latin-1").splitlines() if l.strip()]
+        pos, neg = read("rt-polarity.pos"), read("rt-polarity.neg")
+    rng = random.Random(seed)
+    rng.shuffle(pos); rng.shuffle(neg)
+    if n is not None:
+        pos, neg = pos[:n//2], neg[:n//2]
+    texts  = pos + neg
+    labels = [1] * len(pos) + [0] * len(neg)
     return texts, labels
 
 
 def train_baseline() -> Dict:
     logger.info("Training TF-IDF + Logistic Regression baseline...")
-    texts, labels = _make_sentiment_data(2000)
+    texts, labels = _make_sentiment_data()  # all 10,662 snippets
     X_train, X_test, y_train, y_test = train_test_split(texts, labels, test_size=0.2, random_state=42)
 
     pipeline = Pipeline([
@@ -63,8 +109,11 @@ def train_baseline() -> Dict:
     return {"model": "baseline", "accuracy": report["accuracy"], "report": report}
 
 
-def train_bert(epochs: int = 2) -> Dict:
-    """Fine-tune DistilBERT for sentiment classification."""
+def train_bert(epochs: int = 2, n_samples: int = 1000) -> Dict:
+    """Fine-tune DistilBERT for sentiment classification (needs torch + accelerate).
+
+    Downloads distilbert-base-uncased (~270 MB) on first use. On CPU, keep n_samples small.
+    """
     try:
         from transformers import (AutoModelForSequenceClassification,
                                    AutoTokenizer, Trainer, TrainingArguments)
@@ -79,7 +128,7 @@ def train_bert(epochs: int = 2) -> Dict:
             def __getitem__(self, i):
                 return {k: v[i] for k, v in self.enc.items()} | {"labels": self.labels[i]}
 
-        texts, labels = _make_sentiment_data(1000)
+        texts, labels = _make_sentiment_data(n_samples)
         X_train, X_test, y_train, y_test = train_test_split(texts, labels, test_size=0.2, random_state=42)
 
         tok   = AutoTokenizer.from_pretrained("distilbert-base-uncased")
@@ -88,7 +137,9 @@ def train_bert(epochs: int = 2) -> Dict:
         args = TrainingArguments(
             output_dir=BERT_PATH, num_train_epochs=epochs,
             per_device_train_batch_size=16, per_device_eval_batch_size=32,
-            logging_steps=50, save_steps=500, eval_strategy="epoch",
+            logging_steps=50, eval_strategy="epoch",
+            save_strategy="epoch",          # must match eval_strategy for load_best_model_at_end
+            save_total_limit=1,             # keep disk use small (checkpoints are large)
             load_best_model_at_end=True,
         )
         trainer = Trainer(
@@ -101,9 +152,9 @@ def train_bert(epochs: int = 2) -> Dict:
         tok.save_pretrained(BERT_PATH)
         logger.info(f"DistilBERT saved to {BERT_PATH}")
         return {"model": "bert", "status": "trained"}
-    except ImportError:
-        logger.warning("transformers/torch not available skipping BERT training")
-        return {"model": "bert", "status": "skipped", "reason": "transformers not installed"}
+    except ImportError as e:
+        logger.warning(f"Skipping BERT training: {e}")
+        return {"model": "bert", "status": "skipped", "reason": f"missing library: {e}"}
 
 
 _baseline_model = None
@@ -165,3 +216,6 @@ if __name__ == "__main__":
     train_baseline()
     print("\nTest prediction:", predict("This is absolutely amazing and wonderful!"))
     print("Test prediction:", predict("This is terrible and I hate it."))
+    if "--bert" in sys.argv:  # optional and slow on CPU: python main.py --bert
+        print(train_bert())
+        print("BERT prediction:", predict("This is terrible and I hate it.", "bert"))

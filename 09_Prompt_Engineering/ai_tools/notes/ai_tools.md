@@ -27,11 +27,11 @@ Claude is offered in tiers that trade speed for intelligence. The current genera
 
 | Model | Speed | Intelligence | Best for |
 |-------|-------|--------------|----------|
-| **Claude Haiku 4.5** | Fastest | Good | High-volume, simple, latency-sensitive tasks |
-| **Claude Sonnet 4.x** | Balanced | Great | Most coding, analysis, and general work (the default workhorse) |
-| **Claude Opus 4.x** | Slower | Best | The hardest reasoning, research, and complex multi-step problems |
+| **Claude Haiku 5.5** | Fastest | Good | High-volume, simple, latency-sensitive tasks |
+| **Claude Sonnet 5.x** | Balanced | Great | Most coding, analysis, and general work (the default workhorse) |
+| **Claude Opus 5.x** | Slower | Best | The hardest reasoning, research, and complex multi-step problems |
 
-The naming pattern is consistent: **Haiku** = fast and cheap, **Sonnet** = balanced, **Opus** = most capable. The number (4.x) is the generation. Claude models offer large context windows (on the order of 200K tokens), enough to hold whole documents or codebases in a single request. The general rule for picking a tier: start with Sonnet for everyday work, drop to Haiku when you need volume and speed, and reach for Opus only when a task genuinely needs the deepest reasoning.
+The naming pattern is consistent: **Haiku** = fast and cheap, **Sonnet** = balanced, **Opus** = most capable. The number (5.x) is the generation. Claude models offer large context windows (up to 1M tokens), enough to hold whole documents or codebases in a single request. The general rule for picking a tier: start with Sonnet for everyday work, drop to Haiku when you need volume and speed, and reach for Opus only when a task genuinely needs the deepest reasoning.
 
 ### Prompting Claude well: XML tags
 
@@ -39,7 +39,7 @@ Claude has a documented preference for **XML-style tags** to structure prompts. 
 
 ### Extended thinking
 
-Claude supports **extended thinking** a mode where the model reasons in a hidden scratchpad before producing its visible answer. This is chain-of-thought built into the model: enabling it (with a thinking "budget" of tokens) improves math, coding, and multi-step reasoning. Conceptually it gives the model room to work through a problem privately, the same way a person sketches on scratch paper before writing the final answer.
+Claude supports **extended thinking** a mode where the model reasons in a hidden scratchpad before producing its visible answer. This is chain-of-thought built into the model: enabling it (on current models with an `effort` setting rather than a fixed thinking "budget" of tokens) improves math, coding, and multi-step reasoning. Conceptually it gives the model room to work through a problem privately, the same way a person sketches on scratch paper before writing the final answer.
 
 ### Tool use (function calling)
 
@@ -130,7 +130,7 @@ Cursor's **Agent mode** (toggled in Composer) is its most autonomous: it can run
 
 ### Model selection, privacy, and MCP
 
-- **Model selection** Cursor lets you choose the underlying model per request: a Claude Sonnet 4.x as the recommended default, a more powerful model for hard reasoning, or a small fast model for autocomplete.
+- **Model selection** Cursor lets you choose the underlying model per request: a Claude Sonnet 5.x as the recommended default, a more powerful model for hard reasoning, or a small fast model for autocomplete.
 - **Privacy mode** When enabled, your code is **not stored on Cursor's servers and not used for training**, which matters for proprietary codebases.
 - **MCP (Model Context Protocol)** An open standard for connecting models to external tools and data sources. Cursor supports MCP servers (configured in `.cursor/mcp.json`), so you can extend it with custom integrations a filesystem server, a database connector, and so on.
 
@@ -253,7 +253,7 @@ A **browser-based IDE** with an **Agent** that can build and **instantly deploy*
 
 ### Google AI Studio
 
-A free **playground for Google's Gemini models** where you can experiment and generate an API key. Notable for very large context windows (up to ~1M tokens, enough for whole codebases or books), multimodal input (text, image, audio, video, PDF), code execution, and reusable system instructions. Best for experimenting with Gemini, long-context tasks, and free API access. (The notebook's Gemini example uses the `google.generativeai` package, which is now deprecated in favor of the newer `google-genai` SDK a reminder that SDKs move quickly and you should check current docs.)
+A free **playground for Google's Gemini models** where you can experiment and generate an API key. Notable for very large context windows (up to ~1M tokens, enough for whole codebases or books), multimodal input (text, image, audio, video, PDF), code execution, and reusable system instructions. Best for experimenting with Gemini, long-context tasks, and free API access. (The notebook's Gemini example uses the newer `google-genai` SDK; the older `google.generativeai` package is deprecated a reminder that SDKs move quickly and you should check current docs.)
 
 ### NotebookLM (Google)
 
@@ -274,7 +274,7 @@ The notebook includes a small decision-tree that maps task keywords to recommend
 | Hardest reasoning | Claude Opus or a GPT reasoning model |
 | Autonomous multi-file coding | Windsurf (Cascade) or Cursor Agent |
 | Browser coding + instant deploy | Replit |
-| Image generation | ChatGPT / DALL·E |
+| Image generation | ChatGPT / GPT-Image |
 
 Two external resources help keep these comparisons current: the **LMSYS Chatbot Arena** (crowd-voted model rankings) and **Artificial Analysis** (benchmarks and pricing).
 

@@ -79,6 +79,7 @@
 <script>
 let ws = null;
 let taskId = null;
+let polledLogLen = 0;
 
 const agentStages = {
   'Research complete': 'research',
@@ -117,7 +118,7 @@ async function startResearch(){
 
   const r = await fetch('/research',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({topic})});
   const d = await r.json();
-  taskId = d.task_id;
+  taskId = d.task_id; polledLogLen = 0;
   addLog(`🚀 Task started: ${taskId.slice(0,8)}...`);
   setAgentState('research','active','Searching the web...');
   setProgress(10);
@@ -132,6 +133,7 @@ async function startResearch(){
       addLog(msg.message);
       updateAgentFromLog(msg.message);
     } else if(msg.type==='done'){
+      if(msg.status==='error'){ showError(msg.error); return; }
       setProgress(100);
       ['research','writer','reviewer'].forEach(a=>setAgentState(a,'done','Done ✅'));
       showReport(msg.report);
@@ -159,7 +161,9 @@ async function pollStatus(){
   if(!taskId) return;
   const r = await fetch(`/task/${taskId}`);
   const d = await r.json();
-  d.log.forEach(addLog);
+  d.log.slice(polledLogLen).forEach(addLog);   // only the new lines
+  polledLogLen = d.log.length;
+  if(d.status==='error'){ showError(d.error); return; }
   if(d.status==='complete'){
     const rr = await fetch(`/report/${taskId}`);
     const rd = await rr.json();
@@ -168,6 +172,11 @@ async function pollStatus(){
   } else if(d.status!=='error'){
     setTimeout(pollStatus, 2000);
   }
+}
+
+function showError(err){
+  addLog('❌ Error: '+(err||'unknown error'));
+  ['research','writer','reviewer'].forEach(a=>setAgentState(a,'idle','Stopped'));
 }
 
 function showReport(text){

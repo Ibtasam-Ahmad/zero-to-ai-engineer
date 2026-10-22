@@ -1,0 +1,11 @@
+# Prometheus config for docker-compose.yml: scrape the sentiment API every 15 s.
+# The app's Prometheus-format metrics are at /metrics/prometheus
+# (plain /metrics returns a JSON summary, which Prometheus cannot parse).
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: sentiment-api
+    metrics_path: /metrics/prometheus
+    static_configs:
+      - targets: ["app:8005"]   # "app" = the service name in docker-compose.yml

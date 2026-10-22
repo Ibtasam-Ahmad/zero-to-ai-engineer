@@ -58,7 +58,7 @@ Several production features appear right in the task definitions:
 
 ### Deployments and scheduling
 
-Running a flow once in a notebook is development. Production needs it to run *on its own*. Prefect's answer is a **deployment** a flow packaged together with a schedule and the infrastructure to run on. The notebook shows building a deployment with a `CronSchedule`. **Cron** is a standard syntax for expressing schedules; `"0 2 * * *"` means "at minute 0 of hour 2, every day" i.e. 2 a.m. daily. A **work pool** defines the infrastructure (a local process, Docker, Kubernetes), and a **worker** is the agent that picks up scheduled runs and executes them. A **block** is reusable configuration such as stored credentials. The lifecycle is: `prefect server start` (the control plane), `prefect worker start` (the executor), and deployments that the scheduler triggers on cron.
+Running a flow once in a notebook is development. Production needs it to run *on its own*. Prefect's answer is a **deployment** a flow packaged together with a schedule and the infrastructure to run on. The notebook shows creating a deployment with `flow.deploy(..., cron=...)` (Prefect 3 removed the older `Deployment.build_from_flow`). **Cron** is a standard syntax for expressing schedules; `"0 2 * * *"` means "at minute 0 of hour 2, every day" i.e. 2 a.m. daily. A **work pool** defines the infrastructure (a local process, Docker, Kubernetes), and a **worker** is the agent that picks up scheduled runs and executes them. A **block** is reusable configuration such as stored credentials. The lifecycle is: `prefect server start` (the control plane), `prefect worker start` (the executor), and deployments that the scheduler triggers on cron.
 
 ## Apache Airflow
 
@@ -77,7 +77,7 @@ Airflow's vocabulary is slightly different but maps onto the same concepts:
 
 The notebook's `ml_training_pipeline` DAG demonstrates Airflow idioms. It declares `default_args` shared by all tasks including `retries: 2`, `retry_delay`, and `email_on_failure` for alerting. The `_extract_data` task uses `xcom_push` to hand the data path to the next task, which retrieves it with `xcom_pull`; this is how Airflow tasks, which may run in separate processes, share information. Tasks are grouped with a `TaskGroup` (a visual/logical cluster of related tasks, here "data_preparation"), and dependencies are declared with the readable `>>` operator: `data_prep >> train >> evaluate >> notify`. That single line *is* the DAG's edge structure.
 
-Other notebook highlights: `schedule_interval='@daily'` sets the cadence, `catchup=False` disables automatic backfilling of past missed runs, and tags organize DAGs in the UI. The setup section shows the operational commands initialize the metadata database, create an admin user, and start the **webserver** (the UI) and **scheduler**.
+Other notebook highlights: `schedule='@daily'` sets the cadence (Airflow 3 removed the older `schedule_interval`), `catchup=False` disables automatic backfilling of past missed runs, and tags organize DAGs in the UI. The setup section shows the operational commands initialize the metadata database (`airflow db migrate`), create an admin user, and start the **API server** (the UI; `airflow webserver` in Airflow 2), the **scheduler** and the **DAG processor**.
 
 ## ZenML
 

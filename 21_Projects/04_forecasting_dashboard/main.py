@@ -20,13 +20,17 @@ def smape(y_true, y_pred):
     return 100 * np.mean(2 * np.abs(y_pred - y_true) / (np.abs(y_true) + np.abs(y_pred) + 1e-8))
 
 
-def generate_sample_data(n_points: int = 365) -> pd.DataFrame:
-    """Generate synthetic time series with trend + seasonality + noise."""
+def generate_sample_data(n_points: int = 365, seed: int = 42) -> pd.DataFrame:
+    """Generate synthetic time series with trend + seasonality + noise.
+
+    Seeded so that every call returns the SAME series: the history shown in the
+    dashboard is then exactly the data the models forecast.
+    """
     dates = pd.date_range("2022-01-01", periods=n_points, freq="D")
     t = np.arange(n_points)
     trend = 0.05 * t
     seasonality = 10 * np.sin(2 * np.pi * t / 365) + 5 * np.sin(2 * np.pi * t / 7)
-    noise = np.random.normal(0, 2, n_points)
+    noise = np.random.default_rng(seed).normal(0, 2, n_points)
     values = 100 + trend + seasonality + noise
     return pd.DataFrame({"ds": dates, "y": values})
 
@@ -36,14 +40,20 @@ def forecast_arima(df: pd.DataFrame, horizon: int) -> Dict:
         from statsmodels.tsa.arima.model import ARIMA
         y = df["y"].values
         split = int(len(y) * 0.8)
-        model = ARIMA(y[:split], order=(2, 1, 2)).fit()
+        # 1) Evaluate: fit on the first 80%, measure MAE on the held-out 20%.
+        eval_model = ARIMA(y[:split], order=(2, 1, 2)).fit()
+        test = y[split:split+horizon]
+        mae = mean_absolute_error(test, eval_model.forecast(steps=len(test))) if len(test) else None
+        # 2) Forecast: refit on ALL the data so the forecast starts after the last date
+        #    (a model fitted on 80% would "forecast" days that are already in the history).
+        model = ARIMA(y, order=(2, 1, 2)).fit()
         fc = model.forecast(steps=horizon)
-        ci = model.get_forecast(steps=horizon).conf_int()
-        mae = mean_absolute_error(y[split:split+horizon], fc[:len(y)-split]) if len(y) > split else None
+        # y is a NumPy array, so conf_int() returns an array (not a DataFrame): no .iloc
+        ci = np.asarray(model.get_forecast(steps=horizon).conf_int())
         return {
             "model": "ARIMA", "forecast": fc.tolist(),
-            "lower": ci.iloc[:, 0].tolist(), "upper": ci.iloc[:, 1].tolist(),
-            "mae": round(float(mae), 3) if mae else None,
+            "lower": ci[:, 0].tolist(), "upper": ci[:, 1].tolist(),
+            "mae": round(float(mae), 3) if mae is not None else None,
         }
     except Exception as e:
         logger.warning(f"ARIMA failed: {e}")
@@ -53,9 +63,17 @@ def forecast_arima(df: pd.DataFrame, horizon: int) -> Dict:
 def forecast_prophet(df: pd.DataFrame, horizon: int) -> Dict:
     try:
         from prophet import Prophet
-        m = Prophet(yearly_seasonality=True, weekly_seasonality=True, daily_seasonality=False)
+        def new_model():
+            return Prophet(yearly_seasonality=True, weekly_seasonality=True, daily_seasonality=False)
+
         split = int(len(df) * 0.8)
-        m.fit(df.iloc[:split])
+        # 1) Evaluate: fit on the first 80%, measure MAE on the held-out 20%.
+        test = df.iloc[split:split+horizon]
+        eval_m = new_model().fit(df.iloc[:split])
+        mae = mean_absolute_error(test["y"], eval_m.predict(test[["ds"]])["yhat"]) if len(test) else None
+        # 2) Forecast: refit on ALL the data, so make_future_dataframe() continues
+        #    from the last real date instead of from the end of the 80% split.
+        m = new_model().fit(df)
         future = m.make_future_dataframe(periods=horizon)
         fc = m.predict(future).tail(horizon)
         return {
@@ -63,7 +81,7 @@ def forecast_prophet(df: pd.DataFrame, horizon: int) -> Dict:
             "forecast": fc["yhat"].tolist(),
             "lower":    fc["yhat_lower"].tolist(),
             "upper":    fc["yhat_upper"].tolist(),
-            "mae": None,
+            "mae": round(float(mae), 3) if mae is not None else None,
         }
     except Exception as e:
         logger.warning(f"Prophet failed: {e}")
@@ -117,7 +135,9 @@ def forecast_lstm(df: pd.DataFrame, horizon: int) -> Dict:
         import torch.nn as nn
 
         y = df["y"].values.astype(np.float32)
-        mean, std = y.mean(), y.std()
+        # plain Python floats: with NumPy 2, float * np.float32 stays float32, which
+        # FastAPI cannot turn into JSON ("'numpy.float32' object is not iterable")
+        mean, std = float(y.mean()), float(y.std())
         y_norm = (y - mean) / std
         LAGS = 14
 
@@ -183,7 +203,7 @@ def _mock_forecast(name: str, df: pd.DataFrame, horizon: int) -> Dict:
         "lower":    [round(p - 2*std, 3) for p in preds],
         "upper":    [round(p + 2*std, 3) for p in preds],
         "mae":      None,
-        "note":     f"{name} library not installed showing mock forecast",
+        "note":     f"{name} failed or is not installed: showing a mock forecast (see the server log)",
     }
 
 

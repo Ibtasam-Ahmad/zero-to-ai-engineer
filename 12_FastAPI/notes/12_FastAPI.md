@@ -336,7 +336,7 @@ FastAPI supports this directly. `OAuth2PasswordBearer` is a dependency that know
 
 ### 9.3 Password hashing
 
-Passwords must **never** be stored as plain text. The notebook uses `passlib` with the **bcrypt** algorithm to store a **hash** a one-way scrambled form of the password. When a user logs in, the server hashes the supplied password and compares it to the stored hash; it can verify a password without ever knowing the original. The notebook also notes that the JWT secret key must be kept secret and replaced with a strong random value in production.
+Passwords must **never** be stored as plain text. The notebook uses `pwdlib` (the maintained successor to `passlib`) with the **bcrypt** algorithm to store a **hash** a one-way scrambled form of the password. When a user logs in, the server hashes the supplied password and compares it to the stored hash; it can verify a password without ever knowing the original. The notebook also notes that the JWT secret key must be kept secret: it is read from the `SECRET_KEY` environment variable (set it to a strong random value, e.g. `openssl rand -hex 32`), and if that is missing the notebook falls back to a random development key and prints a warning. The tokens themselves are created and verified with `PyJWT` (`import jwt`).
 
 ---
 

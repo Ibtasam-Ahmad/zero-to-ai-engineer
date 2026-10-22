@@ -2,7 +2,7 @@
 
 import time
 import uuid
-from typing import List, Optional
+from typing import Annotated, List, Optional
 
 from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
@@ -45,8 +45,9 @@ class PredictResponse(BaseModel):
 
 
 class BatchRequest(BaseModel):
-    texts:         List[str] = Field(..., max_length=50)
-    model_version: Optional[str] = "baseline"
+    # 1-50 texts, each 1-10000 characters; same model_version rule as /predict
+    texts:         List[Annotated[str, Field(min_length=1, max_length=10000)]] = Field(..., min_length=1, max_length=50)
+    model_version: Optional[str] = Field("baseline", pattern="^(baseline|bert)$")
 
 
 @app.post("/predict", response_model=PredictResponse)
@@ -56,9 +57,10 @@ def predict(request: Request, req: PredictRequest):
         result = model_module.predict(req.text, req.model_version)
     except FileNotFoundError:
         raise HTTPException(503, "Model not found run python main.py to train first")
-    monitoring.log_prediction(req.text, result)
+    request_id = str(uuid.uuid4())[:8]  # one id, used in the response AND the prediction log
+    monitoring.log_prediction(req.text, result, request_id)
     return {
-        "request_id":    str(uuid.uuid4())[:8],
+        "request_id":    request_id,
         "text_preview":  req.text[:100] + ("..." if len(req.text) > 100 else ""),
         **result,
     }
@@ -69,9 +71,13 @@ def predict(request: Request, req: PredictRequest):
 def predict_batch(request: Request, req: BatchRequest):
     results = []
     for text in req.texts:
-        result = model_module.predict(text, req.model_version)
-        monitoring.log_prediction(text, result)
-        results.append({"text_preview": text[:60], **result})
+        try:
+            result = model_module.predict(text, req.model_version)
+        except FileNotFoundError:
+            raise HTTPException(503, "Model not found run python main.py to train first")
+        request_id = str(uuid.uuid4())[:8]
+        monitoring.log_prediction(text, result, request_id)
+        results.append({"request_id": request_id, "text_preview": text[:60], **result})
     return {"count": len(results), "results": results}
 
 

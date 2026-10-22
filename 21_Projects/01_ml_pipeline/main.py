@@ -17,7 +17,7 @@ from sklearn.datasets import load_diabetes
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import LinearRegression, Ridge
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
-from sklearn.model_selection import cross_val_score, train_test_split
+from sklearn.model_selection import cross_val_predict, cross_val_score, train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
@@ -33,6 +33,7 @@ except ImportError:
     logger.warning("XGBoost not installed. Skipping XGBoost model.")
 
 MODEL_DIR = "models"
+INTERVAL_LEVEL = 0.90  # the API reports a 90% prediction interval
 os.makedirs(MODEL_DIR, exist_ok=True)
 
 
@@ -52,6 +53,22 @@ def evaluate_model(model, X_test: np.ndarray, y_test: np.ndarray) -> Dict[str, f
     rmse = np.sqrt(mean_squared_error(y_test, preds))
     r2 = r2_score(y_test, preds)
     return {"MAE": mae, "RMSE": rmse, "R2": r2}
+
+
+def compute_interval(pipeline, X_train, y_train, X_test, y_test, level: float = INTERVAL_LEVEL) -> Dict[str, float]:
+    """
+    Prediction interval from cross-validated residuals (a simple "split conformal" idea).
+    residual = true value - predicted value, measured on folds the model did NOT train on.
+    With level=0.90 the 5% and 95% quantiles of the residuals give: pred + low ... pred + high.
+    Also reports how often the interval contained the true value on the test set.
+    """
+    residuals = np.asarray(y_train) - cross_val_predict(pipeline, X_train, y_train, cv=5)
+    alpha = (1 - level) / 2
+    low, high = np.quantile(residuals, [alpha, 1 - alpha])
+    test_preds = pipeline.predict(X_test)
+    y_test = np.asarray(y_test)
+    covered = float(((y_test >= test_preds + low) & (y_test <= test_preds + high)).mean())
+    return {"level": level, "lower_offset": float(low), "upper_offset": float(high), "test_coverage": covered}
 
 
 def build_models() -> Dict[str, Pipeline]:
@@ -105,7 +122,10 @@ def train_and_evaluate(test_size: float = 0.2, random_state: int = 42) -> str:
             mlflow.log_metrics(metrics)
             mlflow.log_metric("cv_r2_mean", cv_scores.mean())
             mlflow.log_metric("cv_r2_std", cv_scores.std())
-            mlflow.sklearn.log_model(pipeline, "model")
+            try:
+                mlflow.sklearn.log_model(pipeline, "model")
+            except Exception as e:  # e.g. MLflow 3.x refuses to save XGBoost this way; metrics are still logged
+                logger.warning(f"  Could not log {name} model to MLflow ({type(e).__name__}); continuing.")
 
             results[name] = metrics
             logger.info(f"  {name}: MAE={metrics['MAE']:.2f}, RMSE={metrics['RMSE']:.2f}, R²={metrics['R2']:.4f}")
@@ -114,6 +134,9 @@ def train_and_evaluate(test_size: float = 0.2, random_state: int = 42) -> str:
     best_name = max(results, key=lambda k: results[k]["R2"])
     best_pipeline = models[best_name]
     best_pipeline.fit(X_train, y_train)  # refit on train
+    interval = compute_interval(best_pipeline, X_train, y_train, X_test, y_test)
+    logger.info(f"{interval['level']:.0%} prediction interval: pred {interval['lower_offset']:+.1f} .. "
+                f"pred {interval['upper_offset']:+.1f} (covered {interval['test_coverage']:.0%} of test patients)")
 
     model_path = os.path.join(MODEL_DIR, "best_model.joblib")
     meta_path = os.path.join(MODEL_DIR, "model_meta.joblib")
@@ -123,6 +146,7 @@ def train_and_evaluate(test_size: float = 0.2, random_state: int = 42) -> str:
         "metrics": results[best_name],
         "feature_names": list(X.columns),
         "all_results": results,
+        "interval": interval,
     }, meta_path)
 
     logger.info(f"\nBest model: {best_name} (R²={results[best_name]['R2']:.4f})")

@@ -1,0 +1,9 @@
+# Keep the build context small and reproducible
+.venv/
+venv/
+__pycache__/
+*.pyc
+models/
+data/
+.git/
+.ipynb_checkpoints/

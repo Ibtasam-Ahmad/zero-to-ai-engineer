@@ -5,7 +5,7 @@
 > **A complete, beginner-friendly roadmap to master Machine Learning → Deep Learning → LLMs → RAG → Agentic AI with every resource you'll ever need.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![Made with Love](https://img.shields.io/badge/Made%20with-❤️-red.svg)]()
 
 **🎯 Goal**: Take you from *"What is AI?"* to building production-grade autonomous AI systems.
@@ -14,15 +14,19 @@
 
 [🚀 Quick Start](#-quick-start-for-absolute-beginners) • [📚 Full Roadmap](#-the-complete-roadmap) • [🛠️ Projects](#-build-projects) • [📖 Resources](#-mega-resource-library)
 
+**🆕 New to AI? Start here:** [👋 START_HERE.md](START_HERE.md) (setup) → [🧭 LEARNING_PATH.md](LEARNING_PATH.md) (what to study, in order) • [📖 GLOSSARY.md](GLOSSARY.md) (terms in plain English)
+
 </div>
 
 ---
 
 ## 📖 Table of Contents
 
+- [🌱 Start Here: New to AI?](#-start-here-new-to-ai)
 - [📂 Repository Structure](#-repository-structure)
 - [📝 Conceptual Study Notes (with Diagrams)](#-conceptual-study-notes-with-diagrams)
 - [🏭 Industry Practice Notebooks](#-industry-practice-notebooks)
+- [🌱 Start Here Notebooks](#-start-here-notebooks)
 - [✅ All Notebooks Verified Runnable](#-all-notebooks-verified-runnable)
 - [🌟 Why This Roadmap?](#-why-this-roadmap)
 - [🚀 Quick Start for Absolute Beginners](#-quick-start-for-absolute-beginners)
@@ -43,18 +47,42 @@
 
 ---
 
+## 🌱 Start Here: New to AI?
+
+If you are a complete beginner, don't start at folder `00` and read straight through. Use these three guides:
+
+| Guide | What it gives you |
+|---|---|
+| [👋 **START_HERE.md**](START_HERE.md) | Set up in 20–60 minutes: Google Colab (nothing to install) or your own computer, how to run a notebook, a first-week plan, troubleshooting |
+| [🧭 **LEARNING_PATH.md**](LEARNING_PATH.md) | The study order for all folders, stage by stage, marked ⭐ core / ✅ recommended / 🔹 optional, plus which extra packages each module needs |
+| [📖 **GLOSSARY.md**](GLOSSARY.md) | 212 AI / ML / LLM / MLOps terms in plain English, each linked to the notebook that teaches it |
+
+Then begin with the 🌱 **Start Here notebooks** (`00_start_here_*.ipynb`, see [the list](#-start-here-notebooks)). They are gentle, fully runnable introductions to each big area, run on a normal CPU with no API key, and end with exercises and solutions.
+
+---
+
 ## 📂 Repository Structure
 
-> **250 Jupyter notebooks** covering the complete AI/ML stack from Python basics to production deployment. Every notebook contains markdown explanations with LaTeX math formulas, code (scratch → library → production), and an Additional Learning Resources section.
+> **260 Jupyter notebooks** covering the complete AI/ML stack from Python basics to production deployment. Every notebook contains markdown explanations with LaTeX math formulas, code (scratch → library → production), and an Additional Learning Resources section.
+>
+> 🌱 **10 of them are Start Here notebooks** (`00_start_here_<topic>.ipynb`, marked 🌱 below): the first notebook to open in each big area, written for complete beginners. See [Start Here Notebooks](#-start-here-notebooks).
 >
 > 🏭 **42 of them are industry-practice companions** (`NN_industry_<topic>.ipynb`, marked 🏭 below), placed next to the theory notebooks in every section. They show how each topic is done at a real company, with beginner-friendly markdown and heavily commented code see [Industry Practice Notebooks](#-industry-practice-notebooks).
 >
-> 🆕 Each section folder also has a **`notes/` sub-folder** with a comprehensive, plain-English **conceptual study guide** (with diagrams) see [Conceptual Study Notes](#-conceptual-study-notes-with-diagrams). Every notebook has been **executed and verified to run** on a current Python 3.12 stack, with a root **`requirements.txt`** pinning the full environment see [Verified Runnable](#-all-notebooks-verified-runnable).
+> 🆕 Each section folder also has a **`notes/` sub-folder** with a comprehensive, plain-English **conceptual study guide** (with diagrams) see [Conceptual Study Notes](#-conceptual-study-notes-with-diagrams). Every notebook has been **executed and verified to run** on a current Python 3.12 stack. Beginners install the small, tested **`requirements-beginner.txt`**; the root **`requirements.txt`** pins the full environment. See [Verified Runnable](#-all-notebooks-verified-runnable).
 
 ```
 zero-to-ai-engineer/
 │
+├── START_HERE.md                             # 👋 Setup guide: Colab or local install, first notebook, troubleshooting
+├── LEARNING_PATH.md                          # 🧭 Study order (core / recommended / optional) + extra installs per module
+├── GLOSSARY.md                               # 📖 212 AI/ML/LLM/MLOps terms in plain English
+├── requirements-beginner.txt                 # Small tested install (Python 3.10-3.12, CPU only)
+├── requirements.txt                          # Full pinned environment for every notebook (Python 3.12+)
+├── LICENSE                                   # MIT
+│
 ├── 00_AI_Fundamentals/
+│   ├── 00_start_here_what_is_ai.ipynb            # 🌱 Start Here: AI vs ML vs DL vs LLMs, key vocabulary, map of this repo
 │   ├── 01_bias_and_fairness.ipynb            # Algorithmic bias types, fairness metrics, Fairlearn, AIF360
 │   ├── 02_transparency_and_explainability.ipynb  # SHAP, LIME, PDP, ICE, model cards, interpretability
 │   ├── 03_accountability_and_governance.ipynb    # AI governance, EU AI Act, NIST RMF, OECD principles
@@ -66,6 +94,7 @@ zero-to-ai-engineer/
 │       └── 00_AI_Fundamentals.md             # Conceptual study guide with Mermaid diagrams
 │
 ├── 01_Python/
+│   ├── 00_start_here_jupyter_terminal_and_debugging.ipynb # 🌱 Start Here: Jupyter, terminal, pip/venv, reading errors, Git in 5 minutes
 │   ├── 01_basic.ipynb                        # Variables, OOP, comprehensions, file I/O, error handling
 │   ├── 02_industrial.ipynb                   # Decorators, type hints, Pydantic, logging, testing, async
 │   ├── 03_advanced.ipynb                     # Metaclasses, descriptors, generators, memory, concurrency
@@ -87,6 +116,7 @@ zero-to-ai-engineer/
 │   └── notes/
 │
 ├── 03_Machine_Learning/
+│   ├── 00_start_here_your_first_ml_model.ipynb  # 🌱 Start Here: split, baseline, train, evaluate, overfitting, leakage, saving
 │   ├── 01_supervised/
 │   │   ├── 00_preprocessing.ipynb            # Feature preprocessing, TargetEncoder, encoders, scalers, pipelines
 │   │   ├── 01_linear_regression.ipynb        # Ridge, Lasso, Elastic Net, polynomial
@@ -167,6 +197,7 @@ zero-to-ai-engineer/
 │       └── 03_house_price.py
 │
 ├── 04_Forecasting/
+│   ├── 00_start_here_forecasting_done_right.ipynb # 🌱 Start Here: baselines, time-based splits, honest backtesting, leakage traps
 │   ├── 01_time_series_basics.ipynb           # Stationarity, decomposition, ACF/PACF, ADF test
 │   ├── 02_classical_methods.ipynb            # ARIMA, SARIMA, SARIMAX, VAR, Exponential Smoothing, TBATS
 │   ├── 03_ml_for_forecasting.ipynb           # XGBoost/LightGBM for TS, lag features, rolling stats
@@ -186,12 +217,13 @@ zero-to-ai-engineer/
 │       └── 03_sales_forecast.py
 │
 ├── 05_Deep_Learning/
+│   ├── 00_start_here_pytorch_from_zero.ipynb    # 🌱 Start Here: tensors, autograd, the training loop, debugging training
 │   ├── 01_neural_network_fundamentals.ipynb  # Activations, backprop derivation, BatchNorm, Xavier/He init
-│   ├── 02_optimizers.ipynb                   # SGD, Adam, AdamW, Lion, SAM, Sophia, schedulers
+│   ├── 02_optimizers.ipynb                   # SGD, Adam, AdamW, Lion, schedulers
 │   ├── 03_cnn.ipynb                          # LeNet→ConvNeXt, ResNet, EfficientNet, transfer learning
 │   ├── 04_rnn_lstm_gru.ipynb                 # All 5 LSTM gate equations, Word2Vec, GloVe, BPTT
 │   ├── 05_transformers_architecture.ipynb    # Scaled dot-product attention, sinusoidal PE, full transformer
-│   ├── 06_generative_models.ipynb            # VAE ELBO, GAN minimax, DDPM, VQVAE, ControlNet
+│   ├── 06_generative_models.ipynb            # VAE ELBO, GAN minimax, DDPM
 │   ├── 07_gnn.ipynb                          # GCN, GAT, GraphSAGE, GIN, DGI, contrastive graph SSL
 │   ├── 08_model_compression.ipynb            # Knowledge distillation, LoRA (W=W₀+BA), QLoRA
 │   ├── 09_self_supervised_learning.ipynb     # SimCLR, MoCo, BYOL, DINO, MAE, BEiT, I-JEPA, Barlow Twins
@@ -203,7 +235,6 @@ zero-to-ai-engineer/
 │   ├── 15_multi_task_learning.ipynb          # Hard/soft parameter sharing, uncertainty weighting, MTL benchmarks
 │   ├── 16_industry_pytorch_training_pipeline.ipynb # 🏭 Industry: professional training loop: checkpoints, resume, early stopping, sanity checks
 │   ├── 17_industry_model_export_and_inference.ipynb # 🏭 Industry: TorchScript/ONNX export, parity checks, quantization, latency benchmarks
-│   ├── lora-sst2/                        # LoRA fine-tuning output folder
 │   ├── peft_comparison.png               # PEFT methods comparison image
 │   ├── notes/
 │   └── projects/
@@ -212,12 +243,13 @@ zero-to-ai-engineer/
 │       └── 03_text_generator.py
 │
 ├── 06_Computer_Vision/
+│   ├── 00_start_here_images_and_your_first_cnn.ipynb # 🌱 Start Here: pixels, convolutions, a CNN trained on CPU
 │   ├── 01_image_basics_opencv.ipynb          # OpenCV, morphology, filtering, SIFT, ORB, optical flow
 │   ├── 02_image_classification.ipynb         # timm, EfficientNet, ViT, data augmentation, TTA
 │   ├── 03_object_detection.ipynb             # YOLO v1-v11, Faster R-CNN, DETR, RT-DETR, YOLO-World
-│   ├── 04_image_segmentation.ipynb           # U-Net, SAM, SAM2, OneFormer, Mask2Former, SegFormer
+│   ├── 04_image_segmentation.ipynb           # U-Net, SAM, SAM2, SegFormer
 │   ├── 05_vision_transformers.ipynb          # ViT, DeiT, Swin, CLIP, DINO, DINOv2, EVA-CLIP, SigLIP
-│   ├── 06_image_generation.ipynb             # Stable Diffusion, SDXL, Flux, ControlNet, DreamBooth, LCM
+│   ├── 06_image_generation.ipynb             # Stable Diffusion, ControlNet
 │   ├── 07_ocr_and_pose.ipynb                 # PaddleOCR, TrOCR, Donut, MediaPipe, RTMPose, DWPose
 │   ├── 08_video_analysis.ipynb               # I3D, SlowFast, VideoMAE, ByteTrack, Video-LLaMA, Sora
 │   ├── 09_3d_vision.ipynb                    # NeRF, Instant-NGP, 3D Gaussian Splatting, PointNet, BEVFormer
@@ -231,6 +263,7 @@ zero-to-ai-engineer/
 │       └── 03_image_similarity.py
 │
 ├── 07_NLP/
+│   ├── 00_start_here_text_to_numbers.ipynb      # 🌱 Start Here: tokens, bag of words, TF-IDF, embeddings, semantic search
 │   ├── 01_text_preprocessing.ipynb           # Tokenization (BPE/WordPiece/SentencePiece), TF-IDF, BM25
 │   ├── 02_word_embeddings.ipynb              # Word2Vec, GloVe, FastText, ELMo, contextualized embeddings
 │   ├── 03_text_classification.ipynb          # BERT fine-tuning, SetFit, zero-shot classification
@@ -251,6 +284,7 @@ zero-to-ai-engineer/
 │       └── 03_ner_extractor.py
 │
 ├── 08_LLM/
+│   ├── 00_start_here_how_llms_work.ipynb        # 🌱 Start Here: next-token prediction, sampling, chat templates, a tiny GPT
 │   ├── 01_chatbots/
 │   │   ├── 01_chatbots.ipynb                 # Multi-turn chat, memory, system prompts, streaming
 │   │   └── notes/
@@ -303,6 +337,7 @@ zero-to-ai-engineer/
 │       └── 03_finetune_classifier.py
 │
 ├── 09_Prompt_Engineering/
+│   ├── 00_start_here_prompting_with_a_free_local_model.ipynb # 🌱 Start Here: every basic technique, run for real with a free local model
 │   ├── 01_basics.ipynb                       # Zero-shot, few-shot, prompt anatomy, roles
 │   ├── 02_techniques.ipynb                   # CoT, Zero-Shot CoT, Self-Consistency, ToT, ReAct, Reflexion
 │   ├── 03_advanced.ipynb                     # DSPy, Instructor, Program-of-Thoughts, Step-Back
@@ -377,6 +412,7 @@ zero-to-ai-engineer/
 │   └── notes/
 │
 ├── 14_Mathematics/
+│   ├── 00_start_here_math_notation_bridge.ipynb # 🌱 Start Here: from high-school maths to ML notation, formula → code
 │   ├── 01_linear_algebra.ipynb               # SVD (A=UΣVᵀ), eigendecomp, matrix calculus
 │   ├── 02_calculus.ipynb                     # Gradients, Jacobian, Hessian, backprop derivation
 │   ├── 03_probability.ipynb                  # 13 distributions with PDF/PMF LaTeX formulas
@@ -489,6 +525,7 @@ zero-to-ai-engineer/
 │
 └── 21_Projects/                              # 6 end-to-end capstone projects (FastAPI + HTML/CSS/JS)
     ├── 01_ml_pipeline/                       # Scikit-learn pipeline API with train/predict/explain endpoints
+    │   ├── README.md                         # How to run it (tested steps) + remaining limitations
     │   ├── api.py
     │   ├── main.py
     │   ├── train.py
@@ -496,26 +533,30 @@ zero-to-ai-engineer/
     │   ├── templates/index.html
     │   └── notes/
     ├── 02_rag_chatbot/                       # Document Q&A chatbot (drop PDFs in docs/ folder)
+    │   ├── README.md                         # How to run it (tested steps) + remaining limitations
     │   ├── api.py
     │   ├── main.py
     │   ├── ingest.py
-    │   ├── docs/                             # Place PDF files here for ingestion
+    │   ├── docs/                             # Sample PDF included; add your own PDFs here
     │   ├── requirements.txt
     │   ├── templates/
     │   └── notes/
     ├── 03_computer_vision_app/               # Real-time object detection + segmentation web app
+    │   ├── README.md                         # How to run it (tested steps) + remaining limitations
     │   ├── api.py
     │   ├── main.py
     │   ├── requirements.txt
     │   ├── templates/
     │   └── notes/
     ├── 04_forecasting_dashboard/             # Multi-model forecast comparison (ARIMA/Prophet/LSTM/XGBoost)
+    │   ├── README.md                         # How to run it (tested steps) + remaining limitations
     │   ├── api.py
     │   ├── main.py
     │   ├── requirements.txt
     │   ├── templates/
     │   └── notes/
     ├── 05_multi_agent_system/                # LangGraph multi-agent with research + code + data agents
+    │   ├── README.md                         # How to run it (tested steps) + remaining limitations
     │   ├── agents.py
     │   ├── api.py
     │   ├── graph.py
@@ -524,10 +565,13 @@ zero-to-ai-engineer/
     │   ├── templates/
     │   └── notes/
     ├── 06_production_model/                  # Full MLOps: monitoring + drift detection + Dockerfile + CI/CD
+        ├── README.md                         # How to run it (tested steps) + remaining limitations
         ├── api.py
         ├── main.py
         ├── monitoring.py
         ├── docker-compose.yml
+        ├── prometheus.yml                    # Prometheus scrape config used by docker-compose
+        ├── .dockerignore
         ├── Dockerfile
         ├── requirements.txt
         ├── templates/
@@ -539,24 +583,27 @@ zero-to-ai-engineer/
 
 | Category | Count |
 |----------|-------|
-| Total Jupyter Notebooks | **250** (250 executed & verified ✅) |
+| Total Jupyter Notebooks | **260** (all executed, no errors in saved outputs ✅) |
+| 🌱 Start Here Notebooks (included above) | **10** (first notebook to open in each big area) |
 | 🏭 Industry Practice Notebooks (included above) | **42** (in every section) |
+| Beginner guides | `START_HERE.md`, `LEARNING_PATH.md`, `GLOSSARY.md` (212 terms) |
 | Conceptual Study Guides (`notes/`) | **66** |
 | Mermaid Diagrams in Guides | **254** |
-| AI Fundamentals | 6 |
-| ML & Data Science | 43 |
-| Deep Learning | 15 |
-| Computer Vision | 10 |
-| NLP | 11 |
-| LLM & RAG | 18 |
-| Forecasting | 10 |
-| Agents & RL | 14 |
-| MLOps & Deployment | 19 |
-| Databases & Cloud | 12 |
-| Mathematics & Ethics | 15 |
-| ML System Design | 7 |
-| Capstone Projects (Python scripts) | 31 |
-| Full-Stack Web Projects | 6 |
+| AI Fundamentals & Ethics (`00`, `19`) | 17 |
+| Python & Data Analysis (`01`, `02`) | 16 |
+| Machine Learning (`03`) | 51 |
+| Forecasting (`04`) | 13 |
+| Deep Learning (`05`) | 18 |
+| Computer Vision (`06`) | 13 |
+| NLP (`07`) | 14 |
+| LLMs & Prompt Engineering (`08`, `09`) | 34 |
+| Agents & Reinforcement Learning (`10`, `11`) | 17 |
+| APIs, MLOps, Deployment, Docker, Cloud & Git (`12`, `15`–`18`, `20`) | 41 |
+| Databases (`13`) | 9 |
+| Mathematics (`14`) | 9 |
+| ML System Design (`22`) | 8 |
+| Module mini-projects (Python scripts in `projects/` folders) | 26 |
+| Full-Stack Capstone Projects (`21_Projects`, each with a tested README) | 6 |
 
 
 ## 📝 Conceptual Study Notes (with Diagrams)
@@ -661,19 +708,49 @@ pip install opencv-python-headless==5.0.0.93 gymnasium==1.4.0 stable-baselines3=
 
 ---
 
+## 🌱 Start Here Notebooks
+
+Ten gentle, fully runnable introductions, one for each big area. Each is the **first notebook to open** in its folder (`00_start_here_<topic>.ipynb`). They assume no prior knowledge beyond the notebooks they link to. They explain every new word, keep code cells short and heavily commented, say *what just happened* after each result, and end with a recap, exercises with hidden solutions, and links to what to study next. All of them run on a normal **CPU with no API key**.
+
+| Folder | Start Here notebook | You will learn |
+|---|---|---|
+| `00_AI_Fundamentals` | [`00_start_here_what_is_ai`](00_AI_Fundamentals/00_start_here_what_is_ai.ipynb) | What AI, ML, deep learning and LLMs are; the core vocabulary; the AI project workflow; a map of this repo |
+| `01_Python` | [`00_start_here_jupyter_terminal_and_debugging`](01_Python/00_start_here_jupyter_terminal_and_debugging.ipynb) | Jupyter, the terminal, pip and virtual environments, reading error messages, debugging, Git basics, keeping secrets safe |
+| `14_Mathematics` | [`00_start_here_math_notation_bridge`](14_Mathematics/00_start_here_math_notation_bridge.ipynb) | Greek letters, Σ, vectors and matrices, derivatives and gradient descent, probability, and turning formulas into code |
+| `03_Machine_Learning` | [`00_start_here_your_first_ml_model`](03_Machine_Learning/00_start_here_your_first_ml_model.ipynb) | A complete first project: split, baseline, train, evaluate, overfitting, cross-validation, data leakage, saving a model |
+| `04_Forecasting` | [`00_start_here_forecasting_done_right`](04_Forecasting/00_start_here_forecasting_done_right.ipynb) | Trend and seasonality, naive baselines, time-based splits, honest multi-step forecasts, backtesting, prediction intervals |
+| `05_Deep_Learning` | [`00_start_here_pytorch_from_zero`](05_Deep_Learning/00_start_here_pytorch_from_zero.ipynb) | Tensors, autograd, the 5-step training loop, overfitting and its fixes, debugging a training loop |
+| `06_Computer_Vision` | [`00_start_here_images_and_your_first_cnn`](06_Computer_Vision/00_start_here_images_and_your_first_cnn.ipynb) | Pixels and channels, convolutions by hand, training a CNN on CPU, data augmentation, what filters learn |
+| `07_NLP` | [`00_start_here_text_to_numbers`](07_NLP/00_start_here_text_to_numbers.ipynb) | Tokenization, bag of words, TF-IDF, a first text classifier, embeddings and semantic search |
+| `08_LLM` | [`00_start_here_how_llms_work`](08_LLM/00_start_here_how_llms_work.ipynb) | Next-token prediction on a real model, temperature / top-k / top-p sampling, chat templates and token costs, a tiny GPT trained from scratch, hallucinations |
+| `09_Prompt_Engineering` | [`00_start_here_prompting_with_a_free_local_model`](09_Prompt_Engineering/00_start_here_prompting_with_a_free_local_model.ipynb) | Zero-shot vs few-shot, JSON output, step-by-step reasoning, prompt injection, measuring prompts, all run for real with a free local model |
+
+Notebooks that use a language model download a small one (`Qwen/Qwen2.5-0.5B-Instruct`, about 1 GB) the first time and then work offline.
+
+---
+
 ## ✅ All Notebooks Verified Runnable
 
-Every one of the **250 notebooks has been executed end-to-end and fixed** to run on a current **Python 3.12** stack (NumPy 2.x, pandas, scikit-learn 1.7, PyTorch, Transformers, and more). A root **`requirements.txt`** pins the complete environment.
+All **260 notebooks** were executed on **Python 3.12** (NumPy 2, scikit-learn 1.9, PyTorch 2.12 CPU, Transformers 5), and their saved outputs contain **no error messages**.
 
-- **Version-compatibility fixes** applied throughout (NumPy 2, pandas 3, scikit-learn 1.7, Matplotlib, Transformers, etc.).
-- **API-key / cloud cells** (OpenAI, Anthropic, Gemini, AWS, …) are written against **current SDK documentation** so they execute as-is once you supply credentials.
-- **GPU-only notebooks** (large 7B-32B model loads) are correct but require a GPU to run.
-- **The 42 🏭 industry notebooks** were executed end-to-end from a fresh kernel on **CPU only** (scikit-learn 1.9, PyTorch 2.12 CPU, Transformers 5.12) and need **no GPU and no API key**.
+- **Reviewed and fixed in October 2026:**
+  - library API changes (Transformers 5, MAPIE 1.x, MLflow model aliases, MONAI, TRL, LangChain/Prefect/Airflow/Evidently and others)
+  - outdated model names (current Claude, OpenAI and Gemini models)
+  - data-leakage mistakes in some forecasting and churn examples
+  - a few incorrect explanations and results
+- **No API key needed to run them.** Cells that call paid LLM APIs either fall back to a free local model or print a clear *"skipped: needs X"* message instead of crashing. The same goes for cloud accounts and external services (databases, experiment trackers, …).
+- **GPU-heavy parts** (large-model fine-tuning, big diffusion models) check for a GPU and use small CPU stand-ins or skip with a message.
+- The 🌱 Start Here and 🏭 industry notebooks need **no GPU and no API key**.
 
 ```bash
-# Install the full environment used across all notebooks
+# Beginners: small, tested install (Python 3.10-3.12, CPU only); see START_HERE.md
+pip install -r requirements-beginner.txt
+
+# Everything used anywhere in the repo, pinned (Python 3.12+)
 pip install -r requirements.txt
 ```
+
+Some modules need a few extra packages. The table in [LEARNING_PATH.md](LEARNING_PATH.md#-extra-installs-per-module) lists them per folder.
 
 ---
 
@@ -751,11 +828,11 @@ Before writing a single line of ML code, you should understand the societal impa
 | **Anaconda** | Python environment | [Anaconda Tutorial](https://docs.anaconda.com/free/anaconda/getting-started/) |
 | **Terminal/CLI** | Command line | [Command Line Crash Course](https://www.youtube.com/watch?v=yz7nYlnXLfE) |
 
-**Setup Your Environment:**
+**Setup Your Environment** (full step-by-step guide with troubleshooting: [START_HERE.md](START_HERE.md)):
 ```bash
 # Option A: Anaconda (recommended for beginners — includes Python + Jupyter)
 # Download from: https://www.anaconda.com/download
-conda create -n ai-learning python=3.11
+conda create -n ai-learning python=3.12
 conda activate ai-learning
 
 # Option B: Python venv (lightweight, no Anaconda needed)
@@ -763,10 +840,11 @@ python3 -m venv .venv
 source .venv/bin/activate        # Linux / macOS
 # .venv\Scripts\activate         # Windows
 
-# Install core packages (enough for sections 01-03)
-pip install numpy pandas matplotlib scikit-learn jupyter
+# Install the beginner set (tested on Python 3.10-3.12, CPU only):
+# Jupyter, NumPy, pandas, scikit-learn, PyTorch, Transformers, FastAPI, ...
+pip install -r requirements-beginner.txt
 
-# OR install the full environment used across ALL 250 notebooks
+# OR install the full pinned environment used across ALL 260 notebooks (Python 3.12+)
 pip install -r requirements.txt
 
 # Verify installation

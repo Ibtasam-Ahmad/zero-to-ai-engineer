@@ -78,7 +78,7 @@ The notebook uses **MLflow**, whose backend is an ordinary relational database *
 - **Metrics** the results (e.g., `accuracy`).
 - **Artifacts** output files such as the trained model itself or a chart, stored in object storage.
 
-MLflow groups runs into **experiments** and can register a trained model into its **model registry** with a version and a stage (Production, Staging). Later you load the current production model by name (`models:/IrisClassifier/Production`) without caring which exact run produced it. The relational database here is doing exactly what it does best: storing structured, queryable records of every experiment.
+MLflow groups runs into **experiments** and can register a trained model into its **model registry** with a version and an alias such as `champion` (MLflow's older Production/Staging stages are deprecated). Later you load the current production model by name (`models:/IrisClassifier@champion`) without caring which exact run produced it. The relational database here is doing exactly what it does best: storing structured, queryable records of every experiment.
 
 ## Logging Predictions to a Database
 

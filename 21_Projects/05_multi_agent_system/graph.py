@@ -1,6 +1,6 @@
 """LangGraph StateGraph definition for the multi-agent research system."""
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Callable, Dict, List, Optional
 from typing_extensions import TypedDict
 
 try:
@@ -39,8 +39,12 @@ def build_graph():
     return graph.compile()
 
 
-def run_pipeline(topic: str) -> Dict[str, Any]:
-    """Run the full research pipeline, with or without LangGraph."""
+def run_pipeline(topic: str, on_log: Optional[Callable[[List[str]], None]] = None) -> Dict[str, Any]:
+    """Run the full research pipeline, with or without LangGraph.
+
+    on_log (optional) is called with the activity log after every step, so a caller
+    (e.g. the API) can show live progress instead of waiting for the end.
+    """
     initial_state: ResearchState = {
         "topic":             topic,
         "research_findings": None,
@@ -50,15 +54,24 @@ def run_pipeline(topic: str) -> Dict[str, Any]:
         "log":               [f"🚀 Starting research on: {topic}"],
     }
 
+    def report(state):
+        if on_log:
+            on_log(list(state.get("log", [])))
+
+    report(initial_state)
     compiled = build_graph()
     if compiled:
-        result = compiled.invoke(initial_state)
+        # stream_mode="values" yields the full state after each node finishes
+        result = initial_state
+        for state in compiled.stream(initial_state, stream_mode="values"):
+            result = state
+            report(state)
     else:
         # Sequential fallback without LangGraph
         state = initial_state.copy()
-        state = research_node(state)
-        state = writer_node(state)
-        state = reviewer_node(state)
+        for node in (research_node, writer_node, reviewer_node):
+            state = node(state)
+            report(state)
         result = state
 
     return result

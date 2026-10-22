@@ -102,11 +102,18 @@ function renderChart(forecasts, dates){
       data: [...Array(histVals.length).fill(null), ...f.forecast],
       borderColor: col, borderWidth:2, pointRadius:0, tension:0.3, borderDash:[4,4],
     });
+    // Confidence band: draw the lower bound, then fill the upper bound down to it ('-1' =
+    // previous dataset). A numeric fill pointing at the dataset itself draws nothing.
+    datasets.push({
+      label: f.model+' CI low',
+      data: [...Array(histVals.length).fill(null), ...f.lower],
+      borderColor:'transparent', pointRadius:0, fill:false,
+    });
     datasets.push({
       label: f.model+' CI',
       data: [...Array(histVals.length).fill(null), ...f.upper],
       borderColor:'transparent', backgroundColor: col+'22',
-      fill: datasets.length, pointRadius:0,
+      fill: '-1', pointRadius:0,
     });
   });
 
@@ -116,7 +123,7 @@ function renderChart(forecasts, dates){
     data:{ labels:allDates, datasets },
     options:{
       responsive:true, interaction:{mode:'index',intersect:false},
-      plugins:{ legend:{labels:{color:'#8b949e',boxWidth:12}}, tooltip:{backgroundColor:'#21262d',titleColor:'#e6edf3',bodyColor:'#8b949e'}},
+      plugins:{ legend:{labels:{color:'#8b949e',boxWidth:12, filter:item=>!item.text.endsWith(' CI low')}}, tooltip:{backgroundColor:'#21262d',titleColor:'#e6edf3',bodyColor:'#8b949e'}},
       scales:{
         x:{ticks:{color:'#8b949e',maxTicksLimit:12,maxRotation:0}, grid:{color:'#21262d'}},
         y:{ticks:{color:'#8b949e'}, grid:{color:'#21262d'}},
@@ -132,8 +139,16 @@ async function runForecast(){
 
   document.querySelector('#cmp-table tbody').innerHTML='<tr><td colspan="4" class="text-secondary text-center py-3">⏳ Running...</td></tr>';
 
-  const r = await fetch('/forecast',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({horizon,models})});
+  // Send the series shown in the chart (sample data or your uploaded CSV) so the
+  // server forecasts exactly that data.
+  const r = await fetch('/forecast',{method:'POST',headers:{'Content-Type':'application/json'},
+                                     body:JSON.stringify({horizon,models,dates:histDates,values:histVals})});
   const d = await r.json();
+  if(!r.ok){
+    const msg = typeof d.detail==='string' ? d.detail : JSON.stringify(d.detail);
+    document.querySelector('#cmp-table tbody').innerHTML=`<tr><td colspan="4" class="text-danger text-center py-3">❌ ${msg}</td></tr>`;
+    return;
+  }
 
   const startDate = new Date(histDates[histDates.length-1]);
   const fcDates = Array.from({length:horizon},(_,i)=>{

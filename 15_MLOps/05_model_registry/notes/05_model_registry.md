@@ -25,7 +25,7 @@ Every registry, whatever the vendor, revolves around the same ideas.
 
 **Model version.** Each time you register a new artifact under that name, the registry creates a new **version** (version 1, 2, 3…). Versions are immutable snapshots: version 2 always refers to the exact same model bytes.
 
-**Stage.** A label describing where a version sits in its lifecycle. The classic progression is:
+**Stage.** A label describing where a version sits in its lifecycle (in MLflow, fixed stages are deprecated since 2.9 and replaced by aliases, see below; the lifecycle idea is the same). The classic progression is:
 
 ```
 Experiment → None → Staging → Production → Archived
@@ -57,16 +57,15 @@ stateDiagram-v2
 
 ## MLflow Model Registry
 
-MLflow's registry is the reference implementation and the one the notebook exercises most fully. The flow is: train a model and log it inside an MLflow run, then **register** it. In `01_model_registry.ipynb`, a `RandomForestClassifier` is trained, logged, and registered under the name `breast-cancer-classifier` with `mlflow.register_model`. Because that name already existed, MLflow creates *version 2* automatically demonstrating that registration is versioned by name.
+MLflow's registry is the reference implementation and the one the notebook exercises most fully. The flow is: train a model and log it inside an MLflow run, then **register** it. In `01_model_registry.ipynb`, a `RandomForestClassifier` is trained, logged, and registered under the name `breast-cancer-classifier` with `mlflow.register_model`. If that name already exists (e.g. you run the cell again), MLflow creates the next version (2, 3, …) automatically demonstrating that registration is versioned by name.
 
 The notebook then walks the full lifecycle with the `MlflowClient`:
 
-- **Transition to Staging**, then **transition to Production** with `archive_existing_versions=True`, which automatically moves the previous production version to Archived exactly the safe-swap behavior you want.
-- **Set an alias** (`champion`) pointing at the new version.
-- **Load a model by alias or stage.** The notebook loads `models:/breast-cancer-classifier@champion` and `models:/breast-cancer-classifier/Production`. Serving code references the *alias or stage*, never a hard-coded version, so deploys become repointing operations.
-- **Inspect and annotate.** It lists every version with its stage, adds a model description, and attaches tags (`team=ml-platform`, `validated=true`).
+- **Set the `challenger` alias** on the new version (this replaces the deprecated "transition to Staging"), then, after validation, **move the `champion` alias** to it (this replaces "transition to Production" with `archive_existing_versions=True`): the previous champion simply loses the alias, exactly the safe-swap behavior you want.
+- **Load a model by alias or version.** The notebook loads `models:/breast-cancer-classifier@champion` and `models:/breast-cancer-classifier/<version>`. Serving code references the *alias*, never a hard-coded version, so deploys become repointing operations.
+- **Inspect and annotate.** It lists every version with its aliases, adds a model description, and attaches tags (`team=ml-platform`, `validated=true`).
 
-The metadata lives in a backend database (the notebook uses a local SQLite file, `mlflow.db`) while the model artifacts live alongside in `mlruns/`. (Note: MLflow is gradually deprecating named stages in favor of aliases, but the *concept* of a controlled lifecycle is unchanged.)
+The metadata lives in a backend database (the notebook uses a local SQLite file, `mlflow.db`) while the model artifacts live alongside in `mlruns/`. (Note: MLflow deprecated named stages in 2.9 in favor of aliases, but the *concept* of a controlled lifecycle is unchanged.)
 
 ## The Same Idea in Other Tools
 

@@ -19,7 +19,7 @@ The serving logic lets a request choose its model version and falls back to the 
 
 ### Model training and inference (`main.py`)
 
-Builds a labelled sentiment dataset, trains the baseline pipeline and (optionally) fine-tunes DistilBERT, persists both to disk, and provides a unified `predict` function. Importantly, every prediction returns not just a label and **confidence** but also the **inference latency** in milliseconds and the model version used operational facts that the monitoring layer depends on.
+Builds a labelled sentiment dataset (the Cornell *sentence polarity* dataset: 5,331 positive and 5,331 negative movie-review snippets from Rotten Tomatoes, the same data as the Hugging Face `rotten_tomatoes` dataset, downloaded once into `data/`), trains the baseline pipeline and (optionally) fine-tunes DistilBERT, persists both to disk, and provides a unified `predict` function. Importantly, every prediction returns not just a label and **confidence** but also the **inference latency** in milliseconds and the model version used operational facts that the monitoring layer depends on.
 
 ### The production API (`api.py`)
 
@@ -43,16 +43,15 @@ This is the project's distinguishing piece. A model that works on day one can qu
 
 ### Containerization and deployment (`Dockerfile`, `docker-compose.yml`)
 
-The final layer makes the whole thing portable and reproducible. The **Dockerfile** packages the application into a **container** a self-contained image bundling the code, dependencies, and runtime so it runs identically anywhere. It demonstrates several best practices: a **multi-stage build** (compiling dependencies in one stage and copying only the results into a lean final image), running as a **non-root user** for security, a built-in container **health check**, and launching with multiple worker processes for concurrency.
+The final layer makes the whole thing portable and reproducible. The **Dockerfile** packages the application into a **container** a self-contained image bundling the code, dependencies, and runtime so it runs identically anywhere. It demonstrates several best practices: a **multi-stage build** (compiling dependencies in one stage and copying only the results into a lean final image), running as a **non-root user** for security, a built-in container **health check**, and training the baseline model during the build so the image ships ready to serve. It launches a single worker process on purpose: the metrics, prediction log and rate-limit counters live in process memory, so several workers would each keep their own partial numbers (scaling out properly needs shared storage, such as Prometheus multiprocess mode or a Redis-backed rate limiter).
 
 The **docker-compose.yml** file goes further, defining the *full operational stack* as a set of cooperating services orchestrated together:
 
 - the **app** itself,
-- **Redis**, an in-memory data store available for caching or shared state,
 - **Prometheus**, scraping and storing the app's metrics,
 - **Grafana**, a dashboarding tool for visualizing those metrics,
 
-all wired together with persistent volumes, restart policies, and health checks. This mirrors how a real deployment composes an application with its monitoring and supporting infrastructure rather than running a model in isolation.
+all wired together with persistent volumes, restart policies, and health checks. Prometheus reads its scrape settings from `prometheus.yml`, which points it at the app's `/metrics/prometheus` endpoint. This mirrors how a real deployment composes an application with its monitoring and supporting infrastructure rather than running a model in isolation.
 
 ### The web interface (`templates/index.html`)
 
@@ -99,7 +98,7 @@ flowchart TD
     J --> K[Rolling log plus Prometheus counters, histograms, gauges]
     K --> L[/metrics summary, /metrics/prometheus, drift check]
     subgraph Stack [docker-compose stack]
-        M[App] --> N[Redis]
+        M[App]
         L --> O[Prometheus scrapes]
         O --> P[Grafana dashboards]
     end
@@ -115,6 +114,6 @@ flowchart TD
 - **Model drift detection** monitoring for silent degradation and signaling when retraining is warranted.
 - **Health checks** exposing readiness so orchestrators route traffic only to healthy instances.
 - **Containerization with Docker** multi-stage builds, non-root execution, and reproducible images.
-- **Multi-service orchestration with Docker Compose** composing the app with Redis, Prometheus, and Grafana into a complete deployable stack.
+- **Multi-service orchestration with Docker Compose** composing the app with Prometheus and Grafana into a complete deployable stack.
 
 This project is the natural endpoint of the collection. It returns to the simplest kind of model a text classifier precisely so the spotlight can fall on everything that surrounds a model once it has to *stay running*: the difference between a model that works and a system you can trust.

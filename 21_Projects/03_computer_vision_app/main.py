@@ -21,18 +21,15 @@ logger = logging.getLogger(__name__)
 _IMAGENET_CLASSES: Optional[List[str]] = None
 _EFFICIENTNET: Optional[torch.nn.Module] = None
 _YOLO = None
+_SSDLITE = None
+_SAM = None
 
 
 def get_imagenet_classes() -> List[str]:
     global _IMAGENET_CLASSES
     if _IMAGENET_CLASSES is None:
-        try:
-            import urllib.request
-            url = "https://raw.githubusercontent.com/pytorch/hub/master/imagenet_classes.txt"
-            with urllib.request.urlopen(url, timeout=5) as f:
-                _IMAGENET_CLASSES = [l.decode("utf-8").strip() for l in f.readlines()]
-        except Exception:
-            _IMAGENET_CLASSES = [f"class_{i}" for i in range(1000)]
+        # torchvision ships the 1,000 class names with the weights, so this works offline too
+        _IMAGENET_CLASSES = list(EfficientNet_B0_Weights.DEFAULT.meta["categories"])
     return _IMAGENET_CLASSES
 
 
@@ -74,8 +71,27 @@ def classify(image_bytes: bytes, top_k: int = 5) -> List[Dict]:
     return results
 
 
-def detect(image_bytes: bytes) -> List[Dict]:
-    """Run YOLOv8 object detection. Falls back to mock if ultralytics not installed."""
+def detect_ssdlite(img: Image.Image, min_score: float = 0.3) -> List[Dict]:
+    """Real fallback detector from torchvision (COCO classes, ~13 MB download, fast on CPU)."""
+    global _SSDLITE
+    from torchvision.models.detection import SSDLite320_MobileNet_V3_Large_Weights, ssdlite320_mobilenet_v3_large
+    weights = SSDLite320_MobileNet_V3_Large_Weights.DEFAULT
+    if _SSDLITE is None:
+        logger.info("Loading SSDLite320-MobileNetV3 (torchvision)...")
+        _SSDLITE = ssdlite320_mobilenet_v3_large(weights=weights).eval()
+    with torch.no_grad():
+        out = _SSDLITE([weights.transforms()(img)])[0]
+    names = weights.meta["categories"]
+    return [{"label": names[label], "confidence": round(score * 100, 2),
+             "box": {"x1": x1, "y1": y1, "x2": x2, "y2": y2}}
+            for (x1, y1, x2, y2), label, score in zip(out["boxes"].tolist(), out["labels"].tolist(), out["scores"].tolist())
+            if score >= min_score]
+
+
+def detect(image_bytes: bytes) -> Dict:
+    """Run YOLOv8 object detection. Falls back to torchvision SSDLite (a real detector, no fake boxes)
+    if ultralytics or its weights are not available. Returns {"model": ..., "detections": [...]}."""
+    img = Image.open(io.BytesIO(image_bytes)).convert("RGB")
     try:
         from ultralytics import YOLO
         global _YOLO
@@ -83,7 +99,6 @@ def detect(image_bytes: bytes) -> List[Dict]:
             logger.info("Loading YOLOv8n...")
             _YOLO = YOLO("yolov8n.pt")
 
-        img = Image.open(io.BytesIO(image_bytes)).convert("RGB")
         results = _YOLO(img, verbose=False)[0]
         boxes = []
         for box in results.boxes:
@@ -93,35 +108,59 @@ def detect(image_bytes: bytes) -> List[Dict]:
                 "confidence": round(float(box.conf) * 100, 2),
                 "box":        {"x1": x1, "y1": y1, "x2": x2, "y2": y2},
             })
-        return boxes
+        return {"model": "YOLOv8n (ultralytics)", "detections": boxes}
 
-    except ImportError:
-        # Fallback mock
-        return [{"label": "person (mock)", "confidence": 92.5, "box": {"x1": 50, "y1": 30, "x2": 200, "y2": 380}}]
+    except Exception as e:
+        logger.warning(f"YOLOv8 not available ({type(e).__name__}); using torchvision SSDLite instead.")
+        return {"model": "SSDLite320-MobileNetV3 (torchvision)", "detections": detect_ssdlite(img)}
 
 
-def segment(image_bytes: bytes) -> Dict:
-    """Return basic segmentation info. Uses SAM if available, else mock."""
+def segment(image_bytes: bytes, mode: str = "objects") -> Dict:
+    """Return segmentation info using MobileSAM.
+    mode="objects": detected boxes are the SAM prompts (one mask per object, fast).
+    mode="everything": SAM's automatic mode (very slow on a CPU). Mock only if ultralytics is missing."""
+    global _SAM
     img = Image.open(io.BytesIO(image_bytes)).convert("RGB")
     w, h = img.size
 
     try:
         from ultralytics import SAM
-        model = SAM("mobile_sam.pt")
-        results = model(img, verbose=False)[0]
+        if _SAM is None:
+            _SAM = SAM("mobile_sam.pt")  # load once (it used to be reloaded on every request)
+        labels = None
+        if mode == "objects":
+            dets = detect(image_bytes)["detections"]
+            if not dets:
+                return {"width": w, "height": h, "mode": mode, "num_masks": 0, "masks": [],
+                        "note": "No objects detected, so nothing to segment. Try mode=everything (slow)."}
+            labels = [d["label"] for d in dets]
+            results = _SAM(img, bboxes=[[d["box"][k] for k in ("x1", "y1", "x2", "y2")] for d in dets], verbose=False)[0]
+        else:
+            results = _SAM(img, verbose=False)[0]
         masks = []
-        for i, mask in enumerate(results.masks.data[:5]):  # top 5 masks
+        boxes = results.boxes.xyxy.tolist() if results.boxes is not None else []
+        for i, mask in enumerate(results.masks.data if results.masks is not None else []):
             m = mask.cpu().numpy().astype(bool)
-            masks.append({"mask_id": i, "area": int(m.sum()), "bbox": results.boxes.xyxy[i].tolist() if results.boxes else []})
-        return {"width": w, "height": h, "num_masks": len(masks), "masks": masks}
-    except Exception:
-        # Mock segmentation
+            if m.sum() == 0:  # skip empty masks
+                continue
+            entry = {"area": int(m.sum()), "bbox": boxes[i] if i < len(boxes) else []}
+            if labels is not None and i < len(labels):
+                entry["label"] = labels[i]
+            masks.append(entry)
+        masks.sort(key=lambda m: m["area"], reverse=True)  # largest first
+        if mode != "objects":
+            masks = masks[:5]  # top 5 masks
+        for i, m in enumerate(masks):
+            m["mask_id"] = i
+        return {"width": w, "height": h, "mode": mode, "num_masks": len(masks), "masks": masks}
+    except ImportError:
+        # Mock segmentation, clearly marked as DEMO (only when ultralytics is not installed)
         return {
-            "width": w, "height": h, "num_masks": 3,
+            "width": w, "height": h, "mode": "demo", "demo": True, "num_masks": 3,
             "masks": [
                 {"mask_id": 0, "area": w * h // 3, "bbox": [0, 0, w // 2, h]},
                 {"mask_id": 1, "area": w * h // 4, "bbox": [w // 2, 0, w, h // 2]},
                 {"mask_id": 2, "area": w * h // 5, "bbox": [w // 2, h // 2, w, h]},
             ],
-            "note": "Mock segmentation install ultralytics for real SAM inference",
+            "note": "DEMO ONLY: these are fake rectangles, not a real segmentation. Install ultralytics for real SAM inference",
         }

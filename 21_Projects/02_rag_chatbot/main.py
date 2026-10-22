@@ -18,6 +18,9 @@ try:
 except ImportError:
     raise ImportError("Run: pip install chromadb")
 
+# chromadb 0.5.x with newer posthog versions logs "Failed to send telemetry event" errors; hide them
+logging.getLogger("chromadb.telemetry.product.posthog").setLevel(logging.CRITICAL)
+
 try:
     from sentence_transformers import SentenceTransformer
 except ImportError:
@@ -31,7 +34,7 @@ except ImportError:
 CHROMA_DIR   = "./chroma_db"
 EMBED_MODEL  = "all-MiniLM-L6-v2"
 CHUNK_SIZE   = 500
-CHUNK_OVERLAP = 50
+CHUNK_OVERLAP = 50   # characters (approximately) repeated at the start of the next chunk
 TOP_K        = 4
 
 _embedder: Optional[SentenceTransformer] = None
@@ -50,12 +53,20 @@ def get_embedder() -> SentenceTransformer:
 def get_collection():
     global _chroma_client, _collection
     if _collection is None:
-        _chroma_client = chromadb.PersistentClient(path=CHROMA_DIR)
+        _chroma_client = chromadb.PersistentClient(path=CHROMA_DIR, settings=Settings(anonymized_telemetry=False))
         _collection = _chroma_client.get_or_create_collection(
             name="rag_docs",
             metadata={"hnsw:space": "cosine"},
         )
     return _collection
+
+
+def reset_collection() -> None:
+    """Delete every stored chunk (used by `python ingest.py --reset`)."""
+    global _collection
+    get_collection()
+    _chroma_client.delete_collection("rag_docs")
+    _collection = None
 
 
 def extract_text_from_pdf(pdf_path: str) -> List[Dict]:
@@ -71,32 +82,56 @@ def extract_text_from_pdf(pdf_path: str) -> List[Dict]:
     current_chunk = []
     current_len   = 0
     chunk_id      = 0
+    has_new_words = False   # does the current chunk contain words that are not saved yet?
 
     for word in words:
         current_chunk.append(word)
         current_len += len(word) + 1
+        has_new_words = True
         if current_len >= CHUNK_SIZE:
             chunks.append({
                 "text":   " ".join(current_chunk),
                 "source": os.path.basename(pdf_path),
                 "chunk":  chunk_id,
             })
-            # overlap
-            overlap_words = current_chunk[-CHUNK_OVERLAP:] if len(current_chunk) > CHUNK_OVERLAP else current_chunk[:]
+            # overlap: keep the last words, up to about CHUNK_OVERLAP characters (it used to be 50 *words*)
+            overlap_words = []
+            while current_chunk and sum(len(w) + 1 for w in overlap_words + current_chunk[-1:]) <= CHUNK_OVERLAP:
+                overlap_words.insert(0, current_chunk.pop())
             current_chunk = overlap_words
             current_len   = sum(len(w) + 1 for w in current_chunk)
             chunk_id     += 1
+            has_new_words = False
 
-    if current_chunk:
+    if current_chunk and has_new_words:  # otherwise the last chunk would only repeat the overlap
         chunks.append({"text": " ".join(current_chunk), "source": os.path.basename(pdf_path), "chunk": chunk_id})
 
     return chunks
 
 
-def ingest_documents(docs_dir: str = "./docs") -> int:
-    """Ingest all PDFs in docs_dir into ChromaDB. Returns number of chunks added."""
+def ingest_file(pdf_path: Path) -> int:
+    """Ingest ONE PDF, replacing older chunks of the same file. Returns number of chunks added."""
     collection = get_collection()
     embedder   = get_embedder()
+    pdf_path   = Path(pdf_path)
+
+    logger.info(f"Ingesting: {pdf_path.name}")
+    chunks = extract_text_from_pdf(str(pdf_path))
+    collection.delete(where={"source": pdf_path.name})  # remove stale chunks of an earlier version
+    if not chunks:
+        return 0
+    texts      = [c["text"]   for c in chunks]
+    metadatas  = [{"source": c["source"], "chunk": c["chunk"]} for c in chunks]
+    ids        = [f"{pdf_path.stem}_{c['chunk']}" for c in chunks]
+    embeddings = embedder.encode(texts, show_progress_bar=True).tolist()
+
+    collection.upsert(documents=texts, embeddings=embeddings, metadatas=metadatas, ids=ids)
+    logger.info(f"  Added {len(chunks)} chunks from {pdf_path.name}")
+    return len(chunks)
+
+
+def ingest_documents(docs_dir: str = "./docs") -> int:
+    """Ingest all PDFs in docs_dir into ChromaDB. Returns number of chunks added."""
     total      = 0
 
     pdf_files = list(Path(docs_dir).glob("*.pdf"))
@@ -105,16 +140,10 @@ def ingest_documents(docs_dir: str = "./docs") -> int:
         return 0
 
     for pdf_path in pdf_files:
-        logger.info(f"Ingesting: {pdf_path.name}")
-        chunks = extract_text_from_pdf(str(pdf_path))
-        texts      = [c["text"]   for c in chunks]
-        metadatas  = [{"source": c["source"], "chunk": c["chunk"]} for c in chunks]
-        ids        = [f"{pdf_path.stem}_{c['chunk']}" for c in chunks]
-        embeddings = embedder.encode(texts, show_progress_bar=True).tolist()
-
-        collection.upsert(documents=texts, embeddings=embeddings, metadatas=metadatas, ids=ids)
-        total += len(chunks)
-        logger.info(f"  Added {len(chunks)} chunks from {pdf_path.name}")
+        try:
+            total += ingest_file(pdf_path)
+        except Exception as e:  # one unreadable PDF must not stop the others
+            logger.warning(f"  Skipping {pdf_path.name}: {type(e).__name__}: {e}")
 
     return total
 
@@ -138,6 +167,9 @@ def retrieve(query: str, top_k: int = TOP_K) -> List[Dict]:
 
 def generate_response(query: str, context_chunks: List[Dict], history: List[Dict]) -> str:
     """Generate a response using retrieved context. Tries Ollama, falls back to template."""
+    if not context_chunks:
+        return ("I don't have any documents to search yet. Put PDF files in the docs/ folder and run "
+                "`python ingest.py`, or upload a PDF with the button at the top.")
     context = "\n\n---\n\n".join([c["text"] for c in context_chunks])
     system_prompt = (
         "You are a helpful assistant. Answer the user's question using ONLY the provided context. "

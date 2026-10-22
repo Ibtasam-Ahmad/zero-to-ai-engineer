@@ -3,7 +3,7 @@
 import time
 import uuid
 from collections import deque
-from typing import Deque, Dict, List
+from typing import Deque, Dict, List, Optional
 
 try:
     from prometheus_client import Counter, Gauge, Histogram, generate_latest, CONTENT_TYPE_LATEST
@@ -22,9 +22,10 @@ _prediction_log: Deque[Dict] = deque(maxlen=1000)
 _confidence_window: Deque[float] = deque(maxlen=100)
 
 
-def log_prediction(text: str, result: Dict):
+def log_prediction(text: str, result: Dict, request_id: Optional[str] = None):
+    # Use the caller's request_id so the id returned to the client matches the log entry
     entry = {
-        "request_id": str(uuid.uuid4())[:8],
+        "request_id": request_id or str(uuid.uuid4())[:8],
         "timestamp":  time.time(),
         "text_len":   len(text),
         "label":      result["label"],

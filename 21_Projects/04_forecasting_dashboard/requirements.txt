@@ -6,6 +6,7 @@ pandas==2.2.3
 scikit-learn==1.5.2
 statsmodels==0.14.3
 prophet==1.1.6
+cmdstanpy==1.2.5   # prophet 1.1.6 breaks with cmdstanpy>=1.3 ("CmdStan installation missing makefile")
 xgboost==2.1.1
 torch==2.4.1
 python-multipart==0.0.12

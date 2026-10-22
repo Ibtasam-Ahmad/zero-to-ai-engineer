@@ -107,7 +107,7 @@ async function runInference(){
     const d = await r.json();
 
     if(currentMode==='classify') renderClassify(d.predictions);
-    else if(currentMode==='detect') renderDetect(d.detections);
+    else if(currentMode==='detect') renderDetect(d.detections, d.model);
     else renderSegment(d);
   }catch(e){
     document.getElementById('results-area').innerHTML='';
@@ -125,7 +125,7 @@ function renderClassify(preds){
   document.getElementById('results-area').innerHTML=html+'</div>';
 }
 
-function renderDetect(dets){
+function renderDetect(dets, modelName){
   const preview = document.getElementById('preview');
   const canvas  = document.getElementById('det-canvas');
   const ctx     = canvas.getContext('2d');
@@ -147,16 +147,17 @@ function renderDetect(dets){
   };
   img.src=URL.createObjectURL(currentFile);
 
-  let html=`<div class="card p-4 mt-3"><h5>🎯 Detections (${dets.length})</h5>`;
+  let html=`<div class="card p-4 mt-3"><h5>🎯 Detections (${dets.length})</h5><p class="text-secondary small">Model: ${modelName}</p>`;
   dets.forEach(d=>{ html+=`<span class="badge-box">${d.label} ${d.confidence.toFixed(1)}%</span>`; });
   document.getElementById('results-area').innerHTML=html+'</div>';
 }
 
 function renderSegment(d){
   let html=`<div class="card p-4"><h5>✂️ Segmentation ${d.num_masks} masks detected</h5>
-            <p class="text-secondary small">Image: ${d.width}×${d.height}px</p>`;
+            <p class="text-secondary small">Image: ${d.width}×${d.height}px · mode: ${d.mode}</p>`;
+  if(d.demo) html+=`<div class="alert alert-warning py-2">⚠ DEMO RESULT: not a real segmentation</div>`;
   d.masks.forEach(m=>{
-    html+=`<div class="label-row"><span>Mask ${m.mask_id}</span><span class="badge-box">Area: ${m.area.toLocaleString()}px</span></div>`;
+    html+=`<div class="label-row"><span>Mask ${m.mask_id}${m.label ? ' ('+m.label+')' : ''}</span><span class="badge-box">Area: ${m.area.toLocaleString()}px</span></div>`;
   });
   if(d.note) html+=`<div class="text-warning small mt-2">⚠ ${d.note}</div>`;
   document.getElementById('results-area').innerHTML=html+'</div>';

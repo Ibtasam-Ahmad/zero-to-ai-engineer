@@ -7,12 +7,12 @@ import os
 from typing import Dict, List, Optional
 
 import joblib
-import numpy as np
+import pandas as pd
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 app = FastAPI(title="Diabetes Prediction API", version="1.0.0")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
@@ -26,41 +26,46 @@ _meta  = None
 
 def get_model():
     global _model, _meta
-    if _model is None:
-        if not os.path.exists(MODEL_PATH):
+    if _model is None or _meta is None:
+        if not (os.path.exists(MODEL_PATH) and os.path.exists(META_PATH)):
             raise HTTPException(status_code=503, detail="Model not found. Run main.py first.")
-        _model = joblib.load(MODEL_PATH)
-        _meta  = joblib.load(META_PATH)
+        model, meta = joblib.load(MODEL_PATH), joblib.load(META_PATH)  # only keep them if BOTH load
+        _model, _meta = model, meta
     return _model, _meta
 
 
 class PredictRequest(BaseModel):
-    age:  float = Field(..., description="Age (normalized)", example=0.038)
-    sex:  float = Field(..., description="Sex (normalized)", example=0.050)
-    bmi:  float = Field(..., description="BMI (normalized)", example=0.062)
-    bp:   float = Field(..., description="Blood pressure (normalized)", example=-0.025)
-    s1:   float = Field(..., description="Serum measurement 1", example=-0.044)
-    s2:   float = Field(..., description="Serum measurement 2", example=-0.034)
-    s3:   float = Field(..., description="Serum measurement 3", example=-0.043)
-    s4:   float = Field(..., description="Serum measurement 4", example=-0.002)
-    s5:   float = Field(..., description="Serum measurement 5", example=0.019)
-    s6:   float = Field(..., description="Serum measurement 6", example=-0.017)
+    # The dataset is standardised (values about -0.14 to 0.20); ge/le reject raw numbers like age=50
+    age:  float = Field(..., ge=-0.5, le=0.5, description="Age (normalized)", example=0.038)
+    sex:  float = Field(..., ge=-0.5, le=0.5, description="Sex (normalized)", example=0.050)
+    bmi:  float = Field(..., ge=-0.5, le=0.5, description="BMI (normalized)", example=0.062)
+    bp:   float = Field(..., ge=-0.5, le=0.5, description="Blood pressure (normalized)", example=-0.025)
+    s1:   float = Field(..., ge=-0.5, le=0.5, description="Serum measurement 1", example=-0.044)
+    s2:   float = Field(..., ge=-0.5, le=0.5, description="Serum measurement 2", example=-0.034)
+    s3:   float = Field(..., ge=-0.5, le=0.5, description="Serum measurement 3", example=-0.043)
+    s4:   float = Field(..., ge=-0.5, le=0.5, description="Serum measurement 4", example=-0.002)
+    s5:   float = Field(..., ge=-0.5, le=0.5, description="Serum measurement 5", example=0.019)
+    s6:   float = Field(..., ge=-0.5, le=0.5, description="Serum measurement 6", example=-0.017)
 
 
 class PredictResponse(BaseModel):
     prediction: float
-    prediction_lower: float
-    prediction_upper: float
+    model_config = ConfigDict(protected_namespaces=())  # allow field names starting with "model_"
+    prediction_lower: Optional[float]   # None for old model files without interval info
+    prediction_upper: Optional[float]
+    interval_level: Optional[float]     # 0.9 = 90% prediction interval
     model_used: str
     features_received: Dict[str, float]
 
 
 class HealthResponse(BaseModel):
+    model_config = ConfigDict(protected_namespaces=())
     status: str
     model_loaded: bool
 
 
 class ModelInfoResponse(BaseModel):
+    model_config = ConfigDict(protected_namespaces=())
     model_name: str
     metrics: Dict[str, float]
     feature_names: List[str]
@@ -72,7 +77,7 @@ def health():
     try:
         get_model()
         return {"status": "ok", "model_loaded": True}
-    except HTTPException:
+    except Exception:
         return {"status": "ok", "model_loaded": False}
 
 
@@ -90,14 +95,14 @@ def model_info():
 @app.post("/predict", response_model=PredictResponse)
 def predict(req: PredictRequest):
     model, meta = get_model()
-    features = [req.age, req.sex, req.bmi, req.bp, req.s1, req.s2, req.s3, req.s4, req.s5, req.s6]
-    X = np.array(features).reshape(1, -1)
+    X = pd.DataFrame([req.dict()], columns=meta["feature_names"])  # same column names as in training
     pred = float(model.predict(X)[0])
-    margin = pred * 0.10  # ±10% confidence band
+    interval = meta.get("interval")  # offsets from cross-validated residuals (replaces the made-up ±10%)
     return {
         "prediction":       round(pred, 2),
-        "prediction_lower": round(pred - margin, 2),
-        "prediction_upper": round(pred + margin, 2),
+        "prediction_lower": round(pred + interval["lower_offset"], 2) if interval else None,
+        "prediction_upper": round(pred + interval["upper_offset"], 2) if interval else None,
+        "interval_level":   interval["level"] if interval else None,
         "model_used":       meta["best_model"],
         "features_received": req.dict(),
     }

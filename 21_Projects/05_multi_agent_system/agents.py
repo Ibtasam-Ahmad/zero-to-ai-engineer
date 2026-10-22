@@ -22,13 +22,32 @@ REVIEWER_SYSTEM = """You are a Reviewer Agent. Given a draft report:
 Be constructive and thorough."""
 
 
-def get_llm(model: str = "gpt-4o-mini"):
+# Model name in one place. Check the provider's current model list; override with
+# the OPENAI_MODEL environment variable instead of editing code.
+DEFAULT_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+
+
+def get_llm(model: str = DEFAULT_MODEL):
     """Return a LangChain ChatOpenAI instance if available."""
     try:
         from langchain_openai import ChatOpenAI
         return ChatOpenAI(model=model, temperature=0.3)
-    except ImportError:
+    except Exception:  # not only ImportError: a missing OPENAI_API_KEY raises openai.OpenAIError
         return None
+
+
+class _DDGSSearch:
+    """Keyless DuckDuckGo search via the `ddgs` package, with the same .invoke(query) API."""
+
+    def __init__(self, max_results: int = 5):
+        from ddgs import DDGS  # raises ImportError if ddgs isn't installed
+        self._ddgs = DDGS
+        self.max_results = max_results
+
+    def invoke(self, query: str) -> str:
+        hits = self._ddgs().text(query, max_results=self.max_results)
+        return "\n".join(f"- {h.get('title')}: {h.get('body')} ({h.get('href')})"
+                         for h in hits if h.get("title") or h.get("body"))
 
 
 def get_search_tool():
@@ -39,8 +58,7 @@ def get_search_tool():
     except Exception:
         pass
     try:
-        from langchain_community.tools import DuckDuckGoSearchRun
-        return DuckDuckGoSearchRun()
+        return _DDGSSearch(max_results=5)
     except Exception:
         return None
 
@@ -55,10 +73,12 @@ def research_node(state: Dict[str, Any]) -> Dict[str, Any]:
         try:
             results = search.invoke(topic)
             raw = str(results)
-        except Exception:
-            raw = f"Search unavailable for: {topic}"
+        except Exception as e:
+            # e.g. DuckDuckGo rate limits: say so clearly instead of failing silently
+            raw = (f"Web search failed for: {topic} ({type(e).__name__}: {str(e)[:150]}). "
+                   "Try again later, or set TAVILY_API_KEY for a more reliable search.")
     else:
-        raw = f"No search tool available. Topic: {topic}"
+        raw = f"No search tool available (pip install ddgs, or set TAVILY_API_KEY). Topic: {topic}"
 
     if llm:
         from langchain_core.messages import HumanMessage, SystemMessage

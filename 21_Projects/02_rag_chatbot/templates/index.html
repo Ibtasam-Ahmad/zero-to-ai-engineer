@@ -73,12 +73,20 @@ async function refreshSessions(){
   const r = await fetch('/sessions');
   const d = await r.json();
   const list = document.getElementById('session-list');
-  list.innerHTML = d.sessions.map(s=>`<div class="session-item ${s===sessionId?'active':''}" onclick="loadSession('${s}')">${s.slice(0,18)}...</div>`).join('');
+  // DOM elements + textContent, so a session id cannot inject HTML/script
+  list.replaceChildren(...d.sessions.map(s=>{
+    const item = document.createElement('div');
+    item.className = 'session-item' + (s===sessionId ? ' active' : '');
+    item.textContent = s.slice(0,18) + '...';
+    item.onclick = () => loadSession(s);
+    return item;
+  }));
 }
 
 function loadSession(sid){
   sessionId = sid;
-  document.getElementById('chat-window').innerHTML = `<div class="bubble bot">📂 Resumed session: ${sid.slice(0,18)}...</div>`;
+  document.getElementById('chat-window').innerHTML = '';
+  addBubble('bot', `📂 Resumed session: ${sid.slice(0,18)}...`, null);
   refreshSessions();
 }
 
@@ -86,11 +94,13 @@ function addBubble(role, text, sources){
   const win = document.getElementById('chat-window');
   const div = document.createElement('div');
   div.className = `bubble ${role}`;
-  div.innerHTML = text.replace(/\n/g,'<br/>');
+  // textContent, not innerHTML: text from PDFs is shown as text, never run as HTML
+  text.split('\n').forEach((line, i)=>{ if(i) div.appendChild(document.createElement('br')); div.appendChild(document.createTextNode(line)); });
   if(sources && sources.length){
     const sd = document.createElement('div');
     sd.className='sources';
-    sd.innerHTML = '📄 Sources: ' + sources.map(s=>`<span class="source-chip">${s.source}</span>`).join('');
+    sd.textContent = '📄 Sources: ';
+    sources.forEach(s=>{ const chip = document.createElement('span'); chip.className='source-chip'; chip.textContent = s.source; sd.appendChild(chip); });
     div.appendChild(sd);
   }
   win.appendChild(div);
@@ -136,7 +146,7 @@ document.getElementById('pdf-input').addEventListener('change', async (e)=>{
   const fd = new FormData(); fd.append('file', file);
   const r = await fetch('/upload-doc',{method:'POST',body:fd});
   const d = await r.json();
-  status.textContent = `✅ ${d.filename} (${d.chunks_ingested} chunks)`;
+  status.textContent = r.ok ? `✅ ${d.filename} (${d.chunks_ingested} chunks)` : `❌ ${d.detail}`;
   setTimeout(()=>status.textContent='', 4000);
 });
 
