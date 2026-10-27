@@ -14,7 +14,7 @@
 
 [🚀 Quick Start](#-quick-start-for-absolute-beginners) • [📚 Full Roadmap](#-the-complete-roadmap) • [🛠️ Projects](#-build-projects) • [📖 Resources](#-mega-resource-library)
 
-**🆕 New to AI? Start here:** [👋 START_HERE.md](START_HERE.md) (setup) → [🧭 LEARNING_PATH.md](LEARNING_PATH.md) (what to study, in order) • [📖 GLOSSARY.md](GLOSSARY.md) (terms in plain English)
+**🆕 New to AI? Start here:** [👋 START_HERE.md](START_HERE.md) (setup) → [🧭 LEARNING_PATH.md](LEARNING_PATH.md) (what to study, in order) • [📖 GLOSSARY.md](GLOSSARY.md) (terms in plain English) • [🎓 University-level tracks](#-university-level-tracks-bs--ms--mphil)
 
 </div>
 
@@ -26,6 +26,7 @@
 - [📂 Repository Structure](#-repository-structure)
 - [📝 Conceptual Study Notes (with Diagrams)](#-conceptual-study-notes-with-diagrams)
 - [🏭 Industry Practice Notebooks](#-industry-practice-notebooks)
+- [🎓 University-Level Tracks (BS / MS / MPhil)](#-university-level-tracks-bs--ms--mphil)
 - [🌱 Start Here Notebooks](#-start-here-notebooks)
 - [✅ All Notebooks Verified Runnable](#-all-notebooks-verified-runnable)
 - [🌟 Why This Roadmap?](#-why-this-roadmap)
@@ -55,19 +56,23 @@ If you are a complete beginner, don't start at folder `00` and read straight thr
 |---|---|
 | [👋 **START_HERE.md**](START_HERE.md) | Set up in 20–60 minutes: Google Colab (nothing to install) or your own computer, how to run a notebook, a first-week plan, troubleshooting |
 | [🧭 **LEARNING_PATH.md**](LEARNING_PATH.md) | The study order for all folders, stage by stage, marked ⭐ core / ✅ recommended / 🔹 optional, plus which extra packages each module needs |
-| [📖 **GLOSSARY.md**](GLOSSARY.md) | 212 AI / ML / LLM / MLOps terms in plain English, each linked to the notebook that teaches it |
+| [📖 **GLOSSARY.md**](GLOSSARY.md) | 459 AI, ML, computer-science, data and MLOps terms in plain English, each linked to the notebook that teaches it |
 
 Then begin with the 🌱 **Start Here notebooks** (`00_start_here_*.ipynb`, see [the list](#-start-here-notebooks)). They are gentle, fully runnable introductions to each big area, run on a normal CPU with no API key, and end with exercises and solutions.
+
+Every notebook added in the October 2026 university-level update opens with an **"Explained simply"** section that describes the idea in everyday words before any maths or code, and each new track folder has a `README.md` with easy explanations and examples (see [University-Level Tracks](#-university-level-tracks-bs--ms--mphil)).
 
 ---
 
 ## 📂 Repository Structure
 
-> **260 Jupyter notebooks** covering the complete AI/ML stack from Python basics to production deployment. Every notebook contains markdown explanations with LaTeX math formulas, code (scratch → library → production), and an Additional Learning Resources section.
+> **355 Jupyter notebooks** covering the complete AI/ML stack from Python basics to production deployment. Every notebook contains markdown explanations with LaTeX math formulas, code (scratch → library → production), and an Additional Learning Resources section.
 >
 > 🌱 **10 of them are Start Here notebooks** (`00_start_here_<topic>.ipynb`, marked 🌱 below): the first notebook to open in each big area, written for complete beginners. See [Start Here Notebooks](#-start-here-notebooks).
 >
-> 🏭 **42 of them are industry-practice companions** (`NN_industry_<topic>.ipynb`, marked 🏭 below), placed next to the theory notebooks in every section. They show how each topic is done at a real company, with beginner-friendly markdown and heavily commented code see [Industry Practice Notebooks](#-industry-practice-notebooks).
+> 🏭 **47 of them are industry-practice companions** (`NN_industry_<topic>.ipynb`, marked 🏭 below), placed next to the theory notebooks in every section. They show how each topic is done at a real company, with beginner-friendly markdown and heavily commented code see [Industry Practice Notebooks](#-industry-practice-notebooks).
+>
+> 🎓 **95 of them were added in October 2026** for the optional **university-level tracks** (classical AI, DSA, advanced algorithms, discrete maths, DBMS, software engineering, research methods, ML theory and more; new folders marked 🎓 below) and as **hands-on companions** to existing modules. See [University-Level Tracks](#-university-level-tracks-bs--ms--mphil).
 >
 > 🆕 Each section folder also has a **`notes/` sub-folder** with a comprehensive, plain-English **conceptual study guide** (with diagrams) see [Conceptual Study Notes](#-conceptual-study-notes-with-diagrams). Every notebook has been **executed and verified to run** on a current Python 3.12 stack. Beginners install the small, tested **`requirements-beginner.txt`**; the root **`requirements.txt`** pins the full environment. See [Verified Runnable](#-all-notebooks-verified-runnable).
 
@@ -76,7 +81,7 @@ zero-to-ai-engineer/
 │
 ├── START_HERE.md                             # 👋 Setup guide: Colab or local install, first notebook, troubleshooting
 ├── LEARNING_PATH.md                          # 🧭 Study order (core / recommended / optional) + extra installs per module
-├── GLOSSARY.md                               # 📖 212 AI/ML/LLM/MLOps terms in plain English
+├── GLOSSARY.md                               # 📖 459 AI, ML, CS and data terms in plain English
 ├── requirements-beginner.txt                 # Small tested install (Python 3.10-3.12, CPU only)
 ├── requirements.txt                          # Full pinned environment for every notebook (Python 3.12+)
 ├── LICENSE                                   # MIT
@@ -90,6 +95,48 @@ zero-to-ai-engineer/
 │   ├── 05_robustness_and_safety.ipynb        # Adversarial attacks (FGSM, PGD), ART, certified defenses
 │   ├── 06_responsible_ai_and_ethics.ipynb    # Constitutional AI, RLHF safety, red teaming, AI alignment
 │   ├── 07_industry_responsible_ai_product_review.ipynb # 🏭 Industry: pre-launch responsible-AI review: fairness audit, risk register, model card
+│   ├── classical_ai/                         # 🎓 University track: the BS/MS "Artificial Intelligence" course (Russell & Norvig)
+│   │   ├── README.md                         # Track guide: plain-English overview, examples, study order
+│   │   ├── 01_types_of_ai_and_intelligent_agents.ipynb # History and types of AI, agents and environments, problem formulation
+│   │   ├── 02_uninformed_search.ipynb        # BFS, DFS, iterative deepening, uniform-cost and bidirectional search
+│   │   ├── 03_informed_search.ipynb          # Heuristics, greedy best-first, A*, IDA*, weighted A*, RBFS/SMA*
+│   │   ├── 04_local_search_and_optimization.ipynb # Hill climbing, simulated annealing, beam search, genetic algorithms
+│   │   ├── 05_adversarial_search_and_games.ipynb # Minimax, alpha-beta pruning, evaluation functions, expectimax, MCTS
+│   │   ├── 06_constraint_satisfaction.ipynb  # CSPs, backtracking, forward checking, AC-3, MAC, min-conflicts
+│   │   ├── 07_knowledge_representation_and_logic.ipynb # Propositional & first-order logic, CNF, resolution, chaining, unification
+│   │   ├── 08_reasoning_and_planning.ipynb   # Deductive/inductive/abductive reasoning, STRIPS/PDDL, partial-order planning
+│   │   ├── 09_uncertain_knowledge_and_reasoning.ipynb # Bayes' rule, Bayesian networks, d-separation, exact and sampling inference
+│   │   ├── 10_fuzzy_logic_and_expert_systems.ipynb # Fuzzy sets, Mamdani/Sugeno inference, rule-based expert systems
+│   │   ├── 11_industry_route_planning_and_scheduling.ipynb # 🏭 Industry: delivery routes (Dijkstra, A*) + driver scheduling as a CSP
+│   │   └── notes/
+│   ├── dsa/                                  # 🎓 University track: Data Structures & Algorithms (CLRS order), also coding-interview prep
+│   │   ├── README.md                         # Track guide: plain-English overview, examples, study order
+│   │   ├── 01_complexity_analysis_and_recursion.ipynb # Big-O/Ω/Θ, growth rates, timing with timeit, recursion, recurrences
+│   │   ├── 02_arrays_strings_and_techniques.ipynb # Two pointers, sliding window, prefix sums, Kadane, bit manipulation
+│   │   ├── 03_searching_and_sorting.ipynb    # Binary search variants, classic sorts, the n log n bound, Timsort, quickselect
+│   │   ├── 04_hashing.ipynb                  # Hash tables, chaining, open addressing, Python dict/set, consistent hashing, Bloom filters
+│   │   ├── 05_linked_lists_stacks_queues.ipynb # Linked lists, LRU cache, stacks, queues, deques and their applications
+│   │   ├── 06_trees_bst_and_heaps.ipynb      # Traversals, binary search trees, balanced trees, heaps and priority queues
+│   │   ├── 07_graphs.ipynb                   # BFS/DFS, topological sort, shortest paths, MST, union-find, SCCs
+│   │   ├── 08_greedy_and_divide_and_conquer.ipynb # Activity selection, Huffman coding, master theorem, counting inversions
+│   │   ├── 09_dynamic_programming.ipynb      # Memoisation vs tabulation, 1-D/2-D DP, bitmask TSP, DP on trees
+│   │   ├── 10_backtracking.ipynb             # Subsets, permutations, N-Queens, Sudoku, graph colouring, pruning
+│   │   ├── 11_advanced_tries_strings_and_range_queries.ipynb # Tries, KMP/Z/Rabin-Karp, segment & Fenwick trees, number theory
+│   │   ├── 12_industry_dsa_in_ai_systems.ipynb # 🏭 Industry: top-k heaps, tokenizer tries, Bloom filters, LRU caches, Viterbi
+│   │   └── notes/
+│   ├── advanced_algorithms/                  # 🎓 University track: MS-level algorithms (follows dsa/)
+│   │   ├── README.md                         # Track guide: plain-English overview, examples, study order
+│   │   ├── 01_amortized_and_randomized_algorithms.ipynb # Amortized analysis, union-find, randomized quicksort, skip lists, treaps
+│   │   ├── 02_np_completeness_and_reductions.ipynb # P vs NP, verifiers, SAT and DPLL, reductions, coping with NP-hardness
+│   │   ├── 03_approximation_and_parameterized_algorithms.ipynb # Vertex cover, set cover, metric TSP, knapsack FPTAS, FPT algorithms
+│   │   ├── 04_network_flows_and_matching.ipynb # Max-flow min-cut, Edmonds-Karp, Hopcroft-Karp, the Hungarian algorithm
+│   │   ├── 05_linear_and_integer_programming.ipynb # LP modelling, simplex from scratch, duality, branch-and-bound
+│   │   ├── 06_streaming_and_sketching_algorithms.ipynb # Reservoir sampling, Count-Min, HyperLogLog, MinHash/LSH, quantile sketches
+│   │   ├── 07_computational_geometry_and_fft.ipynb # Convex hull, sweep line, Voronoi/Delaunay, FFT and the convolution theorem
+│   │   ├── 08_advanced_data_structures.ipynb # Sparse tables, suffix arrays, interval & KD-trees, red-black trees, LSM trees
+│   │   ├── 09_coding_interview_workbook.ipynb # Interview method, pattern map, worked problems for every common pattern
+│   │   ├── 10_parallel_and_external_memory_algorithms.ipynb # Work/span, Amdahl's law, parallel prefix sum, external sort, MapReduce
+│   │   └── notes/
 │   └── notes/
 │       └── 00_AI_Fundamentals.md             # Conceptual study guide with Mermaid diagrams
 │
@@ -113,6 +160,10 @@ zero-to-ai-engineer/
 │   ├── 09_polars.ipynb                       # Polars DataFrame operations, expressions, lazy evaluation, streaming
 │   ├── 10_duckdb.ipynb                       # DuckDB SQL analytics, OLAP queries, Python integration
 │   ├── 11_industry_eda_report_for_stakeholders.ipynb # 🏭 Industry: data-quality report, KPIs, cohorts, Pareto, auto-generated memo
+│   ├── 12_data_acquisition_apis_scraping_and_formats.ipynb # File formats, REST API client, web scraping, incremental loads, provenance
+│   ├── 13_statistical_modeling_and_inference.ipynb # OLS/GLM inference, diagnostics, permutation tests, mixed models
+│   ├── 14_design_of_experiments.ipynb        # Randomisation & blocking, factorial designs, response surfaces, power, CUPED
+│   ├── 15_data_visualization_principles_and_storytelling.ipynb # Perception, chart choice, colour, uncertainty, KPI dashboard, data story
 │   └── notes/
 │
 ├── 03_Machine_Learning/
@@ -140,6 +191,7 @@ zero-to-ai-engineer/
 │   │   ├── 02_dimensionality_reduction.ipynb # PCA, t-SNE, UMAP, ICA, NMF, Isomap, LLE, MDS
 │   │   ├── 03_association_rules.ipynb        # Apriori, FP-Growth, ECLAT, SPADE, PrefixSpan
 │   │   ├── 04_industry_customer_segmentation.ipynb # 🏭 Industry: RFM segmentation, naming segments, stability check, marketing playbook
+│   │   ├── 05_clustering_and_manifold_learning_in_depth.ipynb # K-means/hierarchical/spectral from scratch, choosing k, HDBSCAN, manifolds
 │   │   └── notes/
 │   ├── 03_semi_supervised/
 │   │   ├── 01_semi_supervised_learning.ipynb # Label propagation, FixMatch, MixMatch, ReMixMatch, VAT
@@ -171,6 +223,7 @@ zero-to-ai-engineer/
 │   ├── 09_recommendation_systems/
 │   │   ├── 01_recommendation_systems.ipynb   # CF, matrix factorization, NCF, LightGCN
 │   │   ├── 02_industry_product_recommender.ipynb # 🏭 Industry: implicit feedback, time split, precision/NDCG@k, cold start
+│   │   ├── 03_neural_and_sequential_recommenders.ipynb # BPR, two-tower retrieval + ANN, sequential models, re-ranking, IPS evaluation
 │   │   └── notes/
 │   ├── 10_causal_inference/
 │   │   ├── 01_causal_inference.ipynb         # DoWhy, EconML, causal DAGs, propensity scoring, CATE estimation
@@ -190,6 +243,21 @@ zero-to-ai-engineer/
 │   ├── 15_synthetic_tabular_data/
 │   │   ├── 01_synthetic_tabular_data.ipynb   # CTGAN, TVAE, statistical synthesis, privacy metrics, SDMetrics
 │   │   └── 02_industry_synthetic_test_data_for_development.ipynb # 🏭 Industry: privacy-safer synthetic copy with utility/privacy release gates
+│   ├── 16_learning_theory/                   # 🎓 University track: MS-level ML theory
+│   │   ├── README.md                         # Track guide: plain-English overview, examples, study order
+│   │   ├── 01_statistical_learning_theory.ipynb # Bias-variance, PAC learning, Hoeffding, VC dimension, Rademacher, double descent
+│   │   ├── 02_kernel_methods.ipynb           # Mercer, RKHS, kernel ridge/PCA, Nyström, random Fourier features, MMD, NTK
+│   │   └── notes/
+│   ├── 17_probabilistic_graphical_models/    # 🎓 University track: probabilistic graphical models
+│   │   ├── README.md                         # Track guide: plain-English overview, examples, study order
+│   │   ├── 01_markov_networks_and_exact_inference.ipynb # Markov networks, variable elimination, belief propagation, CRFs, structure learning
+│   │   ├── 02_em_variational_inference_and_sampling.ipynb # EM (GMM, missing data, Baum-Welch), Gibbs/MCMC, mean-field and stochastic VI
+│   │   └── notes/
+│   ├── 18_domain_applications/               # 🎓 Domain electives
+│   │   ├── README.md                         # Track guide: plain-English overview, examples, study order
+│   │   ├── 01_geospatial_machine_learning.ipynb # Map projections, spatial indexes, spatial CV, IDW/GP interpolation, routing
+│   │   ├── 02_bioinformatics_sequence_ml.ipynb # Sequence alignment, k-mers & MinHash, BWT read mapping, HMMs, sequence classifiers
+│   │   └── notes/
 │   ├── 10_evaluation_metrics_comprehensive.ipynb  # Every metric: classification/regression/ranking/clustering/NLP/CV/TS/RAG
 │   └── projects/
 │       ├── 01_titanic_survival.py
@@ -235,6 +303,10 @@ zero-to-ai-engineer/
 │   ├── 15_multi_task_learning.ipynb          # Hard/soft parameter sharing, uncertainty weighting, MTL benchmarks
 │   ├── 16_industry_pytorch_training_pipeline.ipynb # 🏭 Industry: professional training loop: checkpoints, resume, early stopping, sanity checks
 │   ├── 17_industry_model_export_and_inference.ipynb # 🏭 Industry: TorchScript/ONNX export, parity checks, quantization, latency benchmarks
+│   ├── 18_neural_networks_from_scratch_numpy.ipynb # Layer API, gradient checks, optimisers, dropout, batch norm, im2col CNN in NumPy
+│   ├── 19_sequence_models_hands_on.ipynb     # RNN/LSTM/GRU from scratch, char-level LM, seq2seq with attention, beam search
+│   ├── 20_generative_models_hands_on.ipynb   # AE vs VAE, GAN, DDPM diffusion from scratch, RealNVP flow, evaluation
+│   ├── 21_graph_machine_learning_hands_on.ipynb # Node features, spectral embedding, node2vec, GNNs from scratch, link prediction
 │   ├── peft_comparison.png               # PEFT methods comparison image
 │   ├── notes/
 │   └── projects/
@@ -331,6 +403,8 @@ zero-to-ai-engineer/
 │   ├── 18_reasoning_models.ipynb             # Chain-of-thought scaling, o1/o3/R1 architecture, inference-time compute
 │   ├── 19_industry_rag_pipeline.ipynb        # 🏭 Industry: production RAG: version filters, citations, refusals, evaluation (local LLM)
 │   ├── 20_industry_llm_application_patterns.ipynb # 🏭 Industry: structured output + retries, guardrails, fallbacks, cost, eval harness
+│   ├── 21_fine_tuning_hands_on_cpu.ipynb     # Tiny base model, SFT with loss masking, LoRA and DPO from scratch, forgetting
+│   ├── 22_llm_evaluation_hands_on.ipynb      # Eval-set design, metrics from scratch, LLM-as-judge biases, RAG metrics, CI tests
 │   └── projects/
 │       ├── 01_local_rag.py
 │       ├── 02_llm_benchmark.py
@@ -375,6 +449,8 @@ zero-to-ai-engineer/
 │   ├── 06_advanced_rl.ipynb                  # Model-based RL, MBPO, Dreamer, RLHF, RLAIF
 │   ├── 07_multi_armed_bandits.ipynb          # UCB1, Thompson sampling, contextual bandits
 │   ├── 08_industry_inventory_control_with_rl.ipynb # 🏭 Industry: custom Gymnasium env, PPO vs tuned (s,S) policy, shadow mode
+│   ├── 09_tabular_rl_from_scratch.ipynb      # GridWorld: DP, Monte Carlo, SARSA/Q-learning, TD(λ), Dyna-Q, reward shaping
+│   ├── 10_deep_rl_on_cpu.ipynb               # DQN/Double DQN, REINFORCE, A2C, PPO+GAE from scratch, honest RL evaluation
 │   ├── notes/
 │   └── projects/
 │       ├── 01_cartpole_dqn.py
@@ -400,6 +476,19 @@ zero-to-ai-engineer/
 │       └── Dockerfile
 │
 ├── 13_Databases/
+│   ├── 00_dbms_fundamentals/                 # 🎓 University track: BS-level database theory (the "DBMS" course)
+│   │   ├── README.md                         # Track guide: plain-English overview, examples, study order
+│   │   ├── 01_dbms_introduction_and_architecture.ipynb # Why a DBMS, DDL/DML/DCL/TCL, components, architectures
+│   │   ├── 02_er_model_and_eer.ipynb         # ER & EER diagrams, weak entities, specialization, ER-to-relational mapping
+│   │   ├── 03_relational_model_and_relational_algebra.ipynb # Keys, integrity constraints, relational algebra & calculus, Codd's rules
+│   │   ├── 04_functional_dependencies_and_normalization.ipynb # FDs, Armstrong's axioms, closures, canonical cover, 1NF-BCNF, 4NF/5NF
+│   │   ├── 05_transactions_and_concurrency_control.ipynb # ACID, serializability, locking, deadlocks, timestamp & optimistic CC, isolation
+│   │   ├── 06_recovery_and_storage.ipynb     # Write-ahead log, ARIES, shadow paging, buffer management, RAID, file organization
+│   │   ├── 07_indexing_b_trees_and_hashing.ipynb # B/B+ trees, hash, bitmap and inverted indexes, EXPLAIN QUERY PLAN
+│   │   ├── 08_query_processing_and_optimization.ipynb # Cost model, selection & join algorithms, heuristic and cost-based optimization
+│   │   ├── 09_distributed_databases_warehousing_and_security.ipynb # Fragmentation, replication, 2PC, CAP, sharding, star schemas, OLAP, security
+│   │   ├── 10_industry_designing_a_database_end_to_end.ipynb # 🏭 Industry: course platform: ER → BCNF schema → DDL, queries, indexes, tests
+│   │   └── notes/
 │   ├── 01_sql/01_sql_fundamentals.ipynb      # PostgreSQL, joins, indexes, window functions, CTEs
 │   ├── 01_sql/02_industry_sql_for_ml_feature_extraction.ipynb # 🏭 Industry: point-in-time SQL features, indexes/EXPLAIN, injection safety
 │   ├── 02_nosql/01_nosql_databases.ipynb     # MongoDB, Redis, Cassandra, CAP theorem
@@ -407,6 +496,9 @@ zero-to-ai-engineer/
 │   ├── 04_orm/01_orm.ipynb                   # SQLAlchemy 2.0, SQLModel, Alembic migrations
 │   ├── 05_db_in_ai/01_databases_in_ai.ipynb  # Feature stores, Feast, online/offline stores
 │   ├── 06_data_engineering/01_data_engineering.ipynb  # Spark, Kafka, dbt, data lakehouse
+│   ├── 06_data_engineering/02_big_data_processing_on_one_machine.ipynb # MapReduce from scratch, out-of-core pandas, Parquet, DuckDB, skew, mini-Dask
+│   ├── 06_data_engineering/03_spark_locally.ipynb # Mini-Spark from scratch, shuffles, Spark SQL, joins, MLlib, Structured Streaming
+│   ├── 06_data_engineering/04_stream_processing_from_scratch.ipynb # Event time, windows & watermarks, stateful operators, delivery semantics
 │   ├── 07_graph_databases/01_graph_databases.ipynb    # Neo4j, Cypher, graph algorithms, knowledge graphs, GDS
 │   ├── 08_time_series_databases/01_time_series_databases.ipynb  # InfluxDB, time series queries, DuckDB time series
 │   └── notes/
@@ -421,6 +513,18 @@ zero-to-ai-engineer/
 │   ├── 06_optimization.ipynb                 # All optimizers with update equations, convergence proofs
 │   ├── 07_bayesian_ml.ipynb                  # PyMC, MCMC, variational inference, Bayesian neural networks
 │   ├── 08_industry_math_in_practice.ipynb    # 🏭 Industry: float pitfalls, stable softmax, solve vs inv, gradient checking
+│   ├── 09_numerical_methods.ipynb            # Error analysis, root finding, interpolation, quadrature, Monte Carlo, ODE solvers
+│   ├── 10_numerical_linear_algebra.ipynb     # LU/Cholesky/QR, conditioning, iterative solvers, eigenvalue algorithms, sparse
+│   ├── 11_matrix_calculus_and_autodiff_from_scratch.ipynb # Jacobians, VJPs/JVPs, forward and reverse-mode autodiff engine, gradient checks
+│   ├── 12_convex_optimization_and_duality.ipynb # Convexity, LP/QP/SOCP/SDP, duality, KKT, proximal methods, ADMM, interior point
+│   ├── discrete_math/                        # 🎓 University track: Discrete Structures + Theory of Computation
+│   │   ├── README.md                         # Track guide: plain-English overview, examples, study order
+│   │   ├── 01_sets_relations_functions_and_proofs.ipynb # Sets, relations, functions, countability, proofs, induction, loop invariants
+│   │   ├── 02_combinatorics_and_recurrences.ipynb # Counting, binomial theorem, pigeonhole, inclusion-exclusion, recurrences
+│   │   ├── 03_graph_theory.ipynb             # Connectivity, Euler/Hamilton, colouring, planarity, matchings, spectral graphs
+│   │   ├── 04_automata_and_regular_languages.ipynb # DFA/NFA, subset construction, regex ↔ automata, minimisation, pumping lemma
+│   │   ├── 05_grammars_parsing_and_computability.ipynb # CFGs, CYK parsing, pushdown automata, Chomsky hierarchy, Turing machines, halting
+│   │   └── notes/
 │   └── notes/
 │
 ├── 15_MLOps/
@@ -452,6 +556,7 @@ zero-to-ai-engineer/
 │   │   └── notes/
 │   ├── 08_automl/
 │   │   ├── 01_automl.ipynb                   # Optuna, NAS, AutoKeras, FLAML, H2O AutoML
+│   │   ├── 02_automl_from_scratch.ipynb      # Search spaces, Hyperband, GP Bayesian optimisation, ensemble selection, toy NAS
 │   │   └── notes/
 │   ├── 09_federated_learning/
 │   │   ├── 01_federated_learning.ipynb       # FedAvg, differential privacy, Flower framework
@@ -462,6 +567,7 @@ zero-to-ai-engineer/
 │   ├── 13_llmops.ipynb                       # LLMOps, prompt versioning, LLM monitoring, Langfuse, cost tracking
 │   ├── 14_data_contracts.ipynb               # Data contracts, Pandera, schema validation, data quality guarantees
 │   ├── 15_industry_end_to_end_mlops_pipeline.ipynb # 🏭 Industry: validate → train → MLflow registry gate → drift → retrain
+│   ├── 16_observability_hands_on.ipynb       # Structured logs, Prometheus metrics, OpenTelemetry traces, SLOs, burn-rate alerts
 │   ├── notes/
 │   ├── mlflow.db                             # MLflow SQLite database (root)
 │   ├── mlruns/                               # MLflow runs directory (root)
@@ -523,6 +629,32 @@ zero-to-ai-engineer/
 │   ├── 07_software_engineering_for_ml.ipynb  # Project structure, testing, CI/CD, Docker, structured logging
 │   └── 08_industry_system_design_case_study.ipynb # 🏭 Industry: real-time fraud scoring design: capacity, latency budget, simulation
 │
+├── 23_Software_Engineering/                  # 🎓 University track: 12 notebooks, software engineering for AI developers
+│   ├── README.md                             # Track guide: plain-English overview, examples, study order
+│   ├── 01_oop_and_solid_principles.ipynb     # Encapsulation, composition, protocols, dataclasses, SOLID, code smells, UML
+│   ├── 02_design_patterns_for_ai_code.ipynb  # Factory, adapter, strategy, observer, chain of responsibility, DI, repository
+│   ├── 03_testing_ai_code.ipynb              # pytest fixtures, mocking LLM/HTTP calls, property-based tests, coverage, TDD, CI
+│   ├── 04_debugging_and_profiling.ipynb      # Tracebacks, logging, pdb, numerical ML bugs, cProfile, tracemalloc
+│   ├── 05_concurrency_and_async.ipynb        # Threads vs processes, the GIL, concurrent.futures, asyncio, backpressure
+│   ├── 06_operating_systems_for_developers.ipynb # Processes, scheduling, synchronisation, memory, file systems, the Linux shell
+│   ├── 07_computer_networks_for_ai_apps.ipynb # TCP/IP, DNS, raw HTTP over a socket, TLS, REST, SSE/WebSockets/gRPC, CORS
+│   ├── 08_security_for_ai_applications.ipynb # OWASP Top 10 for web and LLM apps, auth, secrets, input validation, supply chain
+│   ├── 09_system_design_fundamentals.ipynb   # Load balancing, caching, databases at scale, queues, rate limiting, SLOs
+│   ├── 10_connecting_ai_to_a_frontend.ipynb  # FastAPI backend + plain HTML/JS front end, streaming UX, React/Streamlit/Gradio
+│   ├── 11_industry_building_and_shipping_an_ai_feature.ipynb # 🏭 Industry: spec → tested package → API + page → CI → feature flag & canary
+│   ├── 12_computer_architecture_for_ai_performance.ipynb # Number formats, ALU, pipelining, memory hierarchy, SIMD, roofline, GPU concepts
+│   └── notes/
+│
+├── 24_Research_Methods/                      # 🎓 University track: 6 notebooks, MS/MPhil research skills
+│   ├── README.md                             # Track guide: plain-English overview, examples, study order
+│   ├── 01_research_methodology_and_literature_review.ipynb # Research questions, finding & reading papers, review matrix, PRISMA, proposal
+│   ├── 02_experiment_design_for_ml.ipynb     # Randomisation, blocking, ML protocols, power analysis, threats to validity
+│   ├── 03_statistical_significance_and_reporting.ipynb # Paired model tests, Friedman + Nemenyi, multiple comparisons, effect sizes
+│   ├── 04_reproducibility_and_research_code.ipynb # Seeds, pinned environments, configs, experiment tracking, checksums, model cards
+│   ├── 05_paper_writing_and_publishing.ipynb # IMRaD, clear writing, figures, LaTeX tables & BibTeX, peer review, the thesis
+│   ├── 06_industry_running_a_research_project_end_to_end.ipynb # 🏭 Industry: question → pre-registered plan → multi-seed study → tests → write-up
+│   └── notes/
+│
 └── 21_Projects/                              # 6 end-to-end capstone projects (FastAPI + HTML/CSS/JS)
     ├── 01_ml_pipeline/                       # Scikit-learn pipeline API with train/predict/explain endpoints
     │   ├── README.md                         # How to run it (tested steps) + remaining limitations
@@ -565,17 +697,17 @@ zero-to-ai-engineer/
     │   ├── templates/
     │   └── notes/
     ├── 06_production_model/                  # Full MLOps: monitoring + drift detection + Dockerfile + CI/CD
-        ├── README.md                         # How to run it (tested steps) + remaining limitations
-        ├── api.py
-        ├── main.py
-        ├── monitoring.py
-        ├── docker-compose.yml
-        ├── prometheus.yml                    # Prometheus scrape config used by docker-compose
-        ├── .dockerignore
-        ├── Dockerfile
-        ├── requirements.txt
-        ├── templates/
-        └── notes/
+    │   ├── README.md                         # How to run it (tested steps) + remaining limitations
+    │   ├── api.py
+    │   ├── main.py
+    │   ├── monitoring.py
+    │   ├── docker-compose.yml
+    │   ├── prometheus.yml                    # Prometheus scrape config used by docker-compose
+    │   ├── .dockerignore
+    │   ├── Dockerfile
+    │   ├── requirements.txt
+    │   ├── templates/
+    │   └── notes/
     └── notes/                                # Conceptual study guides for all projects
 ```
 
@@ -583,25 +715,30 @@ zero-to-ai-engineer/
 
 | Category | Count |
 |----------|-------|
-| Total Jupyter Notebooks | **260** (all executed, no errors in saved outputs ✅) |
+| Total Jupyter Notebooks | **355** (all executed, no errors in saved outputs ✅) |
 | 🌱 Start Here Notebooks (included above) | **10** (first notebook to open in each big area) |
-| 🏭 Industry Practice Notebooks (included above) | **42** (in every section) |
-| Beginner guides | `START_HERE.md`, `LEARNING_PATH.md`, `GLOSSARY.md` (212 terms) |
-| Conceptual Study Guides (`notes/`) | **66** |
+| 🏭 Industry Practice Notebooks (included above) | **47** (in every section) |
+| 🎓 University-level tracks & hands-on companions (included above) | **95** (76 track notebooks + 19 companions, added October 2026) |
+| Beginner guides | `START_HERE.md`, `LEARNING_PATH.md`, `GLOSSARY.md` (459 terms) |
+| Track guides (`README.md` in each new 🎓 track folder) | **10** |
+| Conceptual Study Guides (`notes/`) | **76** |
 | Mermaid Diagrams in Guides | **254** |
 | AI Fundamentals & Ethics (`00`, `19`) | 17 |
-| Python & Data Analysis (`01`, `02`) | 16 |
-| Machine Learning (`03`) | 51 |
+| Classical AI, DSA & Advanced Algorithms (`00_AI_Fundamentals/` sub-folders) | 33 |
+| Python & Data Analysis (`01`, `02`) | 20 |
+| Machine Learning (`03`) | 59 |
 | Forecasting (`04`) | 13 |
-| Deep Learning (`05`) | 18 |
+| Deep Learning (`05`) | 22 |
 | Computer Vision (`06`) | 13 |
 | NLP (`07`) | 14 |
-| LLMs & Prompt Engineering (`08`, `09`) | 34 |
-| Agents & Reinforcement Learning (`10`, `11`) | 17 |
-| APIs, MLOps, Deployment, Docker, Cloud & Git (`12`, `15`–`18`, `20`) | 41 |
-| Databases (`13`) | 9 |
-| Mathematics (`14`) | 9 |
+| LLMs & Prompt Engineering (`08`, `09`) | 36 |
+| Agents & Reinforcement Learning (`10`, `11`) | 19 |
+| APIs, MLOps, Deployment, Docker, Cloud & Git (`12`, `15`–`18`, `20`) | 43 |
+| Databases (`13`, incl. DBMS fundamentals) | 22 |
+| Mathematics (`14`, incl. discrete maths) | 18 |
 | ML System Design (`22`) | 8 |
+| Software Engineering (`23`) | 12 |
+| Research Methods (`24`) | 6 |
 | Module mini-projects (Python scripts in `projects/` folders) | 26 |
 | Full-Stack Capstone Projects (`21_Projects`, each with a tested README) | 6 |
 
@@ -610,8 +747,8 @@ zero-to-ai-engineer/
 
 Every section folder now contains a **`notes/` sub-folder** holding a comprehensive, **purely conceptual study guide** (named after the folder). The notebooks are the *hands-on code*; these notes are the *explanation* they teach each topic **from absolute scratch**, defining every term on first use, with no prior knowledge assumed.
 
-- **66 guides** spanning all 22 sections and their sub-topics
-- **254 diagrams** drawn with **[Mermaid](https://mermaid.js.org/)** (render natively on GitHub) neural-network architectures, CNN / RNN / Transformer internals, the RAG and agent pipelines, the ML lifecycle, ER diagrams, and more
+- **76 guides** spanning 24 sections and their sub-topics
+- **254 diagrams** drawn with **[Mermaid](https://mermaid.js.org/)** (render natively on GitHub) neural-network architectures, CNN / RNN / Transformer internals, the RAG and agent pipelines, the ML lifecycle, ER diagrams, and more (the 10 newer guides for the 🎓 university-level tracks use worked examples, tables and plain-text diagrams instead)
 - **Conceptual only** (no code dumps) with light pointers into the notebooks ("see `xx.ipynb` the cell that does Y")
 - No prerequisites or audience jargon just the subject, explained simply yet in depth
 
@@ -632,6 +769,10 @@ Every section folder now contains a **`notes/` sub-folder** holding a comprehens
 | FastAPI · Databases · Mathematics | `12_FastAPI/notes/…`, `13_Databases/notes/…`, `14_Mathematics/notes/…` |
 | MLOps · Deployment · Docker · Cloud | `15_MLOps/notes/…`, `16_Deployment/notes/…`, `17_Docker/notes/…`, `18_Cloud/notes/…` |
 | Ethics · Git/DevOps · Projects | `19_AI_Ethics_and_Safety/notes/…`, `20_Git_and_DevOps/notes/…`, `21_Projects/notes/…` |
+| 🎓 Classical AI · DSA · Advanced Algorithms | `00_AI_Fundamentals/classical_ai/notes/classical_ai.md`, `00_AI_Fundamentals/dsa/notes/dsa.md`, `00_AI_Fundamentals/advanced_algorithms/notes/advanced_algorithms.md` |
+| 🎓 Learning theory · PGMs · Domain electives | `03_Machine_Learning/16_learning_theory/notes/16_learning_theory.md`, `03_Machine_Learning/17_probabilistic_graphical_models/notes/17_probabilistic_graphical_models.md`, `03_Machine_Learning/18_domain_applications/notes/18_domain_applications.md` |
+| 🎓 DBMS · Discrete maths | `13_Databases/00_dbms_fundamentals/notes/00_dbms_fundamentals.md`, `14_Mathematics/discrete_math/notes/discrete_math.md` |
+| 🎓 Software Engineering · Research Methods | `23_Software_Engineering/notes/23_Software_Engineering.md`, `24_Research_Methods/notes/24_Research_Methods.md` |
 
 > **Suggested flow:** skim the **notes** first to build intuition, then run the matching **notebook** to see it in code.
 
@@ -639,7 +780,7 @@ Every section folder now contains a **`notes/` sub-folder** holding a comprehens
 
 ## 🏭 Industry Practice Notebooks
 
-Most notebooks in this repo teach **how an algorithm works** (math, from-scratch code, toy data). The **42 industry notebooks** teach **how companies actually use it**: they start from a business problem and walk through the real workflow, from messy data, validation and honest splits to baselines, business metrics, error analysis, saving and serving the model, monitoring and tests.
+Most notebooks in this repo teach **how an algorithm works** (math, from-scratch code, toy data). The **47 industry notebooks** teach **how companies actually use it**: they start from a business problem and walk through the real workflow, from messy data, validation and honest splits to baselines, business metrics, error analysis, saving and serving the model, monitoring and tests.
 
 They are written for **first-time learners**:
 - plain-English markdown before every step (*what* we do, *why* companies do it, *what goes wrong* otherwise),
@@ -652,6 +793,8 @@ Each one sits **next to the theory notebooks of its topic** and is named `NN_ind
 | Section | Industry notebook | Real-world scenario |
 |---------|-------------------|---------------------|
 | AI Fundamentals | `00_AI_Fundamentals/07_industry_responsible_ai_product_review.ipynb` | Responsible-AI review before launching a CV-screening feature |
+| Classical AI | `00_AI_Fundamentals/classical_ai/11_industry_route_planning_and_scheduling.ipynb` | Delivery-van routes and driver schedules |
+| DSA | `00_AI_Fundamentals/dsa/12_industry_dsa_in_ai_systems.ipynb` | The data structures inside retrieval, tokenizers, caches and rate limiters |
 | Python | `01_Python/04_industry_from_notebook_to_production_code.ipynb` | Turning a messy script into a tested, packaged CLI |
 | Data Analysis | `02_Data_Analysis/11_industry_eda_report_for_stakeholders.ipynb` | EDA report and recommendations memo for a manager |
 | ML · Supervised | `03_Machine_Learning/01_supervised/14_industry_churn_prediction.ipynb` | Who should the retention team call? |
@@ -685,6 +828,7 @@ Each one sits **next to the theory notebooks of its topic** and is named `NN_ind
 | Reinforcement Learning | `11_Reinforcement_Learning/08_industry_inventory_control_with_rl.ipynb` | Warehouse inventory policy: PPO vs a tuned heuristic |
 | FastAPI | `12_FastAPI/04_industry_production_ml_api.ipynb` | Production-grade prediction API with tests |
 | Databases | `13_Databases/01_sql/02_industry_sql_for_ml_feature_extraction.ipynb` | Point-in-time feature extraction in SQL |
+| DBMS | `13_Databases/00_dbms_fundamentals/10_industry_designing_a_database_end_to_end.ipynb` | Designing the database of an online course platform, from ER diagram to tests |
 | Mathematics | `14_Mathematics/08_industry_math_in_practice.ipynb` | Numerical bugs that break real ML code |
 | MLOps | `15_MLOps/15_industry_end_to_end_mlops_pipeline.ipynb` | Train → registry gate → drift → retrain loop with MLflow |
 | Deployment | `16_Deployment/05_industry_safe_model_rollout_strategies.ipynb` | Shipping a new model version safely |
@@ -693,6 +837,8 @@ Each one sits **next to the theory notebooks of its topic** and is named `NN_ind
 | AI Ethics & Safety | `19_AI_Ethics_and_Safety/09_industry_ai_incident_response_and_red_teaming.ipynb` | Red-teaming a content filter and handling an incident |
 | Git & DevOps | `20_Git_and_DevOps/05_industry_team_git_workflow_for_ml.ipynb` | Team Git workflow for an ML project |
 | ML System Design | `22_ML_System_Design/08_industry_system_design_case_study.ipynb` | Designing a real-time fraud-scoring system |
+| Software Engineering | `23_Software_Engineering/11_industry_building_and_shipping_an_ai_feature.ipynb` | Taking an AI feature from spec to a canary release |
+| Research Methods | `24_Research_Methods/06_industry_running_a_research_project_end_to_end.ipynb` | A complete, reproducible model-comparison study |
 
 **Running them**
 - They run on a normal laptop CPU with **no GPU and no API keys**. Datasets are bundled with scikit-learn or generated inside the notebook, so nothing large is downloaded.
@@ -705,6 +851,42 @@ Each one sits **next to the theory notebooks of its topic** and is named `NN_ind
 ```bash
 pip install opencv-python-headless==5.0.0.93 gymnasium==1.4.0 stable-baselines3==2.9.0 rank-bm25==0.2.2 nltk==3.10.3 pytest==9.1.1
 ```
+
+---
+
+## 🎓 University-Level Tracks (BS / MS / MPhil)
+
+The repo now also covers the course list of a **BS, MS or MPhil in AI & Data Science**: the computer-science core (classical AI, data structures and algorithms, discrete maths, databases, software engineering), deeper maths and ML theory, and the research skills needed for a thesis. These tracks are **optional for the job-ready route**: you can become an AI engineer without them. Take them if you are a university student, are preparing for exams or technical interviews, or want the theory under the tools.
+
+Each track folder has a **`README.md`** that explains the topic in plain English with everyday examples, says who it is for, and gives the study order. Every notebook opens with an **"Explained simply"** section, runs on a normal CPU with no API key, and ends with practice problems.
+
+| Track | Folder | Notebooks | What you learn |
+|---|---|---|---|
+| Classical AI | [`00_AI_Fundamentals/classical_ai/`](00_AI_Fundamentals/classical_ai/README.md) | 11 | How programs reach a goal by searching, reasoning with logic and planning, as in the standard university "Artificial Intelligence" course |
+| Data Structures & Algorithms | [`00_AI_Fundamentals/dsa/`](00_AI_Fundamentals/dsa/README.md) | 12 | How to arrange data so common jobs are fast, and how to write and measure efficient algorithms (also coding-interview prep) |
+| Advanced Algorithms | [`00_AI_Fundamentals/advanced_algorithms/`](00_AI_Fundamentals/advanced_algorithms/README.md) | 10 | What to do when problems get very hard or very large: NP-completeness, approximation, flows, linear programming, sketches, parallel algorithms |
+| Discrete Maths & Theory of Computation | [`14_Mathematics/discrete_math/`](14_Mathematics/discrete_math/README.md) | 5 | Sets, proofs, counting, graphs, automata, grammars, and the limits of what any computer can compute |
+| Numerical & Optimization Maths | `14_Mathematics/` notebooks [09](14_Mathematics/09_numerical_methods.ipynb) · [10](14_Mathematics/10_numerical_linear_algebra.ipynb) · [11](14_Mathematics/11_matrix_calculus_and_autodiff_from_scratch.ipynb) · [12](14_Mathematics/12_convex_optimization_and_duality.ipynb) | 4 | How computers really solve equations and matrix problems, compute gradients automatically, and find the best solution to an optimisation problem |
+| DBMS Fundamentals | [`13_Databases/00_dbms_fundamentals/`](13_Databases/00_dbms_fundamentals/README.md) | 10 | How a database works inside: ER design, relational algebra, normalization, transactions, recovery, indexes, query optimization |
+| Software Engineering | [`23_Software_Engineering/`](23_Software_Engineering/README.md) | 12 | How to turn notebook code into reliable software: OOP, design patterns, testing, debugging, OS, networks, security, system design |
+| Research Methods | [`24_Research_Methods/`](24_Research_Methods/README.md) | 6 | How to show a result is real and publish it: literature review, experiment design, significance tests, reproducibility, paper writing |
+| Learning Theory & Kernels | [`03_Machine_Learning/16_learning_theory/`](03_Machine_Learning/16_learning_theory/README.md) | 2 | Why and when a model generalises to new data (PAC, VC dimension, bias-variance), and how kernels let linear methods learn curved patterns |
+| Probabilistic Graphical Models | [`03_Machine_Learning/17_probabilistic_graphical_models/`](03_Machine_Learning/17_probabilistic_graphical_models/README.md) | 2 | How to reason about many uncertain variables at once, and how EM, variational inference and sampling find hidden structure |
+| Domain Electives | [`03_Machine_Learning/18_domain_applications/`](03_Machine_Learning/18_domain_applications/README.md) | 2 | Machine learning on location data (geospatial) and on DNA and protein sequences (bioinformatics) |
+
+**New hands-on companions.** These notebooks sit next to existing theory notebooks and build the same ideas from scratch, or run them for real on a CPU:
+
+| Module | Notebooks | What you build |
+|---|---|---|
+| Data Analysis | [12](02_Data_Analysis/12_data_acquisition_apis_scraping_and_formats.ipynb) · [13](02_Data_Analysis/13_statistical_modeling_and_inference.ipynb) · [14](02_Data_Analysis/14_design_of_experiments.ipynb) · [15](02_Data_Analysis/15_data_visualization_principles_and_storytelling.ipynb) | Collect data from files, APIs and web pages; draw conclusions with statistical models; design fair experiments; make honest, clear charts |
+| Deep Learning | [18](05_Deep_Learning/18_neural_networks_from_scratch_numpy.ipynb) · [19](05_Deep_Learning/19_sequence_models_hands_on.ipynb) · [20](05_Deep_Learning/20_generative_models_hands_on.ipynb) · [21](05_Deep_Learning/21_graph_machine_learning_hands_on.ipynb) | A neural network in plain NumPy; RNNs, LSTMs and seq2seq; VAEs, GANs, diffusion and flows; graph embeddings and GNNs |
+| LLM | [21](08_LLM/21_fine_tuning_hands_on_cpu.ipynb) · [22](08_LLM/22_llm_evaluation_hands_on.ipynb) | Fine-tune a tiny language model on a CPU (SFT, LoRA and DPO from scratch); evaluate LLMs with proper metrics and statistics |
+| Reinforcement Learning | [09](11_Reinforcement_Learning/09_tabular_rl_from_scratch.ipynb) · [10](11_Reinforcement_Learning/10_deep_rl_on_cpu.ipynb) | Table-based RL from scratch, then DQN, REINFORCE, A2C and PPO on a CPU |
+| Data Engineering | [02](13_Databases/06_data_engineering/02_big_data_processing_on_one_machine.ipynb) · [03](13_Databases/06_data_engineering/03_spark_locally.ipynb) · [04](13_Databases/06_data_engineering/04_stream_processing_from_scratch.ipynb) | Process data bigger than memory on one machine, run Spark locally, and build a stream processor from scratch |
+| MLOps | [08_automl/02](15_MLOps/08_automl/02_automl_from_scratch.ipynb) · [16](15_MLOps/16_observability_hands_on.ipynb) | An AutoML system from scratch; logs, metrics, traces and alerts for a model in production |
+| Machine Learning | [02_unsupervised/05](03_Machine_Learning/02_unsupervised/05_clustering_and_manifold_learning_in_depth.ipynb) · [09_recommendation_systems/03](03_Machine_Learning/09_recommendation_systems/03_neural_and_sequential_recommenders.ipynb) | Clustering and manifold learning from scratch; two-tower and sequential recommenders |
+
+**Which route should I follow?** [LEARNING_PATH.md](LEARNING_PATH.md) describes three routes through the repo, **job-ready**, **BS-equivalent** and **MS/MPhil-equivalent**, and says where each track fits.
 
 ---
 
@@ -731,13 +913,14 @@ Notebooks that use a language model download a small one (`Qwen/Qwen2.5-0.5B-Ins
 
 ## ✅ All Notebooks Verified Runnable
 
-All **260 notebooks** were executed on **Python 3.12** (NumPy 2, scikit-learn 1.9, PyTorch 2.12 CPU, Transformers 5), and their saved outputs contain **no error messages**.
+All **355 notebooks** were executed on **Python 3.12** (NumPy 2, scikit-learn 1.9, PyTorch 2.12 CPU, Transformers 5), and their saved outputs contain **no error messages**.
 
 - **Reviewed and fixed in October 2026:**
   - library API changes (Transformers 5, MAPIE 1.x, MLflow model aliases, MONAI, TRL, LangChain/Prefect/Airflow/Evidently and others)
   - outdated model names (current Claude, OpenAI and Gemini models)
   - data-leakage mistakes in some forecasting and churn examples
   - a few incorrect explanations and results
+- **Added in late October 2026:** the 95 notebooks of the 🎓 university-level tracks and hands-on companions, executed the same way. `23_Software_Engineering/04_debugging_and_profiling.ipynb` prints a few tracebacks on purpose, to teach how to read them; they are caught and are not errors.
 - **No API key needed to run them.** Cells that call paid LLM APIs either fall back to a free local model or print a clear *"skipped: needs X"* message instead of crashing. The same goes for cloud accounts and external services (databases, experiment trackers, …).
 - **GPU-heavy parts** (large-model fine-tuning, big diffusion models) check for a GPU and use small CPU stand-ins or skip with a message.
 - The 🌱 Start Here and 🏭 industry notebooks need **no GPU and no API key**.
@@ -805,6 +988,7 @@ Before writing a single line of ML code, you should understand the societal impa
 - 🏆 [LeetCode Easy Problems](https://leetcode.com/problemset/) 50 problems minimum
 - 🏆 [HackerRank Python](https://www.hackerrank.com/domains/python) Structured practice
 - 🏆 [Exercism Python Track](https://exercism.org/tracks/python) Mentored coding exercises
+- 🎓 In this repo: [`00_AI_Fundamentals/dsa/`](00_AI_Fundamentals/dsa/README.md) teaches data structures, algorithms and Big-O from zero, with interview-style practice (optional, and it makes the platforms above much easier)
 
 **Python Concepts You MUST Know:**
 ```python
@@ -828,6 +1012,8 @@ Before writing a single line of ML code, you should understand the societal impa
 | **Anaconda** | Python environment | [Anaconda Tutorial](https://docs.anaconda.com/free/anaconda/getting-started/) |
 | **Terminal/CLI** | Command line | [Command Line Crash Course](https://www.youtube.com/watch?v=yz7nYlnXLfE) |
 
+> 🎓 **Going deeper (optional):** [`23_Software_Engineering/`](23_Software_Engineering/README.md) covers clean code, testing, debugging, the operating system, networks and security for AI developers.
+
 **Setup Your Environment** (full step-by-step guide with troubleshooting: [START_HERE.md](START_HERE.md)):
 ```bash
 # Option A: Anaconda (recommended for beginners — includes Python + Jupyter)
@@ -844,7 +1030,7 @@ source .venv/bin/activate        # Linux / macOS
 # Jupyter, NumPy, pandas, scikit-learn, PyTorch, Transformers, FastAPI, ...
 pip install -r requirements-beginner.txt
 
-# OR install the full pinned environment used across ALL 260 notebooks (Python 3.12+)
+# OR install the full pinned environment used across ALL 355 notebooks (Python 3.12+)
 pip install -r requirements.txt
 
 # Verify installation
@@ -893,6 +1079,8 @@ python -c "import numpy; print(numpy.__version__)"
 | **Linear Algebra Foundations to Frontiers** | UT Austin (edX) | 15 weeks | Intermediate |
 | **Multivariable Calculus** | MIT OCW | 12 weeks | Intermediate |
 | **Probabilistic Systems Analysis** | MIT OCW | 15 weeks | Advanced |
+
+> 🎓 **In this repo (optional):** `14_Mathematics/` notebooks 09–12 cover numerical methods, numerical linear algebra, autodiff from scratch and convex optimization, and [`14_Mathematics/discrete_math/`](14_Mathematics/discrete_math/README.md) covers the discrete maths and theory of computation of a CS/AI degree.
 
 ---
 
@@ -953,6 +1141,8 @@ Pillar 6: Responsible AI & Ethics
 ├── Human-in-the-Loop & Human Oversight
 └── Tools: Guardrails AI, Llama Guard, Perspective API
 ```
+
+> 🎓 **Optional university track:** [`00_AI_Fundamentals/classical_ai/`](00_AI_Fundamentals/classical_ai/README.md) covers classical AI (search, games, constraints, logic, planning, reasoning under uncertainty), the standard BS/MS "Artificial Intelligence" course.
 
 #### 🎬 Video Courses & Tutorials
 
@@ -1030,6 +1220,8 @@ Pillar 6: Responsible AI & Ethics
 ### 🧱 Phase 1: Programming & Tools (Week 0)
 
 > **Goal**: Get comfortable with Python, Jupyter, and the data science workflow.
+>
+> 🎓 **Optional university tracks for this phase:** [data structures & algorithms](00_AI_Fundamentals/dsa/README.md) (then [advanced algorithms](00_AI_Fundamentals/advanced_algorithms/README.md)), [software engineering](23_Software_Engineering/README.md) and [discrete maths](14_Mathematics/discrete_math/README.md). `02_Data_Analysis/` notebooks 12–15 add data collection, statistical inference, experiment design and visual storytelling.
 
 #### 🎬 Video Tutorials
 
@@ -1067,6 +1259,8 @@ Pillar 6: Responsible AI & Ethics
 ### 🧱 Phase 2: Machine Learning Foundations (Weeks 1-4)
 
 > **Goal**: Understand how machines learn from data. Build algorithms from scratch before using libraries.
+>
+> 🎓 **Going deeper (optional):** [learning theory & kernels](03_Machine_Learning/16_learning_theory/README.md), [probabilistic graphical models](03_Machine_Learning/17_probabilistic_graphical_models/README.md), [domain electives](03_Machine_Learning/18_domain_applications/README.md), and [DBMS fundamentals](13_Databases/00_dbms_fundamentals/README.md) for the data side.
 
 #### 📚 Core Concepts to Master
 
@@ -1164,6 +1358,8 @@ Week 4: Feature Engineering & Pipelines
 ### 🧠 Phase 3: Deep Learning from Scratch (Weeks 5-8)
 
 > **Goal**: Understand neural networks at the tensor level. Build backpropagation by hand.
+>
+> 🧪 **Hands-on in this repo:** `05_Deep_Learning/` notebooks 18–21 build neural networks, sequence models, generative models and GNNs from scratch on a CPU.
 
 #### 📚 Core Concepts to Master
 
@@ -1271,6 +1467,8 @@ Week 8: Transformers (The Big One!)
 ### 🤖 Phase 4: Transformers & Large Language Models (Weeks 9-12)
 
 > **Goal**: Understand how ChatGPT works. Build a GPT-like model from scratch.
+>
+> 🧪 **Hands-on in this repo:** [`08_LLM/21_fine_tuning_hands_on_cpu.ipynb`](08_LLM/21_fine_tuning_hands_on_cpu.ipynb) (SFT, LoRA and DPO from scratch on a CPU) and [`08_LLM/22_llm_evaluation_hands_on.ipynb`](08_LLM/22_llm_evaluation_hands_on.ipynb) (evaluating LLMs properly).
 
 #### 📚 Core Concepts to Master
 
@@ -1586,6 +1784,8 @@ Week 19: Production Agent Systems
 ### 🏭 Phase 7: Production AI & MLOps (Weeks 20-24)
 
 > **Goal**: Deploy AI systems that are reliable, scalable, and maintainable in production.
+>
+> 🎓 **Also in this repo:** [`23_Software_Engineering/`](23_Software_Engineering/README.md) (testing, security, system design, shipping a feature), [`15_MLOps/16_observability_hands_on.ipynb`](15_MLOps/16_observability_hands_on.ipynb), [`15_MLOps/08_automl/02_automl_from_scratch.ipynb`](15_MLOps/08_automl/02_automl_from_scratch.ipynb) and the data-engineering notebooks `13_Databases/06_data_engineering/02`–`04`.
 
 #### 📚 Core Concepts to Master
 
