@@ -346,3 +346,42 @@ flowchart LR
 ```
 
 A realistic cloud-based ML system threads all of these concepts together. Raw data lands in **object storage**; an **ETL** or data-processing service cleans it; a **managed ML platform** trains the model on **spot GPU instances** with **checkpointing**; the trained artifact is versioned in a **model registry**; it is deployed to an **auto-scaling endpoint** (or served as a **serverless container**) and watched by **drift monitoring**; **hosted foundation models** fill in capabilities you don't train yourself; and the whole thing is governed by **least-privilege IAM** and watched by **cost dashboards and budgets**. The three providers give these pieces different names, but once you know the categories compute, storage, networking, managed ML, hosted models, and cost control you can read any of their catalogs and find what you need.
+
+
+## Service Guides in Plain Words
+
+Three companion guides in this folder explain every service of each major cloud in simple words: what it is, why you would need it, when to use it, when not to, and the equivalent on the other two clouds, with "which one should I use?" tables for each category:
+
+- `aws_services_explained_simply.md`
+- `gcp_services_explained_simply.md`
+- `azure_services_explained_simply.md`
+- `ai_ecosystem_services_explained_simply.md`: AI platforms and tools outside the big three clouds (telephony and voice AI, speech, model providers, GPU clouds, vector databases, document parsing, search APIs, agent infrastructure, observability, guardrails and app building blocks)
+
+The notebooks `06`–`11` teach the core and AI services of AWS, Azure and Google Cloud in depth, and `12_cloud_building_blocks_compared_aws_gcp_azure.ipynb` compares them side by side.
+
+---
+
+## 10. The Cloud Notebooks, One by One
+
+**`06_aws_core_services_for_ai_engineers.ipynb`** covers the core AWS services every AI system stands on: accounts, IAM and how AWS decides "allow" or "deny", VPC networking, compute from EC2 to Lambda, ECS, EKS and Batch, storage and databases, and queues and workflows. It also covers observability, infrastructure as code and security services. Small runnable toys include an IAM policy evaluator, a subnet planner, a firewall simulator and an SQS retry demo.
+
+**`07_aws_ai_services_sagemaker_bedrock_agentcore.ipynb`** maps AWS's AI services in layers. SageMaker AI handles training, pipelines and hosting; Bedrock offers hosted foundation models with the Converse API, Knowledge Bases and Guardrails; AgentCore provides runtime, memory, identity and tools for agents. It also covers Amazon Nova, Kiro, ready-made AI services such as Textract and Transcribe, and AWS's own Trainium and Inferentia chips.
+
+**`08_azure_core_services_for_ai_engineers.ipynb`** explains how Azure is organised (tenant, management groups, subscriptions, resource groups) and how identity works with Microsoft Entra ID, RBAC and keyless managed identities. It then covers Azure Policy, networking, compute (VMs, Container Apps, Functions, AKS), storage and databases, and integration, including the API Management AI gateway. It finishes with observability with KQL, infrastructure as code and security services.
+
+**`09_azure_ai_microsoft_foundry_and_azure_openai.ipynb`** is a guide to Microsoft's AI platform: Microsoft Foundry projects, the model catalog and its deployment types, and calling models with the Responses API without keys. It covers Foundry Agent Service, Azure AI Search with hybrid search and agentic retrieval, Foundry Tools, and Content Safety guardrails. It ends with evaluations, Foundry Local and Azure Machine Learning for classic MLOps.
+
+**`10_gcp_core_services_for_ai_engineers.ipynb`** covers Google Cloud's resource hierarchy and Organization Policy, IAM with service accounts and Workload Identity Federation, and the global VPC. Compute spans Compute Engine, Cloud Run and GKE; data spans Cloud Storage, BigQuery and AlloyDB. It also covers Pub/Sub and Workflows, plus monitoring, CI/CD, security and billing.
+
+**`11_gcp_ai_gemini_enterprise_agent_platform.ipynb`** starts with the renames and then shows the two ways to call Gemini: the Gemini Developer API and Agent Platform. It covers Model Garden, building agents with ADK and Agent Runtime (with Sessions and Memory Bank), agent governance with Model Armor, and retrieval with RAG Engine and Vector Search. It also covers evals, classic ML on the platform, and TPUs.
+
+**`12_cloud_building_blocks_compared_aws_gcp_azure.ipynb`** is a chooser. For each job (compute, databases and storage, messaging, email and SMS, networking, identity, secrets, monitoring, CI/CD) it shows the matching service on AWS, Google Cloud and Azure and when to pick each. Runnable choosers, a cold-start simulation and a master comparison table bring it together.
+
+### Current names (late 2026)
+
+Cloud products are renamed often, and some older sections of this guide use the earlier names. As of late 2026:
+
+- **Vertex AI** is now **Gemini Enterprise Agent Platform** (often shortened to "Agent Platform").
+- **Azure AI Foundry** is now **Microsoft Foundry**.
+- **Amazon SageMaker** is now **Amazon SageMaker AI**.
+- **AWS App Runner** is closed to new customers; AWS points to ECS Express Mode instead.

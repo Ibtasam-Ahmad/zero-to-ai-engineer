@@ -2,7 +2,7 @@
 
 A **database** is an organized collection of data that a computer program can store, search, update, and retrieve in a reliable and efficient way. The software that manages a database that creates it, enforces its rules, answers questions about it, and keeps it safe from corruption is called a **database management system (DBMS)**. In everyday speech people often say "database" to mean both the data and the system that manages it.
 
-This section is the map for everything that follows. It explains what a database actually is, why software systems use one instead of plain files, the major families of databases (relational, non-relational, and vector), and how the six sub-topics in this folder fit together into a single picture.
+This section is the map for everything that follows. It explains what a database actually is, why software systems use one instead of plain files, the major families of databases (relational, non-relational, and vector), and how the sub-topics in this folder (the sub-folders plus the indexing and Redis notebooks) fit together into a single picture.
 
 ## What a Database Is, Concretely
 
@@ -131,3 +131,34 @@ The six folders in this section build from the foundations up to complete AI dat
 ## The Big Picture
 
 No single database is "best." A mature application typically runs a **relational** database for its core records (users, orders, labels), a **key-value** store like Redis for caching and sessions, a **vector** database for semantic search, and a **data-engineering** pipeline feeding all of them. Understanding each family what it is good at, what it sacrifices, and how to query it is the goal of this section. Everything that follows is a deeper look at one piece of that puzzle.
+
+## 9. Indexing Patterns: Database and Vector Indexes Side by Side
+
+`09_indexing_patterns_database_and_vector_side_by_side.ipynb` gives one mental model for every index, from the B-tree in PostgreSQL to the HNSW graph in a vector database. The one idea behind all of them is the same: **pay extra storage and slower writes to get faster reads**. The notebook lines up classic database index patterns with their vector-search cousins in a single mapping table, for example a hash index next to LSH, or a compressed index next to quantization.
+
+On the database side it runs real experiments in SQLite on a 200,000-row table: single and composite indexes (and the leftmost-prefix rule), covering, partial and expression indexes, R-tree for spatial data and FTS5 for full text. It measures the cost of indexes on writes, explains bloat and selectivity, and lists when *not* to add an index. It also explains PostgreSQL's GIN, GiST and BRIN indexes.
+
+On the vector side it builds indexes from scratch in numpy: a flat (exact) baseline, IVF, scalar quantization to int8 and float16, product quantization and IVF-PQ with re-ranking, binary quantization, LSH, a navigable graph and a tiny HNSW, plus the ideas behind DiskANN/Vamana and ScaNN. Each one is measured on **recall@10, speed and memory**, and the results are plotted as a trade-off curve.
+
+The last part covers the hard production problems: filtered search, multi-tenancy, updates and deletes, sparse and multi-vector indexes, and Matryoshka truncation. It ends with how to choose an index on both sides and what pgvector's HNSW and IVFFlat look like in SQL.
+
+## 10. Redis and Caching for AI Applications
+
+`10_redis_and_caching_for_ai_applications.ipynb` explains how to make a service fast, cheap and safe under real traffic, with a focus on AI products that call LLMs. No Redis server is needed: the notebook builds a small pure-Python "mini Redis" and uses it for every demo.
+
+It starts with **caching from first principles**: why caches work (a few popular keys get most of the traffic), how hit rate changes latency and LLM cost, where caches live (browser, CDN, proxy, in-process, distributed cache) and HTTP caching headers. It then runs the classic **caching patterns**. The most common is cache-aside:
+
+```mermaid
+flowchart LR
+    R[Request] --> C{In cache?}
+    C -- yes --> H[Return cached value]
+    C -- no --> D[Read database or call LLM]
+    D --> W[Store in cache with TTL]
+    W --> H
+```
+
+Around that it covers read-through, write-through and write-behind, TTL choice with jitter, invalidation, cache stampedes, hot keys, and eviction policies compared under realistic traffic.
+
+**Redis in depth** covers its event loop, data types, expiry, persistence (RDB and AOF), replication and Sentinel, Redis Cluster with its 16384 hash slots, key design, pipelining, Lua scripts and security.
+
+The **AI use cases** are LLM response caching, semantic caching, chat-history storage, rate limiters, per-tenant quotas, job queues with Streams, pub/sub for streaming tokens, distributed locks, and vector search in Redis compared with a dedicated vector database. It ends with managed options, Redis vs Valkey and Dragonfly, monitoring and failure modes.

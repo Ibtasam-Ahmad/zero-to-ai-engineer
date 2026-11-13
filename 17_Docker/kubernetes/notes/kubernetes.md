@@ -172,3 +172,38 @@ Kubernetes is the system that runs containers across a fleet of machines as if t
 - For **ML**, all of this delivers auto-scaling inference, precise GPU scheduling, resource isolation, zero-downtime model updates, and cost savings and ML-native layers like **Kubeflow** (pipelines) and **KServe** (one-resource model serving) build on top of it to streamline the ML lifecycle.
 
 Where Docker (the companion guide) packages a model into a portable container and Docker Compose runs a stack on one machine, Kubernetes is what carries that same stack to many machines, at production scale, with automation doing the operational heavy lifting.
+
+---
+
+## 9. Kubernetes Deep Dive for AI Workloads
+
+`02_kubernetes_deep_dive_for_ai_workloads.ipynb` goes well beyond the short overview. It starts with the **reconciliation loop** (you build a toy one): controllers keep comparing the desired state with the actual state and fixing the difference. It then walks through every common **workload** type and when to use it: Deployments for stateless model servers, StatefulSets for things with stable identity and storage, DaemonSets for one pod per node (such as log or GPU agents), and Jobs and CronJobs for batch work like training or nightly scoring.
+
+**Configuration and storage** cover ConfigMaps, Secrets, PersistentVolumeClaims and StorageClasses, plus ResourceQuotas and LimitRanges per namespace. **Networking** covers Services and DNS, Ingress, and the newer **Gateway API**. The notebook notes that the community ingress-nginx controller has been retired, so new setups should plan for Gateway API. NetworkPolicies limit which pods may talk to each other.
+
+**Scaling** happens at two levels. HPA, VPA and KEDA (event-driven, for example on queue depth) scale pods; the Cluster Autoscaler and Karpenter add or remove nodes. **Scheduling** explains requests and limits, QoS classes, affinity, taints and tolerations, and priority with preemption, using a runnable toy scheduler that also places GPU pods.
+
+**Security** covers RBAC, Pod Security Standards, admission control (ValidatingAdmissionPolicy, OPA Gatekeeper, Kyverno) and image policies. The notebook also explains CRDs and operators, Helm versus Kustomize, probes, rolling updates and PodDisruptionBudgets, and ends with local clusters, managed Kubernetes, a troubleshooting playbook and a map to the CNCF exams.
+
+---
+
+## 10. GPU Infrastructure and LLM Serving on Kubernetes
+
+`03_gpu_infrastructure_and_llm_serving_on_kubernetes.ipynb` builds on the deep dive and focuses on the hardest, most expensive workloads: GPU training and LLM inference.
+
+It begins with the **GPU software stack**: drivers, CUDA, the NVIDIA Container Toolkit, the device plugin that advertises GPUs to Kubernetes, the **GPU Operator** that installs all of these, and **DCGM** for GPU metrics. Because GPUs are costly, it compares ways to **share one GPU**: MIG (hard slices), time-slicing and MPS, with a runnable bin-packing toy that shows the effect on utilisation. **Dynamic Resource Allocation (DRA)** is presented as the newer way to request devices.
+
+Training jobs often need all their workers at once, so **gang scheduling** with Kueue, Volcano or the KAI Scheduler avoids deadlocks where two jobs each hold half the GPUs (there is a runnable deadlock demo).
+
+For inference, the notebook surveys the **LLM serving stacks** (Triton, KServe, the vLLM production stack, llm-d, NVIDIA Dynamo and NIM, Ray Serve and SGLang). It explains the **Gateway API Inference Extension**, which routes requests to the replica that already holds the right KV cache, and compares routing strategies in a runnable toy. LLM servers are autoscaled on queue depth and KV-cache use rather than CPU, and cold starts matter because loading model weights is slow, which leads to model caching.
+
+```mermaid
+flowchart LR
+    Req[Requests] --> GW[Gateway with KV-cache-aware routing]
+    GW --> R1[LLM replica on GPU]
+    GW --> R2[LLM replica on GPU]
+    Q[Queue depth and KV-cache use] --> AS[Autoscaler]
+    AS -.adds or removes.-> R2
+```
+
+It closes with multi-node training versus Slurm, GPU networking, GPU clouds, on-prem and hybrid setups, container runtimes, and an illustrative cost-per-million-tokens model.

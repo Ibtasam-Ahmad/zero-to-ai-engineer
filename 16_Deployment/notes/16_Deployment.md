@@ -279,3 +279,56 @@ The standard pipeline: train in PyTorch or scikit-learn, export to ONNX (Open Ne
 Quantization is the primary optimization for edge: INT8 quantization reduces model size by 4x and inference speed by 2-4x with typically less than 1% accuracy loss on most tasks. Use onnxruntime.quantization.quantize_dynamic() as the first optimization to try.
 
 Platform-specific formats: TFLite (Android/embedded), CoreML (Apple devices/macOS). Both can be exported from ONNX. Benchmark on your actual target hardware, not on a development machine.
+
+---
+
+## 8. Deploying an AI SaaS Application End to End
+
+`06_deploying_an_ai_saas_application_end_to_end.ipynb` moves from "one model behind an API" to a **product many paying customers share**. An AI SaaS app needs more than an endpoint: a frontend, an API, background workers with a queue, a cache, Postgres with pgvector, object storage, an LLM gateway, auth, billing, email, observability, secrets, CI/CD and infrastructure as code.
+
+The central idea is **multi-tenancy**: one system serving many customers (tenants) who must never see each other's data. The notebook compares three models. **Silo** gives each tenant dedicated resources, **pool** shares everything, and **bridge** mixes the two per component. Whatever the model, the tenant ID comes from a verified token and travels with every request and job. It also appears in database row-level security, cache keys, object-storage prefixes, vector namespaces and even per-tenant encryption keys.
+
+Money is part of the design too. **Rate limits** (a token bucket that returns 429) protect the system second by second, while **quotas** cap a monthly allowance. Every billable action produces a usage event, which becomes an invoice line, and the notebook computes **gross margin per tenant** (revenue minus cost to serve, divided by revenue).
+
+Most of this is built as a **runnable mini SaaS** inside the notebook: hashed API keys, cache-aside, tenant-scoped retrieval with a scripted fake LLM, a job queue with retries and a dead-letter queue, signed billing webhooks and an end-to-end test suite. It then shows five deployment blueprints (AWS, Google Cloud, Azure, Kubernetes, and a startup PaaS stack), writes real deployment files, and closes with operations: zero-downtime migrations, backups, secrets rotation, alerting, compliance basics and a launch checklist.
+
+---
+
+## 9. Deploying an AI App for Free
+
+`07_free_tier_deployment_frontend_backend_and_database.ipynb` is for side projects: putting a laptop AI app (for example a FastAPI backend that calls an LLM plus a small web page) on the internet without paying. Nothing in it deploys anything; it explains, compares and simulates.
+
+It starts with how "free" really works. There are **always-free** tiers, **trial credits** that run out, and **hobby plans** that may forbid commercial use. Many free backends **sleep** when idle, so the first request after a quiet period hits a cold start. Going over a limit may pause your app, throttle it, or start billing, so the notebook stresses budgets, alerts and caps on instances.
+
+It then surveys free options for each layer: frontend hosting, backend/API hosting, relational and vector databases, object storage, and AI building blocks such as LLM APIs with free usage, auth, email and monitoring. Five step-by-step stacks follow: Vercel + Render + Neon, an all-Cloudflare stack, Supabase + Netlify, Hugging Face Spaces or Streamlit Community Cloud, and Cloud Run + Neon. Each comes with the limit that bites first and an upgrade path. Runnable tools include a stack chooser, a cold-start simulation, a monthly usage estimator, and a small calculation of why serverless backends need a connection pooler.
+
+**Free tiers change often.** The numbers in the notebook are correct as of 13 Nov 2026; check the pricing pages before you rely on any of them. The lasting advice is to keep the app portable (a Dockerfile, plain Postgres, environment variables) so leaving a free tier is a config change, not a rewrite.
+
+---
+
+## 10. Uploading and Downloading Large Files
+
+`08_large_file_uploads_and_downloads_presigned_multipart_resumable.ipynb` answers a common question: a user must upload a 100 MB file, but your API accepts only 10 MB per request. Big uploads break because **every hop** (gateway, function, server) has its own size limit, timeout and memory limit.
+
+The fix is to keep the file away from your API entirely:
+
+1. **Ask.** The browser sends your API a tiny JSON request: name, size and type. The API checks the user, size and quota.
+2. **Presigned URLs.** The API starts a **multipart upload** in object storage and returns **presigned URLs**, one per part. A presigned URL is a storage address with a time-limited signature that allows exactly one action, such as "upload part 3 of this file", without giving out cloud credentials.
+3. **Upload the parts directly.** The browser cuts the file into parts (8 MiB parts make 13 parts for 100 MiB) and sends them **straight to storage**, several at a time. Each part returns an ETag; a failed part is retried alone.
+4. **Complete.** The browser sends the list of part numbers and ETags to the API, which asks storage to join them into one object.
+
+```mermaid
+sequenceDiagram
+    participant B as Browser
+    participant A as Your API (10 MB limit)
+    participant S as Object storage
+    B->>A: small JSON: name, size, type
+    A->>S: start multipart upload
+    A-->>B: presigned URL for each part
+    B->>S: upload parts directly, in parallel
+    S-->>B: ETag per part
+    B->>A: complete: part numbers + ETags
+    A->>S: join parts into one file
+```
+
+Only small JSON ever passes through the API, so its 10 MB limit never matters. The notebook also covers resuming after a refresh (tus, Google Cloud Storage resumable sessions, Azure block blobs), upload security, large downloads with Range requests, and AI cases such as model weights and document ingestion.

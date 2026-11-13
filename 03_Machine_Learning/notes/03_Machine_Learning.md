@@ -210,6 +210,10 @@ Here's the map of this entire section and how the folders relate:
 
 These aren't isolated islands. A real project weaves them together: you **engineer features** (05), train **supervised** models (01) perhaps using **unsupervised** methods (02) for preprocessing, **evaluate** them rigorously (06) with the right **metrics** (10), **explain** their decisions (07), and depending on the goal apply them to **anomaly detection** (08) or **recommendations** (09).
 
+## Quick Reference: Which Algorithm When?
+
+`00b_20_ml_algorithms_cheatsheet.ipynb` puts 20 classic algorithms (plus AdaBoost) on one page: linear and logistic regression, k-nearest neighbours (for classes and for numbers), naive Bayes, decision trees, random forests, AdaBoost, gradient boosting, support vector machines, LDA and QDA, k-means, hierarchical clustering, DBSCAN, PCA, t-SNE, neural networks, CNNs, RNNs/LSTMs and Q-learning. For each it gives the core idea, strengths, weaknesses and typical uses, then a "which one should I try first?" flowchart and a fair benchmark on several datasets. The main lesson matches the rest of this module: always start with a simple baseline, and only keep a complex model if it clearly beats it.
+
 ## The Mindset of an AI Engineer
 
 A few principles thread through everything in this section:

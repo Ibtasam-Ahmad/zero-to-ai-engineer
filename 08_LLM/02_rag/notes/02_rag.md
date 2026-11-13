@@ -15,7 +15,7 @@ flowchart LR
     LLM --> ANS[Grounded answer with sources]
 ```
 
-This guide builds RAG from absolute scratch every term defined on first use covering why RAG exists, the building blocks (embeddings, chunking, vector stores, similarity search), the core retrieve-then-generate pipeline, advanced techniques that make RAG actually work in practice, the framework ecosystem, and the state of the art in retrieval and reranking. The four notebooks in `02_rag/` map onto these sections: `01_rag_fundamentals.ipynb` (the basics), `02_advanced_rag.ipynb` (query and fusion techniques), `03_rag_frameworks.ipynb` (the tooling landscape), and `04_advanced_retrieval_and_reranking.ipynb` (the deep retrieval stack).
+This guide builds RAG from absolute scratch every term defined on first use covering why RAG exists, the building blocks (embeddings, chunking, vector stores, similarity search), the core retrieve-then-generate pipeline, advanced techniques that make RAG actually work in practice, the framework ecosystem, and the state of the art in retrieval and reranking. The five notebooks in `02_rag/` map onto these sections: `01_rag_fundamentals.ipynb` (the basics), `02_advanced_rag.ipynb` (query and fusion techniques), `03_rag_frameworks.ipynb` (the tooling landscape), `04_advanced_retrieval_and_reranking.ipynb` (the deep retrieval stack), and `05_every_rag_type_explained.ipynb` (a catalogue of every RAG type).
 
 ---
 
@@ -344,3 +344,21 @@ The recurring lessons:
 - The **core pipeline** is offline indexing (load → chunk → embed → store) plus online querying (embed → retrieve → augment → generate), with **MMR** to keep results diverse.
 - **Advanced RAG** improves the query (rewriting, **HyDE**, **multi-query**, step-back, **RAG-Fusion** with **RRF**), the retrieval (**hybrid** dense + **BM25** sparse search), and the post-retrieval step (**cross-encoder reranking**, ColBERT), and adds self-correcting architectures (Self-RAG, CRAG, FLARE, RAPTOR, GraphRAG). **RAGAS** measures it all.
 - A rich **framework ecosystem** (LangChain, LlamaIndex, Haystack, RAGFlow, Dify, and many more) implements these ideas at every level of abstraction but the concepts above are what make any RAG system actually work.
+
+---
+
+## Every Type of RAG: A Catalogue
+
+`05_every_rag_type_explained.ipynb` is the catalogue for this folder. Names like Adaptive RAG, CRAG, GraphRAG, CAG and ColPali can sound like separate inventions, but the notebook's main point is that almost every "RAG type" changes just **one box** of the basic pipeline: how documents are chunked, how they are indexed, how the query is rewritten, how many retrieval rounds there are, or what kind of data is searched. Every "LLM" in it is a small scripted stand-in, so it runs on a CPU with no API key.
+
+It starts with the **three generations**: **Naive RAG** (retrieve top-k, paste, answer), **Advanced RAG** (add query rewriting and reranking around that), and **Modular RAG** (every step is a swappable part). It then covers every common **chunking strategy**, from fixed-size and recursive to semantic, proposition and late chunking and the effect of chunk size and overlap.
+
+Later sections group the types by what they change:
+
+- **Retrieval upgrades**: hybrid search with RRF, parent-document (small-to-big), sentence-window, contextual retrieval, self-query with metadata filters, and RAPTOR.
+- **Control loops**: multi-hop (IRCoT), FLARE, Self-RAG, Corrective RAG, Speculative RAG, Agentic RAG and Adaptive RAG (query routing).
+- **Special data and settings**: text-to-SQL and tables, GraphRAG, LightRAG and HippoRAG, ColPali for scanned pages, temporal and federated RAG, and **permission-aware RAG**, which filters by the user's access rights *before* ranking so private text never reaches the prompt.
+- **Cache-Augmented Generation (CAG)**: for a small, stable knowledge base, load everything into the context once and reuse the KV cache, with a decision table comparing long context, RAG, CAG and fine-tuning.
+- **Two newer retrievers**: **Dartboard** (balances relevance and diversity, compared with MMR) and **MemoRAG** (a global memory drafts clues that guide retrieval).
+
+It closes with citation grounding, common failure modes, **RAG evaluation** with RAGAS metrics and human review, and a **"Which RAG should I use?"** table and flowchart.

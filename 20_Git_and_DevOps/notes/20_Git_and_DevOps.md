@@ -249,3 +249,50 @@ Conventional Commits formalizes commit messages: feat: adds a MINOR version, fix
 Tools: semantic-release (fully automated release pipeline), conventional-changelog, changesets. GitHub Actions can analyze commits since the last tag, determine the next version, generate a CHANGELOG.md, create a git tag, and publish a release automatically.
 
 For ML systems, version models with code version + data version + training config together. Use MLflow model registry for model versioning and Docker image tags (include model version in the tag) for serving.
+
+---
+
+## 5. Infrastructure as Code with Terraform, OpenTofu and Pulumi
+
+`06_infrastructure_as_code_terraform_opentofu_pulumi.ipynb` applies the same discipline Git gives to code to the cloud resources an AI service runs on: networks, Kubernetes clusters, GPU node pools, model buckets, secrets and alerts.
+
+### 5.1 The core ideas
+
+**Infrastructure as Code (IaC)** means describing those resources in text files kept in Git, and letting a tool create or change the real resources to match. Like an architect's blueprint, it can be reviewed before anything is built and reused for another environment. Most IaC tools are **declarative**: you write the end result, not the steps, so running the same configuration twice changes nothing the second time (**idempotency**). **Drift** is any change made outside the tool, such as a console edit, which a `plan -refresh-only` run reveals.
+
+### 5.2 How Terraform and OpenTofu work
+
+A configuration is made of **providers**, **resources**, **data sources**, **variables**, **outputs** and **locals**. References between resources form a **dependency graph** that sets the order of creation. The core loop is `init`, `plan` (show what will be created, updated, replaced or destroyed) and `apply`:
+
+```mermaid
+flowchart LR
+    A[Write HCL in Git] --> B[terraform plan]
+    B --> C[Review the plan in a PR]
+    C --> D[terraform apply]
+    D --> E[State file updated]
+    E -->|next change| B
+```
+
+The **state file** maps each address to a real object and stores attributes in plain text, including secrets, so it is kept in a remote, locked backend. The notebook also covers `count` versus `for_each` (keys are stable, indexes shift), lifecycle rules, `import` and `moved` blocks, modules, `terraform test`, policy as code (Sentinel, OPA, Checkov, Trivy) and cost diffs with Infracost.
+
+### 5.3 The wider tool landscape
+
+**OpenTofu** is the open-source fork created after Terraform's 2023 licence change; it uses the same HCL and state format. **Pulumi** builds the same kind of desired state from real Python code. The notebook also places CloudFormation, CDK, Bicep and Crossplane, then builds one AI API stack in both HCL and Pulumi Python. Everything runnable is a pure-Python simulation, so no cloud account is needed.
+
+---
+
+## 6. DevSecOps, Supply Chain Security and Platform Engineering
+
+`07_devsecops_cicd_supply_chain_and_platform_engineering.ipynb` picks up where the basic GitHub Actions pipeline of section 3 stops, and asks how a team ships safely at scale.
+
+### 6.1 Pipeline design and shift-left security
+
+The notebook separates **continuous integration**, **continuous delivery** (every passing change is ready to release, a human decides when) and **continuous deployment** (every passing change goes out automatically). Good pipelines are a graph of small jobs, run cheap checks first, cache on input hashes, and **build once, then promote the same artifact** through environments. **DevSecOps** makes security part of everyday work, and **shift-left** moves checks earlier: SAST for source code, SCA for dependencies, secret scanning, IaC scanning, container scanning and DAST against the running app.
+
+### 6.2 Software and model supply chain
+
+An **SBOM** is the ingredient list of a build (SPDX or CycloneDX), so you can quickly answer "are we affected?" when a new vulnerability appears. Artifacts are **signed** (Sigstore, cosign), carry **provenance** describing how they were built (SLSA levels, in-toto attestations), and admission policies let only trusted images run. Models are dependencies too: untrusted pickle files can run code when loaded, so the notebook prefers safetensors, signed model manifests and pinned model revisions.
+
+### 6.3 Credentials, delivery and platforms
+
+**OIDC federation** lets a CI job swap a short-lived signed token for temporary cloud credentials, so no long-lived keys are stored in CI. The notebook then covers progressive delivery (canary analysis, Argo Rollouts, Flagger), a calculator for the **DORA metrics** (deployment frequency, change lead time, change fail rate, recovery time, rework rate), **platform engineering** with internal developer platforms and golden paths, Team Topologies, AIOps, and putting a gateway with approvals in front of MCP servers for infrastructure tools.

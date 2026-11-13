@@ -237,3 +237,23 @@ Pandera enforces contracts at the DataFrame level with a declarative schema: def
 Pydantic validates individual records with typed models and field validators.
 
 Include data contract tests in CI/CD: run them against sample data on every pull request. A broken contract in stage 1 caught in CI is far cheaper than a silent data corruption discovered at training time.
+
+## 15. Production ML and Agentic Analytics, Hands-On
+
+`17_production_ml_and_agentic_analytics_labs.ipynb` ties the module together in five short labs. The **anatomy of a production ML system** shows data sources, a shared feature function (so training and serving compute features the same way), a model registry, serving with prediction logs, monitoring and retraining. A sensible **project structure** keeps notebooks for exploration and `src/` for reusable code, with configs, tests and data kept out of git.
+
+The **data drift simulator** runs 30 simulated days. Covariate drift (the inputs change), label drift (the class mix changes) and concept drift (the relationship between inputs and labels changes) behave differently: input tests such as PSI and the KS test catch the first two, but concept drift only shows up when true labels arrive, which is why accuracy must also be tracked with delayed labels.
+
+**Agentic analytics** means an "AI data analyst" that turns a question into SQL, runs it and explains the answer. The dangerous failure is a query that runs "successfully" on empty or stale data, so the agent must validate freshness, row counts and plausibility before reporting. Finally, **evals step by step**: define the task, build a small trusted golden set, pick metrics (including the rate of confident wrong answers), run, study the errors, fix and re-check for regressions.
+
+## 16. SRE, Reliability, Security and FinOps for AI Systems
+
+`18_sre_reliability_security_and_finops_for_ai_systems.ipynb` is about what happens after an AI service is live: keeping it **reliable, secure, compliant and affordable**. It assumes no SRE, security or finance background and is split into four parts.
+
+**Part A, site reliability engineering.** It recaps SLIs, SLOs and error budgets, then covers **incident response**: roles, severity levels, on-call and **runbooks** (step-by-step guides for a known alert, such as a rising LLM provider error rate). **Blameless postmortems** focus on fixing the system rather than blaming people, and **toil** is repetitive manual work that should be automated. **Chaos engineering** deliberately injects failures, shown with a runnable experiment on a simulated RAG service. Continuous profiling and **LLM observability** (OpenTelemetry GenAI conventions, a token, cost and latency dashboard built from fake spans) complete the picture.
+
+**Part B, security and compliance.** Topics include **zero trust** (every request is checked, nothing is trusted because of where it comes from), network segmentation, secrets and API-key rotation, envelope encryption and cloud posture scanning (CSPM / CNAPP), each with a small runnable toy. Compliance frameworks such as SOC 2, ISO/IEC 27001 and 42001, HIPAA, GDPR and the EU AI Act are explained in plain words, along with how to collect audit evidence. This is not legal advice.
+
+**Part C, FinOps.** FinOps means making cloud cost a shared engineering concern: cost allocation tags and showback reports, unit economics (cost per request or per user), commitments versus spot capacity, Kubernetes cost tools such as OpenCost and Kubecost, off-hours shutdown, GPU idle detection, and LLM token budgets with cost-anomaly alerts.
+
+**Part D, serverless and edge** for AI, including a runnable cold-start simulation.

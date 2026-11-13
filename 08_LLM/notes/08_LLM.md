@@ -581,3 +581,73 @@ The instructor library wraps the Anthropic and OpenAI SDKs to add automatic sche
 Pattern: define a Pydantic model for the expected output, pass it as response_model, receive a validated Python object, no manual parsing.
 
 Anthropic's tool use and OpenAI's function calling provide API-level structured output: the model is forced to call a tool with specific parameters, guaranteeing schema compliance without retries.
+
+## 18. Caching, CAG and the Economics of LLM APIs
+
+Every request is paid for in tokens, and not all tokens cost the same. Output tokens usually cost more than input tokens; *cached* input tokens (an identical prompt prefix the provider has seen recently) cost much less; *reasoning* tokens that a thinking model produces are billed as output even when you never see them. The cheapest prompt layout is therefore "static first, dynamic last": system prompt, tool definitions and long documents at the top, the user's question at the bottom.
+
+Caching happens at several levels. The **KV cache** lives inside the model server and stops the model from re-reading earlier tokens while it writes; **prompt (prefix) caching** reuses that work across requests; a **semantic cache** stores whole answers and returns them for questions that mean the same thing (cheap, but risky if the similarity threshold is loose or users have different permissions). **Cache-Augmented Generation (CAG)** goes one step further for small, stable knowledge bases: load all documents into the context once, keep the KV cache, and answer many questions without a retrieval step.
+
+When answers are not needed immediately, **Batch APIs** process a file of many requests within a time window at a large discount, which suits evaluations, backfills and nightly jobs. **Rate limits** (requests and tokens per minute) cap how fast you can call an API; clients should back off and retry on HTTP 429.
+
+See `23_llm_caching_kv_cache_prompt_semantic_cag.ipynb` (caching in depth) and `27_tokens_cost_batch_and_caching_llm_apis.ipynb` (tokens, batch, rate limits, cost tracking).
+
+## 19. How LLMs Differ, and How to Make Them Faster
+
+Two models can differ on many axes at once: architecture (dense vs Mixture-of-Experts; attention type MHA, GQA or MLA; sliding-window, hybrid or state-space layers; even diffusion language models that fill in many tokens at once), tokenizer, context length, training data, post-training (SFT, RLHF, DPO, RL with verifiable rewards, "thinking" modes), modality, tool-use quality, licence, size and speed. Decoding settings (temperature, top-k, top-p, min-p) change behaviour further. The practical rule is to read the model card, then test candidates on your own data.
+
+Seven common ways to make inference faster or cheaper: quantization, knowledge distillation, KV caching, continuous batching, speculative decoding, tensor parallelism and pipeline parallelism. Measure first (time to first token, inter-token latency, tokens per second, memory, cost per million tokens) so you fix the real bottleneck. See `24_how_llms_differ_from_each_other.ipynb`.
+
+## 20. Every Type of RAG, LangChain and 2026 Topics
+
+RAG has grown from "retrieve top-k chunks and paste them in" (naive RAG) into a family: advanced RAG adds query rewriting and reranking; modular RAG treats each step as a swappable part; adaptive RAG routes each question to the right pipeline; agentic RAG lets an agent decide when and where to search; GraphRAG retrieves through entity relationships; permission-aware RAG filters by the user's access rights before ranking. `02_rag/05_every_rag_type_explained.ipynb` explains each one simply and ends with a "which RAG should I use?" guide.
+
+`25_langchain_complete_guide.ipynb` teaches LangChain end to end, and `26_frontier_ai_topics_2026.ipynb` surveys what practitioners are discussing in 2026 (reasoning models, small and on-device models, voice agents, vision-language-action models, world models, interpretability, regulation).
+
+## 21. How AI Search Works
+
+A search engine has an offline part and an online part. Offline, a **crawler** visits pages (respecting each site's `robots.txt`), removes boilerplate and near-duplicates, and builds an **inverted index**: for every word, the list of pages that contain it. Online, the engine understands the query (fixing spelling, guessing intent), scores pages with text relevance such as BM25, link-based importance such as **PageRank**, freshness and quality signals, and shows the best results with snippets. Modern engines add dense (embedding) retrieval and merge both lists.
+
+```mermaid
+flowchart LR
+    C[Crawl pages] --> P[Clean and dedupe]
+    P --> I[Inverted index and embeddings]
+    Q[User query] --> U[Understand query]
+    U --> R[Retrieve and rank]
+    I --> R
+    R --> S[Results with snippets]
+```
+
+An LLM does web search by calling a **search tool**: it decides a search is needed, writes one or more queries, reads the results (often fetching full pages), and answers with citations. Providers offer built-in search tools, or you can plug in a search API. The main risks are stale or low-quality sources and **indirect prompt injection** hidden inside web pages, so search agents check citations and treat page text as untrusted.
+
+Free options include DuckDuckGo, self-hosted metasearch (SearXNG), the Wikipedia API and the open Common Crawl dataset. **Research search** uses scholarly sources (arXiv, Semantic Scholar, OpenAlex, Crossref, PubMed) and the **citation graph**: who cites whom, papers cited together, and paper embeddings. Search quality is measured with precision@k, recall@k, MRR and nDCG. See `28_how_ai_search_works_web_and_research_search.ipynb`.
+
+## 22. Trending AI Repos and New Concepts
+
+The open-source AI world moves fast, and GitHub stars are a noisy signal. `29_trending_ai_repos_and_new_concepts_2026.ipynb` lists the most popular AI repos by category as of late 2026, explains how to judge a trending repo (activity, issues, licence, maintainers, security), and teaches the newer ideas behind them, such as **reverse-engineering agents** (coding agents driving decompilers through MCP, used only on software you may analyse), **codebase knowledge graphs** that help agents and people understand large projects, always-on **personal agents**, and the skills, plugins and harnesses around open coding agents.
+
+## 23. Inside a Transformer, Step by Step
+
+`30_transformer_and_llm_mechanics_math_and_code.ipynb` opens up the next-token predictor from Sections 1-2 and shows every step inside it. It builds one tiny decoder-only transformer (the same family as GPT and Llama) piece by piece in numpy, checks it against a PyTorch version, and trains it on a CPU in under a minute. Each step comes with the maths in simple words and a small piece of code.
+
+```mermaid
+flowchart LR
+    T[Text] --> TK[BPE tokens]
+    TK --> E[Embeddings plus positions]
+    E --> B[Transformer blocks]
+    B --> L[Logits over vocabulary]
+    L --> S[Sample next token]
+    S --> TK
+```
+
+The path through the notebook:
+
+- **Tokens and embeddings**: a miniature BPE tokenizer, and the embedding table seen as a matrix (with tied input and output embeddings).
+- **Positions**: sinusoidal, learned, **RoPE** (with a check in code that it only depends on relative position), ALiBi, and ways to stretch the context window such as YaRN.
+- **Attention maths**: Q, K and V, why scores are divided by the square root of the key size, the causal mask, multi-head attention, MQA and GQA, and the online softmax idea behind FlashAttention.
+- **The block**: residual stream, LayerNorm and RMSNorm, GELU vs SwiGLU feed-forward layers, parameter counting and where the FLOPs go.
+- **Loss**: cross-entropy on shifted targets and **perplexity**, followed by a real training run.
+- **Generation**: the autoregressive loop, prefill vs decode, a **KV cache** built into the toy model, and sampling with temperature, top-k, top-p and min-p.
+- **Scale**: Chinchilla, the 6ND compute rule, memory per parameter, and loss spikes.
+- **After pre-training**: SFT with loss masking, the maths of **LoRA**, int8 and int4 **quantisation**, and the RLHF and **DPO** formulas.
+- **Alternatives and a look inside**: a small Mixture of Experts and a Mamba-style state-space recurrence, encoder vs decoder designs, and an **interpretability** peek using attention maps and the logit lens.

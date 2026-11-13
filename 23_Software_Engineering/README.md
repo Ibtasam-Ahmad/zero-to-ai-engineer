@@ -29,11 +29,15 @@ Many people can make a model work in a notebook. Far fewer can turn that noteboo
 
  Any time after 23/04 (ideally before quantisation and LLM inference optimisation):
           23/12 Computer architecture for AI performance
+
+ After 23/06-23/09, before putting a real service in front of users:
+          23/13 Linux, shell & networking  -->  23/14 Auth in production  -->  23/15 Backend patterns
 ```
 
 - **Early, right after `01_Python`:** notebooks 01 (OOP and SOLID), 02 (design patterns) and 03 (testing). They are pure Python and make every later project cleaner.
 - **Before or alongside the shipping stage (Stage 11):** notebooks 04 to 11. Notebook 04 (debugging) is useful at any point; 05 to 09 are the foundations under APIs, Docker and system design; 10 and 11 tie everything together.
 - **Any time after notebook 04:** notebook 12 (computer architecture). It explains *why* vectorised, batched, low-precision code is fast, and is the best preparation for [quantisation](../05_Deep_Learning/13_quantization_and_compression_advanced.ipynb) and [LLM inference optimisation](../08_LLM/13_inference_optimization.ipynb).
+- **After notebooks 06 to 09, before shipping a real service:** notebooks 13 (Linux, shell and networking), 14 (authentication and authorisation) and 15 (production backend patterns). They are the hands-on follow-up to the OS, networks, security and system-design notebooks.
 
 ---
 
@@ -57,7 +61,7 @@ None of these three steps touched the model's accuracy. All three decide whether
 | **Who** | Anyone who can write Python and train a simple model and now wants to build AI software that other people use; BS/MS AI students revising software engineering, operating systems, networks, security and distributed systems; anyone preparing for coding or system-design interviews |
 | **Must know first** | [Python basics](../01_Python/01_basic.ipynb) (functions, classes) and [Python production patterns](../01_Python/02_industrial.ipynb) |
 | **Helpful** | [Python advanced](../01_Python/03_advanced.ipynb) (decorators, generators), [Jupyter, terminal and debugging](../01_Python/00_start_here_jupyter_terminal_and_debugging.ipynb), [NumPy](../02_Data_Analysis/02_numpy.ipynb), [pandas](../02_Data_Analysis/03_pandas.ipynb), [SQL fundamentals](../13_Databases/01_sql/01_sql_fundamentals.ipynb), [FastAPI intro](../12_FastAPI/01_fastapi_intro.ipynb) (from notebook 07 on) |
-| **Time needed** | about 32–37 hours for all 12 notebooks (roughly 1.5–4 hours each), more with the practice problems |
+| **Time needed** | about 40–45 hours for all 15 notebooks (roughly 1.5–4 hours each), more with the practice problems |
 | **Runs on** | CPU only, no API key, no internet. Every "LLM" is a small deterministic fake; every server runs on `127.0.0.1` and is stopped at the end; every file goes to a temporary folder that is deleted. Notebook 12 needs no GPU: its GPU numbers are worked out from published specifications |
 
 ---
@@ -78,6 +82,9 @@ None of these three steps touched the model's accuracy. All three decide whether
 | 10 | [Connecting AI to a frontend](10_connecting_ai_to_a_frontend.ipynb) | A FastAPI backend plus one HTML/JavaScript page with JSON, upload, streaming and WebSocket chat, tested end to end | ~1.5 h |
 | 11 | 🏭 [Industry project: building and shipping an AI feature](11_industry_building_and_shipping_an_ai_feature.ipynb) | One ticket-triage feature from design doc to tests, profiling, security review, API, metrics, CI, canary rollout and monitoring | ~2 h |
 | 12 | [Computer architecture for AI performance](12_computer_architecture_for_ai_performance.ipynb) | From bits, logic gates and a toy CPU to caches, SIMD, the roofline model and GPUs: why LLM decoding is memory-bound and how to make AI code fast | ~3 h |
+| 13 | [Linux, the shell and networking for AI engineers](13_linux_shell_and_networking_for_ai_engineers.ipynb) | The operator's handbook for a cloud GPU server: permissions, systemd and logs, text tools, safe bash, SSH, disk/memory/GPU checks, DNS, TLS, firewalls and a reverse proxy | ~3 h |
+| 14 | [Authentication and authorization in production](14_authentication_and_authorization_in_production.ipynb) | Passwords, MFA and passkeys, sessions vs tokens, access and refresh tokens, OAuth 2.0 with PKCE, SSO, API keys, RBAC/ABAC/ReBAC and browser defences | ~2 h |
+| 15 | [Production backend patterns: databases, caching and APIs](15_production_backend_patterns_databases_caching_and_apis.ipynb) | Database caching across layers, connection pooling, N+1 queries, migrations, API design, background jobs and running the service safely | 2–3 h |
 
 ---
 
@@ -348,6 +355,57 @@ The GPU's huge calculation speed does not appear anywhere in this table: decodin
 
 **Key takeaway:** fast AI code moves fewer bytes and does more work per byte: batch, vectorise, keep data contiguous and use the smallest dtype that is accurate enough.
 
+### 13 · Linux, the shell and networking for AI engineers
+
+**Explained simply.** `13_linux_shell_and_networking_for_ai_engineers.ipynb` is the operator's handbook. A cloud GPU server is just a Linux computer you reach through a text window, and deploying a model means doing the same few things again and again: get in safely with SSH keys, put files in the right place with the right permissions, start the model server so it keeps running after you log out, read its logs, check the machine (disk, memory, GPU, ports), and put it on the internet safely. Notebook 06 explained *how* the operating system works; this one shows the commands that do the work.
+
+**Tiny example.** By default bash keeps going after an error. In the notebook, a script without safety settings carried on with an empty model directory (a typo in a variable name) and still exited with code 0. The same script with `set -euo pipefail` and a `trap` stopped at the first failure, ran its cleanup and exited with code 1.
+
+**You will learn**
+- The Linux filesystem layout, users, groups, permissions and `sudo`; processes, signals and background jobs
+- Running an AI API as a **systemd** service and reading its logs with `journalctl`; `PATH`, environment variables and package managers (`apt`, `pip`, `uv`, `conda`)
+- Text tools, pipes and redirection, used to find slow endpoints and 5xx errors in an Nginx-style access log (with `awk`, then pandas); safe bash scripting
+- SSH keys, config, tunnels, `scp`/`rsync` and tmux; `df`, `du`, `free`, `ulimit`, the OOM killer, `nvidia-smi` and `CUDA_VISIBLE_DEVICES`
+- Network commands (`ip`, `ss`, `dig`, `curl`, `openssl s_client`), DNS records, TLS certificates and Let's Encrypt, firewalls, Nginx and Caddy as reverse proxies, and cron
+
+**Key takeaway:** run the model API behind a reverse proxy and a firewall, as a service that restarts itself, and make every script stop at the first error.
+
+### 14 · Authentication and authorization in production
+
+**Explained simply.** `14_authentication_and_authorization_in_production.ipynb` is about two different questions. **Authentication** asks "who are you?" (a password, a passkey, a code from an app). **Authorisation** asks "what may you do?" and must be checked on the server for every request. After login, the user gets a short-lived **access token**, like a day pass shown at every door, and a long-lived **refresh token**, used only at the front desk to get a new day pass. Both are **bearer tokens**: whoever holds one can use it, so they are kept secret and sent only over HTTPS.
+
+**Tiny example.** An endpoint that only checks "is the user logged in?" lets Bob read another company's document just by changing the ID in the URL (an **IDOR** bug). The notebook's authorisation tests fail three cases on that version and pass every case once the endpoint checks that the user may see that specific object.
+
+**You will learn**
+- The threat model, slow password hashes, NIST password rules, rate limits, reset links, magic links and one-time codes
+- MFA with a TOTP implementation checked against the RFC test vectors, passkeys (WebAuthn) and recovery codes
+- Sessions vs tokens: cookies, JWTs built by hand and their pitfalls, access and refresh tokens with rotation and reuse detection, logout and revocation, the BFF pattern for single-page apps
+- OAuth 2.0 and OpenID Connect (authorization code flow with PKCE), enterprise SSO (SAML, OIDC, SCIM), API keys, signed requests, webhooks and service-to-service auth
+- RBAC, ABAC and ReBAC with policy engines; CORS, CSRF, XSS, CSP and clickjacking; choosing an auth provider and a production checklist
+
+**Key takeaway:** keep access tokens short-lived, rotate refresh tokens, and check permission on the specific object, on the server, on every request.
+
+### 15 · Production backend patterns: databases, caching and APIs
+
+**Explained simply.** `15_production_backend_patterns_databases_caching_and_apis.ipynb` is for when a small FastAPI service with a database works, and now has to stay fast and correct with real users, real traffic and real failures. Data is cached at many layers between the user and the disk (browser, CDN, Redis, the ORM, the database's own memory, the operating system), and each layer can make things faster or serve stale data. The database itself can only handle a limited number of connections, so they are shared through a **connection pool**, like a library lending a few copies of a popular book.
+
+**Tiny example.** Listing 100 posts with their authors' names:
+
+| Strategy | Queries | Estimated time with a 1 ms round trip |
+|---|---|---|
+| one query per post (N+1) | 101 | about 103 ms |
+| JOIN | 1 | about 2.5 ms |
+| batched `IN` | 2 | about 3.5 ms |
+
+**You will learn**
+- How database caching works across layers: the PostgreSQL buffer pool and OS page cache, plan caches and prepared statements, materialized views, cache-aside with Redis, ORM identity maps, `ETag`/`304`, and cache invalidation
+- Connection pooling and PgBouncer, the N+1 query problem, `EXPLAIN` and slow-query logs, keyset pagination, batched writes, lost updates, read replicas, partitioning, zero-downtime migrations and backups
+- API design that holds up: HTTP semantics, RFC 9457 errors, validation, pagination, versioning, idempotency keys, rate-limit headers, deadlines, webhooks, long-running jobs and streaming LLM output
+- Background jobs with retries, dead-letter queues and scheduled jobs; health checks, graceful shutdown, timeouts, retry budgets, structured logs and metrics
+- A production-readiness checklist and a playbook for the first slow-endpoint incident
+
+**Key takeaway:** know which cache layer answered, pool your connections, count your queries, and design every API call to be safe to retry.
+
 ---
 
 ## How this connects to the rest of the repo and to real AI systems
@@ -362,6 +420,9 @@ The GPU's huge calculation speed does not appear anywhere in this table: decodin
 - **System design** (09) gives the distributed-systems toolkit that [`22_ML_System_Design`](../22_ML_System_Design/01_hld_ml_systems.ipynb) applies to ML, and the database theory sits in [DBMS fundamentals](../13_Databases/00_dbms_fundamentals/01_dbms_introduction_and_architecture.ipynb).
 - **Shipping** (11) previews [safe rollout strategies](../16_Deployment/05_industry_safe_model_rollout_strategies.ipynb), [monitoring](../15_MLOps/06_monitoring/01_monitoring.ipynb) and the [end-to-end MLOps pipeline](../15_MLOps/15_industry_end_to_end_mlops_pipeline.ipynb), and is good preparation for the [capstone projects](../21_Projects/).
 - **Computer architecture** (12) is the hardware story behind [quantisation and compression](../05_Deep_Learning/13_quantization_and_compression_advanced.ipynb) (number formats), [LLM inference optimisation](../08_LLM/13_inference_optimization.ipynb) (memory-bound decoding, batching, KV cache), [distributed training](../05_Deep_Learning/11_distributed_training.ipynb) (interconnects) and [parallel and external-memory algorithms](../00_AI_Fundamentals/advanced_algorithms/10_parallel_and_external_memory_algorithms.ipynb) (prefix scans, cache-aware algorithms); the floating-point side is also in [maths in practice](../14_Mathematics/08_industry_math_in_practice.ipynb).
+- **Linux, shell and networking** (13) is the hands-on side of operating systems (06) and networks (07): the commands you use whenever you log into a Linux VM or container to deploy or debug a service.
+- **Authentication and authorisation** (14) extends the JWT login in [Advanced FastAPI](../12_FastAPI/02_advanced_fastapi.ipynb), the fixes in [securing vibe-coded applications](../27_AI_and_Cybersecurity/02_securing_vibe_coded_applications.ipynb) and the CI-to-cloud OIDC in [DevSecOps](../20_Git_and_DevOps/07_devsecops_cicd_supply_chain_and_platform_engineering.ipynb).
+- **Production backend patterns** (15) connects [Redis and caching](../13_Databases/10_redis_and_caching_for_ai_applications.ipynb), [SQL fundamentals](../13_Databases/01_sql/01_sql_fundamentals.ipynb) and system design (09) into one working API.
 
 ---
 

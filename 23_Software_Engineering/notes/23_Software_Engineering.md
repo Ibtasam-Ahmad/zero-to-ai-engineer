@@ -1,6 +1,6 @@
 # Software Engineering for AI Developers
 
-A model that works in a notebook is a prototype. A model that thousands of people rely on is a *software system*: it has an architecture, tests, logs, limits, security controls, a front end and a way to be rolled out and rolled back. This guide walks through the concepts behind the twelve notebooks of this module in order, from how to shape a single class to how a team ships a whole AI feature, and finally down to the hardware that decides how fast it all runs. Every idea is defined in plain words first, then made precise with a worked example, a formula or a comparison table. The glossary at the end collects every term.
+A model that works in a notebook is a prototype. A model that thousands of people rely on is a *software system*: it has an architecture, tests, logs, limits, security controls, a front end and a way to be rolled out and rolled back. This guide walks through the concepts behind the fifteen notebooks of this module in order, from how to shape a single class to how a team ships a whole AI feature, and finally down to the hardware that decides how fast it all runs. Every idea is defined in plain words first, then made precise with a worked example, a formula or a comparison table. The glossary at the end collects every term.
 
 The guide follows one thread: **each layer exists to make change safe**. Good classes make it safe to change one part. Tests make it safe to refactor. Profiling makes it safe to optimise. Limits, timeouts and security controls make it safe to face real traffic. Feature flags make it safe to launch.
 
@@ -545,6 +545,47 @@ A quick bound: every decoding step reads all weights once, so tokens/s at batch 
 | Measure first | optimise the real bottleneck | (Part 2) |
 
 **Why it matters.** Mixed-precision training, LLM quantisation, FlashAttention (tiling so the $n \times n$ attention matrix never reaches HBM), continuous batching and llama.cpp on laptops are all applications of these few ideas: number formats, the memory hierarchy and arithmetic intensity.
+
+---
+
+## Part 7: Running, securing and scaling a backend (notebooks 13, 14 and 15)
+
+Parts 3 to 5 explained the theory of operating systems, networks, security and system design. These three notebooks are the practical follow-up: how to operate a Linux server, how sign-in and permissions work in production, and how to keep a database-backed API fast and correct under real traffic.
+
+### Linux, the shell and networking
+
+`13_linux_shell_and_networking_for_ai_engineers.ipynb` is the operator's handbook for a cloud GPU server, which is just a Linux computer reached through a text window. It follows the steps of a deployment: get in with **SSH keys**, put files in the right place with the right **owner and permissions**, run the model API as a **systemd service** so it survives logout and restarts after a crash, and read its logs with `journalctl`. It covers the everyday text tools (`grep`, `sed`, `awk`, `find`, `jq`) with pipes and redirection, and uses them to find slow endpoints and 5xx errors in an Nginx-style access log, first with `awk` and then with pandas. Bash scripts are made to fail safely with `set -euo pipefail` and `trap`: in the notebook's demo the unsafe script carried on with an empty model directory and exited with 0, while the safe one stopped, ran its cleanup and exited with 1. The second half checks the machine (`df`, `free`, the **OOM killer**, `nvidia-smi`, `CUDA_VISIBLE_DEVICES`) and puts the service online: network commands (`ss`, `dig`, `curl`, `openssl s_client`), DNS records, **TLS certificates** with Let's Encrypt, firewalls, a **reverse proxy** (Nginx or Caddy) in front of the API, and cron. All commands run read-only inside a temporary folder.
+
+### Authentication and authorisation in production
+
+`14_authentication_and_authorization_in_production.ipynb` goes wide on the topic that Part 4 introduced. **Authentication** answers "who are you?" and **authorisation** answers "what may you do?". The notebook covers slow password hashes and NIST password rules, reset links and one-time codes, **MFA** with a TOTP implementation checked against the RFC test vectors, passkeys, server-side sessions and cookies, JWTs built by hand, **OAuth 2.0 and OpenID Connect** with the authorization code flow and PKCE, enterprise SSO (SAML, OIDC, SCIM), API keys, signed requests and webhooks, the **RBAC, ABAC and ReBAC** models, and browser defences (CORS, CSRF, XSS, CSP).
+
+Three kinds of token work together after a user logs in:
+- A **bearer token** is any token where whoever holds it can use it, like cash or a concert ticket. It is sent as `Authorization: Bearer <token>`, so it must travel only over HTTPS and never appear in URLs or logs.
+- An **access token** is the short-lived bearer token (typically 5 to 60 minutes) that the client sends to the API on every call. It is either opaque or a JWT checked by signature, issuer, audience and expiry. The short lifetime limits the damage if it leaks.
+- A **refresh token** is long-lived (days to weeks) and is sent only to the auth server's token endpoint, never to the API. Its one job is to get a new access token without asking the user to log in again.
+
+When the access token expires, the API returns 401. The client then sends the refresh token to the auth server and receives a new access token and a new refresh token. The old refresh token is now dead (**rotation**); if anyone presents it again, the server treats that as theft and revokes the whole token family (**reuse detection**). For single-page apps, the notebook recommends a **BFF** (backend for frontend) that keeps both tokens on the server and gives the browser only an `HttpOnly` cookie. Finally, every request that takes an object ID needs an object-level check: the notebook's test suite catches an **IDOR** bug where a logged-in user could read another tenant's document just by changing the ID.
+
+### Production backend patterns: caching, databases and APIs
+
+`15_production_backend_patterns_databases_caching_and_apis.ipynb` is the glue between FastAPI, SQL and system design. It starts with **how database caching works across layers**, from the user down to the disk:
+
+| Layer | What it keeps | Main risk |
+|---|---|---|
+| Browser and CDN | whole HTTP responses, revalidated with `ETag` and `304 Not Modified` | caching private data by mistake |
+| Redis or Memcached (cache-aside) | query results and LLM answers shared by all servers | stale reads, stampedes |
+| ORM identity map | rows already loaded in this one session | stale objects in long sessions |
+| Materialized view | the stored result of a heavy query | only as fresh as the last refresh |
+| Plan cache and prepared statements | the parsed and planned query | a bad generic plan |
+| PostgreSQL `shared_buffers` | 8 KB table and index pages | too small means disk reads |
+| OS page cache | file pages in free RAM | evicted by other work or big scans |
+
+A query is fast the second time because its pages are already in the buffer pool or the page cache. Because traffic is skewed, a small pool goes a long way: in the notebook's simulation a pool holding 10% of the pages served about 69% of reads. The hard part is **invalidation**: every layer can return a stale value, and the fixes range from short TTLs and delete-on-write to versioned keys and change data capture.
+
+**Connection pooling** matters because PostgreSQL starts one operating-system process per connection and allows about 100 by default. An app-side pool lends a few open connections to requests, and an external pooler such as PgBouncer lets many app instances and serverless functions share a small number of real connections. More connections do not mean more speed.
+
+The **N+1 query problem** is running 1 query for a list and then 1 more for each item, usually through ORM lazy loading. In the notebook, listing 100 posts with their authors took 101 queries; a JOIN needed 1 and a batched `IN` query (or a DataLoader) needed 2. With a 1 ms network round trip per query that is about 103 ms against 2.5 to 3.5 ms. The rest of the notebook covers `EXPLAIN` and slow-query logs, keyset pagination, lost updates, read replicas, expand-and-contract migrations, backups, API design (RFC 9457 errors, idempotency keys, rate-limit headers, deadlines), background jobs, health checks, graceful shutdown and a first-incident playbook.
 
 ---
 

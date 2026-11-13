@@ -1,6 +1,6 @@
 # 🧭 Learning Path: What to Study, in What Order
 
-> **Who is this for?** Anyone who opens this repo and asks: *"There are 355 notebooks. Where do I start, and what can I skip?"*
+> **Who is this for?** Anyone who opens this repo and asks: *"There are 419 notebooks. Where do I start, and what can I skip?"*
 >
 > **Studying for a degree, or want degree-level depth?** Pick a route in [🎓 Choose your route](#-choose-your-route), then check your coverage in the [🗺️ Degree map](#degree-map).
 >
@@ -247,6 +247,7 @@ Do `02_Data_Analysis` in **this** order. `01_data_preprocessing` uses tools taug
 | ⭐ | `03_Machine_Learning/01_supervised/`: `00_preprocessing`, `01_linear_regression`, `02_logistic_regression`, `03_decision_trees`, `04_ensemble_methods`, `09_pipeline_and_leakage`, `10_end_to_end_project` | The core supervised algorithms and the habits that keep you honest |
 | ⭐🏭 | `01_supervised/14_industry_churn_prediction.ipynb`, `15_industry_house_price_regression.ipynb` | Classification and regression done professionally |
 | ✅ | `01_supervised/05_svm`, `06_naive_bayes`, `07_knn`, `13_model_calibration` | More algorithms worth knowing |
+| **Recommended** | `03_Machine_Learning/00b_20_ml_algorithms_cheatsheet.ipynb` | 20 algorithms (plus AdaBoost) on one page: core idea, strengths, weaknesses, a tiny demo each, a "which one?" flowchart and a fair benchmark. Revisit before interviews. |
 | ⭐ | `02_unsupervised/01_clustering`, `02_dimensionality_reduction`, 🏭 `04_industry_customer_segmentation` | Finding structure without labels |
 | ⭐ | `05_feature_engineering/` (all three) | Usually the biggest lever on model quality |
 | ⭐ | `06_model_evaluation/` (all three) | Choosing metrics, tuning, comparing models fairly |
@@ -289,6 +290,8 @@ Do `02_Data_Analysis` in **this** order. `01_data_preprocessing` uses tools taug
 | ✅ | `19_sequence_models_hands_on.ipynb` | RNN, LSTM and GRU cells from scratch, seq2seq with attention, and beam search (hands-on partner of `04`) |
 | 🔹🎓 | `20_generative_models_hands_on.ipynb` | VAE, GAN, a diffusion model and a normalizing flow, each trained on CPU (hands-on partner of `06`) |
 | 🔹🔬 | `21_graph_machine_learning_hands_on.ipynb` | Learning on networks: spectral embeddings, node2vec and GNNs from scratch (hands-on partner of `07`) |
+| **Core** | `05_Deep_Learning/22_deep_learning_mechanics_math_and_code_reference.ipynb` | Every mechanic of training in one place, with the maths and code: forward pass, losses, backprop, learning rate, optimisers, normalisation, numerics |
+| **Recommended** | `05_Deep_Learning/23_neural_network_zoo_classic_and_alternative_architectures.ipynb` → `24_neural_network_zoo_scientific_and_modern_architectures.ipynb` | The whole family of neural networks, from Hopfield and RBMs to physics-informed networks, neural operators, KANs and Mamba |
 
 ## Stage 8: Computer vision & NLP (4–6 weeks)
 
@@ -316,6 +319,15 @@ Do `02_Data_Analysis` in **this** order. `01_data_preprocessing` uses tools taug
 | ✅ | `08_LLM/08_evaluation/`, `16_llm_security.ipynb`, `17_structured_outputs.ipynb`, `04_different_llms/`, `05_slms/` | Evaluation, security, structured output, choosing a model |
 | ✅ | `08_LLM/22_llm_evaluation_hands_on.ipynb` | Marking an LLM's homework properly: metrics from scratch, LLM judges, RAG metrics, statistics, regression tests |
 | ✅ | `08_LLM/21_fine_tuning_hands_on_cpu.ipynb` | Teaching a tiny model to follow instructions on a CPU: SFT, LoRA from scratch, forgetting, DPO |
+| **Core** | `08_LLM/02_rag/05_every_rag_type_explained.ipynb` | Every kind of RAG in one place, in simple words: naive → advanced → modular, all chunking methods, hybrid search, parent-document, adaptive, agentic, graph, multimodal, permission-aware RAG, CAG, and a "which RAG should I use?" guide |
+| **Core** | `08_LLM/27_tokens_cost_batch_and_caching_llm_apis.ipynb` | Using LLM APIs like a pro: token types on the bill, cached tokens, Batch APIs, rate limits (RPM/TPM), reasoning tokens, usage tracking and cutting cost |
+| **Recommended** | `08_LLM/24_how_llms_differ_from_each_other.ipynb` | How models really differ (architecture, MoE, attention types incl. MLA, tokenizers, context, post-training, decoding incl. min-p) and 7 ways to make an LLM faster |
+| **Recommended** | `08_LLM/23_llm_caching_kv_cache_prompt_semantic_cag.ipynb` | KV cache from scratch, KV cache at scale, prompt vs semantic caching trade-offs, CAG, speculative decoding vs quantization |
+| **Recommended** | `08_LLM/25_langchain_complete_guide.ipynb` | LangChain from zero to production: prompts, LCEL, memory, tools, agents, loaders, splitters, vector stores, a full RAG app, LangGraph, LangSmith, interview prep |
+| **Core** | `08_LLM/30_transformer_and_llm_mechanics_math_and_code.ipynb` | A tiny GPT built step by step with the maths: tokens, embeddings, positions, attention, KV cache, sampling, LoRA |
+| **Recommended** | `08_LLM/28_how_ai_search_works_web_and_research_search.ipynb` | How search engines crawl, index and rank; how LLMs search the web and cite sources; free search options; research/paper search |
+| **Optional** | `08_LLM/29_trending_ai_repos_and_new_concepts_2026.ipynb` | The top AI repos on GitHub right now and the ideas behind them (reverse-engineering agents, codebase knowledge graphs, personal agents, coding-agent skills), and how to judge a trending repo |
+| **Optional** | `08_LLM/26_frontier_ai_topics_2026.ipynb` | What practitioners are talking about in 2026 (reasoning models, SLMs, voice agents, VLA and world models, flow matching, sparse autoencoders, AI regulation) and who to follow to keep up |
 | 🔹 | `08_LLM/02_rag/03`–`04`, `03_fine_tuning/`, `06_vision_llm/`, `07_prompt_engineering/`, `09_knowledge_graphs/`, `10_synthetic_data/`, `11_multimodal/`, `12`–`15`, `18`; `09_Prompt_Engineering/ai_tools/` | Advanced topics (fine-tuning needs a GPU) |
 
 ## Stage 10: Agents (3–4 weeks)
@@ -326,6 +338,12 @@ Do `02_Data_Analysis` in **this** order. `01_data_preprocessing` uses tools taug
 | ⭐🏭 | `10_Agents/09_industry_tool_using_agent.ipynb` | **Do this early.** It runs offline and shows a complete, safe agent. |
 | ✅🔑 | `03_langgraph.ipynb`, `05_mcp_and_tools.ipynb`, `08_agent_security.ipynb` | Frameworks, tool protocols, security |
 | 🔹 | `04_multi_agent_frameworks`, `06_agent_observability`, `07_advanced_agent_frameworks` | |
+| **Core** | `10_harness_engineering_and_agentic_engineering.ipynb` | Agent = Model + Harness: build a real harness (tools, permissions, sandbox, hooks, budgets, loop detection, memory, skills) and see harness changes alone improve the score; vibe coding vs agentic engineering, spec-driven development |
+| **Core** | `11_context_engineering_memory_and_agent_protocols.ipynb` | Context engineering, long-term agent memory, MCP in depth and the A2A agent-to-agent protocol |
+| **Recommended** | `12_langgraph_hands_on.ipynb` → `13_crewai_and_multi_agent_frameworks_hands_on.ipynb` | LangGraph and CrewAI properly, with runnable code (no API key) |
+| **Recommended** | `16_agentic_workflow_patterns_and_deep_research.ipynb` | The 5 workflow patterns (chaining, routing, parallel, orchestrator-workers, evaluator-optimizer), deep research agents, Mixture of Agents |
+| **Optional** | `15_agent_frameworks_landscape_hands_on.ipynb` | The other frameworks side by side (OpenAI Agents SDK, Google ADK, PydanticAI, AutoGen / Microsoft Agent Framework, smolagents, LlamaIndex, Haystack, Agno, Strands, DSPy, …) and how to choose |
+| **Optional** | `14_no_code_ai_automation_n8n_make_zapier.ipynb` | No-code / low-code AI automation with n8n, Make and Zapier: when to use it, 9 recipes, and how to test and version workflows |
 
 ## Stage 11: Shipping AI: APIs, deployment & MLOps (5–7 weeks; +3–4 weeks for the software-engineering and data-engineering rows)
 
@@ -336,8 +354,21 @@ Do `02_Data_Analysis` in **this** order. `01_data_preprocessing` uses tools taug
 | ⭐ | `16_Deployment/01_deployment_concepts.ipynb`, `02_streamlit_gradio.ipynb`, 🏭 `05_industry_safe_model_rollout_strategies.ipynb` | Demos, deployment options, safe rollouts |
 | ⭐ | `15_MLOps/01_experiment_tracking/01_mlflow.ipynb`, `05_model_registry/`, `06_monitoring/`, `07_testing_in_ml/`, 🏭 `15_industry_end_to_end_mlops_pipeline.ipynb` | Tracking, versioning, testing and monitoring models |
 | ✅ | `20_Git_and_DevOps/02`–`04`, `13_Databases/03_vector_db/`, `18_Cloud/01_aws_for_ai.ipynb`, 🏭 `18_Cloud/05_industry_cloud_ml_architecture_and_cost_planning.ipynb` | CI/CD, vector databases, cloud basics |
+| **Recommended** | `13_Databases/09_indexing_patterns_database_and_vector_side_by_side.ipynb` | Every common database index and vector index explained side by side, with measurements, so you can pick the right one |
 | 🔹 | Rest of `13_Databases`, `15_MLOps`, `16_Deployment`, `17_Docker/03` + `kubernetes/`, `18_Cloud/02`–`04` | Many cells here *show* code for services you would need to install or pay for |
 | ✅ | `15_MLOps/16_observability_hands_on.ipynb` | Seeing a live model from the outside: JSON logs, Prometheus metrics, OpenTelemetry traces, SLOs, drift alerts |
+| **Recommended** | `15_MLOps/17_production_ml_and_agentic_analytics_labs.ipynb` | Hands-on labs: anatomy of a production ML system, project structure, a 30-day data drift simulator, an "AI data analyst" agent with result checks, evals step by step |
+| **Core** | `23_Software_Engineering/13_linux_shell_and_networking_for_ai_engineers.ipynb` | The command line, SSH, systemd, logs and networking tools you use every time you deploy something |
+| **Core** | `23_Software_Engineering/14_authentication_and_authorization_in_production.ipynb` | Logins, sessions, tokens, OAuth/OIDC, passkeys, API keys and permissions done safely |
+| **Core** | `23_Software_Engineering/15_production_backend_patterns_databases_caching_and_apis.ipynb` | Database caching and performance, connection pools, API design, background jobs and running a service well |
+| **Recommended** | `16_Deployment/08_large_file_uploads_and_downloads_presigned_multipart_resumable.ipynb` | Large uploads and downloads without hitting request-size limits: presigned, multipart and resumable uploads |
+| **Recommended** | `17_Docker/kubernetes/02_kubernetes_deep_dive_for_ai_workloads.ipynb` → `03_gpu_infrastructure_and_llm_serving_on_kubernetes.ipynb` | Kubernetes properly, then running GPUs and LLM servers on it |
+| **Recommended** | `18_Cloud/06`–`07` (AWS), `08`–`09` (Azure), `10`–`11` (Google Cloud) | Pick one cloud first: its core services, then its AI platform. The service-map tables show the equivalents on the other two |
+| **Recommended** | `18_Cloud/12_cloud_building_blocks_compared_aws_gcp_azure.ipynb` and the guides `18_Cloud/notes/aws_services_explained_simply.md`, `gcp_services_explained_simply.md`, `azure_services_explained_simply.md` | Which cloud service to use for which job, and what every service is, in plain words |
+| **Core** | `16_Deployment/07_free_tier_deployment_frontend_backend_and_database.ipynb` | Put your first AI app online for free: frontend, backend, database, auth, email |
+| **Recommended** | `16_Deployment/06_deploying_an_ai_saas_application_end_to_end.ipynb`, `13_Databases/10_redis_and_caching_for_ai_applications.ipynb` | Everything a real AI SaaS needs and how to deploy it; Redis and caching |
+| **Recommended** | `20_Git_and_DevOps/06_infrastructure_as_code_terraform_opentofu_pulumi.ipynb`, `07_devsecops_cicd_supply_chain_and_platform_engineering.ipynb` | Infrastructure as code, secure CI/CD and software supply chain, DORA metrics, platform engineering |
+| **Optional** | `15_MLOps/18_sre_reliability_security_and_finops_for_ai_systems.ipynb` | Incidents and postmortems, chaos engineering, zero trust, compliance basics and FinOps for AI systems |
 | ✅🎓 | `13_Databases/06_data_engineering/02_big_data_processing_on_one_machine.ipynb` | Data bigger than your RAM: MapReduce from scratch, chunking, Parquet, DuckDB/Polars |
 | 🔹🎓 | `13_Databases/06_data_engineering/03_spark_locally.ipynb` | Apache Spark on your laptop: RDDs, shuffles, DataFrames and Spark SQL (needs Java; otherwise cells skip) |
 | 🔹🎓 | `13_Databases/06_data_engineering/04_stream_processing_from_scratch.ipynb` | Answers that update as data arrives: windows, watermarks, exactly-once, backpressure |
@@ -376,6 +407,10 @@ Build these in order. Each folder has a `README.md` with tested run steps and it
 | | What | Why |
 |---|---|---|
 | ✅ | `22_ML_System_Design/01`–`07`, 🏭 `08_industry_system_design_case_study.ipynb` | How to design whole ML systems; asked in most ML engineering interviews |
+| **Core** | `22_ML_System_Design/09_ai_system_design_for_llm_applications.ipynb` | System design for LLM apps: tokens and cost, model gateways and routing, fallbacks and circuit breakers, evals, security, hidden token leaks, three worked interview designs |
+| **Recommended** | `22_ML_System_Design/10_distributed_systems_and_architecture_patterns.ipynb` | Leader election, distributed locks and fencing tokens, consistent hashing, sagas and outbox, strangler fig and BFF, Infrastructure as Code |
+| **Recommended** | `22_ML_System_Design/12_designing_for_100_million_users.ipynb` | Scalable architecture: how a system grows from 1 to 100 million users, the maths to size it, and three worked designs |
+| **Recommended** | `22_ML_System_Design/11_rag_at_scale_100_million_pdfs_low_latency.ipynb` | A full design for RAG over 100 million PDFs with minimum latency: ingestion, sharded hybrid search, latency budget, cost |
 | ✅ | The [career checklist](#-after-the-path-portfolio--job-checklist) below | |
 
 ## Stage 13b: Research methods & thesis (degree routes; 4–6 weeks + thesis)
@@ -400,6 +435,10 @@ How to ask a research question, run a fair study and write it up so others can c
 | Reinforcement learning (🔬 core for route (c)) | `11_Reinforcement_Learning/` | `01_rl_fundamentals` → `07_multi_armed_bandits` (simplest) → `02`–`05` → 🏭 `08_industry_inventory_control_with_rl` → `06_advanced_rl`. Hands-on, all on CPU: `09_tabular_rl_from_scratch` (GridWorld with dynamic programming, Monte Carlo, Q-learning and SARSA, built by hand) and `10_deep_rl_on_cpu` (DQN, REINFORCE, A2C and PPO from scratch on CartPole) |
 | Advanced AI safety & policy | `19_AI_Ethics_and_Safety/` | `01`, `02`, `04`, `05`, then 🏭 `09_industry_ai_incident_response_and_red_teaming` |
 | Advanced MLOps | `15_MLOps/02`–`04`, `08`–`14` | `02_data_versioning`, `03_pipeline_orchestration` |
+| Quantum AI (optional; needs Stage 4 linear algebra and probability) | [`25_Quantum_AI/`](25_Quantum_AI/README.md) | **Part 1, Quantum Computing:** `00_start_here_quantum_computing_explained_simply` (no physics needed) → `01_quantum_computing_basics` (qubits, gates, entanglement with a tiny simulator you build) → `02_quantum_algorithms` (Grover, Shor, VQE, QAOA). **Part 2, Quantum AI and Quantum ML:** `03_quantum_machine_learning` (variational classifiers, quantum kernels, barren plateaus) → `04_quantum_ai_tools_hardware_and_industry` (Qiskit, PennyLane, hardware, error correction, post-quantum cryptography) → `05_quantum_ml_on_sensor_data_fall_detection` (quantum vs classical on a real task) |
+| Sensor AI (optional; after Stage 5) | [`26_Sensor_AI/`](26_Sensor_AI/README.md) | `01_signals_frequency_and_sensor_basics` (sampling, FFT, filters) → `02_imu_activity_recognition_and_fall_detection` → `03_radar_fmcw_range_doppler_and_micro_doppler` → `04_lidar_point_clouds_from_zero` → `05_sensor_fusion_kalman_filters_and_tracking` → `06_sensor_data_for_generative_and_foundation_models` (augmentation, simulation and sim2real, generative and foundation models for sensor data) |
+| AI and Cybersecurity (optional; after Stage 10) | [`27_AI_and_Cybersecurity/`](27_AI_and_Cybersecurity/README.md) | `01_ai_native_threat_landscape` → `02_securing_vibe_coded_applications` (do this one before you ship anything built with AI coding tools) → `03_ai_for_cyber_defense` → `04_attacking_and_defending_ai_systems` |
+| Applied AI and Forward Deployed Engineering (optional; after Stage 12) | [`28_Applied_AI_and_Forward_Deployed_Engineering/`](28_Applied_AI_and_Forward_Deployed_Engineering/README.md) | `01_ai_roles_and_how_ai_work_gets_done` → `02_forward_deployed_engineering_in_practice` (a full engagement from discovery to production) → `03_ai_product_strategy_and_business_skills` |
 | Domain electives (🔹) | [`03_Machine_Learning/18_domain_applications/`](03_Machine_Learning/18_domain_applications/README.md) | `01_geospatial_machine_learning` (ML on maps: coordinates, spatial features, spatial cross-validation, hotspots) and `02_bioinformatics_sequence_ml` (ML on DNA and proteins: alignment, k-mers, HMMs, sequence classifiers) |
 
 ---
@@ -485,7 +524,7 @@ Use these tables to check that your study covers a typical degree. Course names 
 | `07_NLP` | `pip install faiss-cpu gensim keybert nltk rank-bm25 spacy yake` | `bertopic`, `fastcoref`, `langdetect`, `laserembeddings`, `librosa`, `mteb`, `openai`, `rouge-score`, `voyageai` |
 | `08_LLM` | `pip install anthropic faiss-cpu google-genai haystack-ai langchain-community langchain-core langchain-openai langchain-text-splitters llama-index nltk ollama openai peft pytest rank-bm25 rouge-score trl` | `cohere`, `FlagEmbedding`, `instructor`, `sacrebleu` |
 | `09_Prompt_Engineering` | `pip install anthropic dspy google-genai instructor openai` | - |
-| `10_Agents` | `pip install ag2 crewai crewai-tools langchain-core langchain-openai langgraph langsmith nest-asyncio openai pydantic-ai smolagents` | `anthropic`, `faiss-cpu` |
+| `10_Agents` | `pip install ag2 crewai crewai-tools langchain-core langchain-openai langgraph langsmith nest-asyncio openai pydantic-ai smolagents` | `anthropic`, `faiss-cpu`; for `15_agent_frameworks_landscape_hands_on` (each framework is optional and skipped if missing): `pydantic-ai-slim autogen-agentchat autogen-ext agent-framework-core agent-framework-orchestrations openai-agents google-adk smolagents llama-index-core haystack-ai agno strands-agents dspy` |
 | `11_Reinforcement_Learning` | `pip install gymnasium stable-baselines3` | - |
 | `12_FastAPI` | `pip install pyjwt "pwdlib[bcrypt]" pytest` | - |
 | `13_Databases` (incl. `00_dbms_fundamentals/`, `06_data_engineering/`) | `pip install duckdb networkx psutil pyarrow` | `dask`, `polars`, `pyspark` (Spark also needs Java 17 or 21) |
@@ -500,6 +539,10 @@ Use these tables to check that your study covers a typical degree. Course names 
 | `22_ML_System_Design` | `pip install faiss-cpu` | - |
 | `23_Software_Engineering` | `pip install pytest` | `coverage`, `hypothesis`, `line_profiler`, `numba`, `psutil`, `pwdlib`, `pydantic-settings`, `pyjwt`, `pytest-cov`, `ruff`, `safetensors`, `websockets` |
 | `24_Research_Methods` | `pip install mlflow` | - |
+| `25_Quantum_AI` | nothing extra (the core of every notebook uses only NumPy and scikit-learn) | `qiskit`, `pennylane` (used in `04` and optional cells; skipped with a message if missing) |
+| `26_Sensor_AI` | `pip install scipy` (usually already installed with scikit-learn) | - |
+| `27_AI_and_Cybersecurity` | nothing extra (standard library, NumPy, pandas, scikit-learn) | - |
+| `28_Applied_AI_and_Forward_Deployed_Engineering` | nothing extra | - |
 
 > 💡 The pip name is sometimes different from the import name: `cv2` → `opencv-python-headless`, `faiss` → `faiss-cpu`, `sklearn` → `scikit-learn`, `imblearn` → `imbalanced-learn`, `bs4` → `beautifulsoup4`, `umap` → `umap-learn`, `torch_geometric` → `torch-geometric`, `jwt` → `pyjwt`. The complete, pinned list for everything is the root `requirements.txt` (Python 3.12+).
 

@@ -834,6 +834,71 @@ stateDiagram-v2
 
 Step back and the whole field rhymes. Everything is built from the same loop: a **forward pass** produces a prediction, a **loss** measures the error, **backpropagation** computes gradients, and an **optimizer** nudges parameters downhill repeated over **batches** and **epochs**. The differences between a CNN, an LSTM, a Transformer, a GAN, and a Neural ODE lie entirely in the *architecture* of the forward pass, not in how learning happens.
 
-A second through-line is the recurring engineering pattern, visible across all thirteen notebooks: build the idea from scratch to understand it, then reach for the optimized library version to use it at scale. The same handful of tricks residual connections to keep gradients flowing, attention to relate distant elements, normalization to stabilize, low-rank and low-precision to compress recur again and again, recombined into ever more capable systems.
+A second through-line is the recurring engineering pattern, visible across the notebooks in this folder: build the idea from scratch to understand it, then reach for the optimized library version to use it at scale. The same handful of tricks residual connections to keep gradients flowing, attention to relate distant elements, normalization to stabilize, low-rank and low-precision to compress recur again and again, recombined into ever more capable systems.
 
 Master the single neuron and the training loop, and the rest of deep learning is variations on a theme.
+
+---
+
+## 16. How Networks Learn: The Mechanics in One Place
+
+`22_deep_learning_mechanics_math_and_code_reference.ipynb` is a **reference** notebook. It does not introduce a new architecture; it collects every moving part of the training loop from Section 15 and explains each one the same way: what it is, the maths in simple words and then as a formula, a tiny code demo, and a practical tip.
+
+It follows the loop in order:
+
+- **Forward pass** in matrix form: shapes, broadcasting, the batch dimension, and the computational graph.
+- **Losses**: about fifteen of them, from MSE and Huber to numerically stable cross-entropy, label smoothing, focal loss, InfoNCE, triplet and CTC, with a "which loss should I pick?" guide.
+- **Backpropagation**: the chain rule, a tiny scalar autograd engine in the micrograd style, a vectorised backward pass for a two-layer MLP checked against PyTorch, and gradient checking.
+- **Activations and initialisation**: derivatives, dead ReLUs, SwiGLU, and the variance reasoning behind Xavier and He initialisation.
+- **Optimisers** written from scratch (SGD to AdamW), with brief notes on newer ones such as Lion, Muon and Shampoo.
+- **Learning rate**: too high vs too low, the LR range test, schedules, the linear scaling rule for batch size, and per-group learning rates.
+- **Batches and normalisation**: gradient noise, gradient accumulation, BatchNorm, LayerNorm, RMSNorm, GroupNorm, and pre-norm vs post-norm.
+- **Regularisation and stability**: weight decay, dropout, early stopping, mixup, gradient clipping, residual connections, and debugging loss spikes and NaNs.
+- **Numerics and cost**: FP32, FP16, BF16 and FP8, mixed precision with loss scaling, gradient checkpointing, a training-memory calculator, and the **6ND** rule for FLOPs.
+- **Generalisation**: bias and variance, universal approximation, double descent, grokking and loss-landscape slices.
+
+It ends with a complete PyTorch training loop and a diagnostics checklist for when training goes wrong.
+
+---
+
+## 17. The Neural Network Zoo, Part 1: Classic and Alternative Networks
+
+`23_neural_network_zoo_classic_and_alternative_architectures.ipynb` is a guided tour of network names you keep meeting but that the main sequence of notebooks does not teach. For each of 16 networks it explains what it is, gives a simple analogy, shows the key maths, runs a tiny demo, says whether it is still used today, and lists its limits. The demos show the mechanism, not record results.
+
+The networks fall into a few groups:
+
+- **Early feed-forward ideas**: the perceptron and why it cannot learn XOR, radial basis function (RBF) networks, extreme learning machines (a random hidden layer with only the output solved by least squares), and self-organising maps.
+- **Memory and energy**: Hopfield networks (classic and modern, including the link between modern Hopfield networks and attention), Boltzmann machines, RBMs and deep belief nets, and energy-based models sampled with Langevin dynamics.
+- **Time and the brain**: echo state networks and reservoir computing, liquid time-constant and CfC networks, and spiking neural networks with STDP and surrogate gradients.
+- **Other designs**: capsule networks, memory-augmented networks (memory networks, neural Turing machines, differentiable neural computers), hypernetworks that output another network's weights, mixture density networks that output a full probability distribution, Bayesian networks with MC dropout and deep ensembles, and Siamese or triplet networks for metric learning.
+
+The notebook also opens with a map of all neural network families (see the table in Section 18) and ends with a summary table and interview questions.
+
+---
+
+## 18. The Neural Network Zoo, Part 2: Scientific and Modern Architectures
+
+`24_neural_network_zoo_scientific_and_modern_architectures.ipynb` covers networks that have **extra knowledge built in**, plus newer designs for sequences and images. It uses the same "what, analogy, maths, demo, used today, limits" pattern as Part 1.
+
+- **Physics-informed neural networks (PINNs)** add the residual of a differential equation to the loss, so the network must obey the physics. Demos fit a damped oscillator from sparse noisy data, solve the heat equation with no data at all, and recover an unknown damping coefficient (an inverse problem).
+- **Neural operators** learn a whole solver, a map from one function to another: **DeepONet** (branch and trunk networks) and the **Fourier neural operator**, which is tested at a resolution it never saw.
+- **Physics-structured dynamics**: Hamiltonian networks conserve energy where a plain network drifts; Lagrangian networks and universal differential equations follow the same idea.
+- **KAN** places learnable spline functions on edges, so a formula can sometimes be read off.
+- **Implicit neural representations**: **SIREN** stores an image in its weights, **NeRF** renders a 3D scene along rays, and Gaussian splatting is noted briefly.
+- **Equivariant networks** respect symmetry: Deep Sets and PointNet, rotation-equivariant convolutions, E(3)-equivariant GNNs for molecules.
+- **Sequence models beyond RNNs**: TCN and WaveNet, state-space models and **Mamba**, linear attention and RWKV, xLSTM.
+- **Vision lineage** from LeNet to ConvNeXt, a tiny U-Net, detection families, then Mixture of Experts, early exits, the lottery ticket idea, and brief notes on world models, JEPA and diffusion transformers.
+
+### 18.1 Families of neural networks, and where each is taught
+
+| Family | Examples | Where to learn it |
+|---|---|---|
+| Feed-forward | perceptron, MLP, RBF, ELM | `01_neural_network_fundamentals.ipynb`, `18_neural_networks_from_scratch_numpy.ipynb`, `23_neural_network_zoo_classic_and_alternative_architectures.ipynb` |
+| Convolutional | CNN, ResNet, U-Net, TCN | `03_cnn.ipynb`, `24_neural_network_zoo_scientific_and_modern_architectures.ipynb` |
+| Recurrent | RNN, LSTM, GRU, ESN, LTC/CfC | `04_rnn_lstm_gru.ipynb`, `19_sequence_models_hands_on.ipynb`, `23_neural_network_zoo_classic_and_alternative_architectures.ipynb` |
+| Attention | Transformer, ViT | `05_transformers_architecture.ipynb` |
+| Generative | AE, VAE, GAN, diffusion, flows, EBM, RBM | `06_generative_models.ipynb`, `20_generative_models_hands_on.ipynb`, `23_neural_network_zoo_classic_and_alternative_architectures.ipynb` |
+| Graph | GCN, GraphSAGE, GAT, equivariant GNNs | `07_gnn.ipynb`, `21_graph_machine_learning_hands_on.ipynb`, `24_neural_network_zoo_scientific_and_modern_architectures.ipynb` |
+| Memory, probabilistic, bio-inspired, metric | NTM, DNC, BNN, MDN, SNN, Hopfield, SOM, Siamese | `23_neural_network_zoo_classic_and_alternative_architectures.ipynb` |
+| Scientific ML | PINN, neural operators, neural ODE, HNN, KAN, INR | `10_neural_ode.ipynb`, `24_neural_network_zoo_scientific_and_modern_architectures.ipynb` |
+| State-space and conditional computation | Mamba, RWKV, MoE, hypernetworks | `24_neural_network_zoo_scientific_and_modern_architectures.ipynb`, `23_neural_network_zoo_classic_and_alternative_architectures.ipynb` |

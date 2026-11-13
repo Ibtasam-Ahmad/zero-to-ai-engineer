@@ -590,3 +590,17 @@ Indirect prompt injection is the primary attack vector for agents: malicious con
 Human-in-the-loop checkpoints are essential for irreversible actions. Before any action in DELETE, SEND_EMAIL, MAKE_PAYMENT, EXECUTE_CODE categories, require explicit human confirmation with a timeout.
 
 Sandbox code execution: never execute agent-generated code in the host environment. Use Docker, E2B, or subprocess with strict resource limits and timeouts.
+
+## 9. Harness Engineering and Context Engineering
+
+An agent is a model plus a **harness**: the loop that calls the model, the tools and their schemas, permissions and sandboxing, hooks that run before and after tool calls, budgets for steps, tokens, time and money, loop detection, memory, sub-agents, skills, checkpoints and traces. **Harness engineering** is the work of designing that layer, and improving it alone can make the same model succeed far more often. It pairs with **agentic engineering** (AI coding agents working under specs, tests and human review) as opposed to **vibe coding** (accepting generated code without checking it). See `10_harness_engineering_and_agentic_engineering.ipynb`.
+
+**Context engineering** decides which tokens the model sees at each step. Its four moves are *write* (keep notes and memory outside the window), *select* (retrieve only what is relevant), *compress* (summarise and trim) and *isolate* (split work across sub-agents). Long contexts suffer from "context rot" and "lost in the middle", so less, better-chosen context usually wins. See `11_context_engineering_memory_and_agent_protocols.ipynb`.
+
+## 10. Protocols, Frameworks, Patterns and No-Code
+
+**MCP** connects an agent to tools and data (servers expose tools, resources and prompts over stdio or Streamable HTTP). **A2A** connects agents to other agents: each publishes an agent card describing its skills, and work is passed as tasks with states such as submitted, working and completed.
+
+Most agent systems can be built from five **workflow patterns**: prompt chaining, routing, parallelization, orchestrator-workers and evaluator-optimizer. Use a fixed workflow when the steps are known; use an autonomous agent only when they are not. **Deep research agents** and **Mixture of Agents** are two popular compositions (`16_agentic_workflow_patterns_and_deep_research.ipynb`).
+
+Frameworks package these ideas: LangGraph (graphs with state and checkpoints, `12_langgraph_hands_on.ipynb`), CrewAI (role-based crews and flows, `13_crewai_and_multi_agent_frameworks_hands_on.ipynb`), and many others such as the OpenAI Agents SDK, Google ADK, PydanticAI, AutoGen / Microsoft Agent Framework, smolagents and LlamaIndex (`15_agent_frameworks_landscape_hands_on.ipynb`). For simple business automations, no-code tools such as n8n, Make and Zapier are often the fastest route (`14_no_code_ai_automation_n8n_make_zapier.ipynb` and `no_code_ai_automation.md`).
