@@ -23,12 +23,12 @@
 ## 📖 Table of Contents
 
 - [🌱 Start Here: New to AI?](#-start-here-new-to-ai)
-- [What's New (November 2026)](#whats-new-november-2026)
 - [📂 Repository Structure](#-repository-structure)
 - [📝 Conceptual Study Notes (with Diagrams)](#-conceptual-study-notes-with-diagrams)
 - [🏭 Industry Practice Notebooks](#-industry-practice-notebooks)
 - [🎓 University-Level Tracks (BS / MS / MPhil)](#-university-level-tracks-bs--ms--mphil)
 - [🌱 Start Here Notebooks](#-start-here-notebooks)
+- [✍️ Numericals Solved by Hand](#-numericals-solved-by-hand)
 - [✅ All Notebooks Verified Runnable](#-all-notebooks-verified-runnable)
 - [🌟 Why This Roadmap?](#-why-this-roadmap)
 - [🚀 Quick Start for Absolute Beginners](#-quick-start-for-absolute-beginners)
@@ -57,7 +57,7 @@ If you are a complete beginner, don't start at folder `00` and read straight thr
 |---|---|
 | [👋 **START_HERE.md**](START_HERE.md) | Set up in 20–60 minutes: Google Colab (nothing to install) or your own computer, how to run a notebook, a first-week plan, troubleshooting |
 | [🧭 **LEARNING_PATH.md**](LEARNING_PATH.md) | The study order for all folders, stage by stage, marked ⭐ core / ✅ recommended / 🔹 optional, plus which extra packages each module needs |
-| [📖 **GLOSSARY.md**](GLOSSARY.md) | 614 AI, ML, computer-science, data and MLOps terms in plain English, each linked to the notebook that teaches it |
+| [📖 **GLOSSARY.md**](GLOSSARY.md) | 2,210 AI, ML, computer-science, data and MLOps terms in plain English, each linked to the notebook that teaches it |
 
 Then begin with the 🌱 **Start Here notebooks** (`00_start_here_*.ipynb`, see [the list](#-start-here-notebooks)). They are gentle, fully runnable introductions to each big area, run on a normal CPU with no API key, and end with exercises and solutions.
 
@@ -65,53 +65,17 @@ Every notebook added in the October 2026 university-level update opens with an *
 
 ---
 
-## What's New (November 2026)
-
-A gap check of this repo against well-known AI curricula and roadmaps (LLM, RAG, agent, ML and system-design courses on GitHub, roadmap.sh, and topics practitioners discuss on LinkedIn) added the notebooks below. They are written in **simple words** (each idea: what it is → an everyday analogy → how it works → when to use it), and **all run on a CPU with no API key and no internet**: real LLMs are replaced by clearly labelled scripted stand-ins, and paid-API code is shown in guarded cells that print *"skipped: needs X"*.
-
-| Area | Notebook | What you get |
-|---|---|---|
-| RAG | [`08_LLM/02_rag/05_every_rag_type_explained`](08_LLM/02_rag/05_every_rag_type_explained.ipynb) | Every RAG type (naive/advanced/modular, hybrid, HyDE, parent-document, sentence-window, contextual, self-query, conversational, Self-RAG, CRAG, adaptive, agentic, multi-hop, FLARE, speculative, GraphRAG/LightRAG/HippoRAG, multimodal/ColPali, text-to-SQL, temporal, federated, permission-aware, Dartboard, MemoRAG), every chunking method, **CAG**, RAG evaluation and a "which RAG should I use?" guide |
-| LLM internals | [`08_LLM/23_llm_caching_kv_cache_prompt_semantic_cag`](08_LLM/23_llm_caching_kv_cache_prompt_semantic_cag.ipynb) | KV cache from scratch and at scale (PagedAttention, prefix caching, MLA, KV quantization, offloading), prompt vs semantic caching, CAG, speculative decoding vs quantization |
-| LLM internals | [`08_LLM/24_how_llms_differ_from_each_other`](08_LLM/24_how_llms_differ_from_each_other.ipynb) | How models differ (dense vs MoE, MHA/GQA/MLA, hybrid and sparse attention, diffusion LLMs, tokenizers, context, post-training, licences), decoding incl. min-p, model merging, 7 ways to make an LLM faster |
-| LLM APIs | [`08_LLM/27_tokens_cost_batch_and_caching_llm_apis`](08_LLM/27_tokens_cost_batch_and_caching_llm_apis.ipynb) | Input/output/cached/reasoning tokens, reading `usage`, prompt caching from the API side, **Batch APIs**, rate limits (RPM/TPM), service tiers, cost tracking |
-| Frameworks | [`08_LLM/25_langchain_complete_guide`](08_LLM/25_langchain_complete_guide.ipynb) | LangChain from zero to production in 19 modules, with interview prep |
-| Trends | [`08_LLM/26_frontier_ai_topics_2026`](08_LLM/26_frontier_ai_topics_2026.ipynb) | Reasoning models and RLVR, SLMs, voice agents, VLA and world models, flow matching, sparse autoencoders, AI regulation, and who to follow to keep up |
-| Agents | [`10_Agents/10`](10_Agents/10_harness_engineering_and_agentic_engineering.ipynb) · [`11`](10_Agents/11_context_engineering_memory_and_agent_protocols.ipynb) · [`16`](10_Agents/16_agentic_workflow_patterns_and_deep_research.ipynb) | **Harness engineering**, agentic engineering, spec-driven development; **context engineering**, agent memory, MCP and **A2A**; workflow patterns, deep research agents, Mixture of Agents |
-| Agent frameworks | [`10_Agents/12`](10_Agents/12_langgraph_hands_on.ipynb) · [`13`](10_Agents/13_crewai_and_multi_agent_frameworks_hands_on.ipynb) · [`15`](10_Agents/15_agent_frameworks_landscape_hands_on.ipynb) | LangGraph and CrewAI hands-on, then OpenAI Agents SDK, Google ADK, PydanticAI, AutoGen / Microsoft Agent Framework, smolagents, LlamaIndex, Haystack, Agno, Strands and DSPy running offline |
-| No-code | [`10_Agents/14_no_code_ai_automation_n8n_make_zapier`](10_Agents/14_no_code_ai_automation_n8n_make_zapier.ipynb) | n8n, Make, Zapier and AI app builders (Flowise, Langflow, Dify, …), 9 automation recipes, testing and versioning workflows |
-| Large-scale design | [`22_ML_System_Design/11`](22_ML_System_Design/11_rag_at_scale_100_million_pdfs_low_latency.ipynb) · [`12`](22_ML_System_Design/12_designing_for_100_million_users.ipynb) | Interview-grade designs: RAG over 100 million PDFs with minimum latency, and a scalable architecture for 100 million users (step-by-step scaling, estimation, worked designs, queueing and autoscaling simulations) |
-| Databases | [`13_Databases/09_indexing_patterns_database_and_vector_side_by_side`](13_Databases/09_indexing_patterns_database_and_vector_side_by_side.ipynb) | Database indexing and vector indexing side by side: when each index type helps, what it costs on writes, recall vs speed vs memory for vector indexes, filtered vector search, and how to choose |
-| System design | [`22_ML_System_Design/09`](22_ML_System_Design/09_ai_system_design_for_llm_applications.ipynb) · [`10`](22_ML_System_Design/10_distributed_systems_and_architecture_patterns.ipynb) | System design for LLM apps (gateways, routing, fallbacks, evals, security, hidden token leaks); distributed-systems patterns (leader election, locks, sagas, strangler fig, BFF, IaC) |
-| MLOps | [`15_MLOps/17_production_ml_and_agentic_analytics_labs`](15_MLOps/17_production_ml_and_agentic_analytics_labs.ipynb) | Production ML anatomy, project structure, a data drift simulator, an AI data-analyst agent, evals step by step |
-| Classical ML | [`03_Machine_Learning/00b_20_ml_algorithms_cheatsheet`](03_Machine_Learning/00b_20_ml_algorithms_cheatsheet.ipynb) | 20 algorithms + AdaBoost on one page with a "which one?" flowchart and a benchmark |
-| AI search | [`08_LLM/28_how_ai_search_works_web_and_research_search`](08_LLM/28_how_ai_search_works_web_and_research_search.ipynb) | How a search engine crawls, indexes and ranks (build a mini one), how LLMs search the web and cite sources, free search options, and research/paper search |
-| Trending repos | [`08_LLM/29_trending_ai_repos_and_new_concepts_2026`](08_LLM/29_trending_ai_repos_and_new_concepts_2026.ipynb) | A checked list of the top AI repos on GitHub (late 2026) by category and the new concepts behind them: AI-assisted reverse engineering (REA), codebase knowledge graphs (Understand Anything), personal agents, open coding agents and agent skills, plus how to judge a trending repo |
-| Cloud | [`18_Cloud/06`](18_Cloud/06_aws_core_services_for_ai_engineers.ipynb)–[`11`](18_Cloud/11_gcp_ai_gemini_enterprise_agent_platform.ipynb) | AWS, Azure and Google Cloud in depth, each in two parts: core services (identity, networking, compute, storage, events, IaC, security) and AI platforms (SageMaker AI, Bedrock and AgentCore; Microsoft Foundry and Azure OpenAI; Gemini Enterprise Agent Platform), with current product names |
-| Cloud services explained simply | [`AWS`](18_Cloud/notes/aws_services_explained_simply.md) · [`Google Cloud`](18_Cloud/notes/gcp_services_explained_simply.md) · [`Azure`](18_Cloud/notes/azure_services_explained_simply.md) · [`AI tools beyond the clouds`](18_Cloud/notes/ai_ecosystem_services_explained_simply.md) · [`18_Cloud/12`](18_Cloud/12_cloud_building_blocks_compared_aws_gcp_azure.ipynb) | Every service of each cloud in plain words (what it is, why you need it, when to use it, the alternatives), a side-by-side chooser across the three clouds, and the third-party AI platforms and tools (Twilio, Vapi, ElevenLabs, Deepgram, Pinecone, LangSmith and many more) |
-| Deploying an AI SaaS | [`16_Deployment/06`](16_Deployment/06_deploying_an_ai_saas_application_end_to_end.ipynb) · [`07`](16_Deployment/07_free_tier_deployment_frontend_backend_and_database.ipynb) · [`13_Databases/10`](13_Databases/10_redis_and_caching_for_ai_applications.ipynb) | Everything an AI SaaS app needs and how to deploy it on AWS, Google Cloud, Azure or Kubernetes; deploying for free (Vercel, Netlify, Cloudflare, Neon, Supabase and others); Redis and caching |
-| Core AI maths and code | [`05_Deep_Learning/22`](05_Deep_Learning/22_deep_learning_mechanics_math_and_code_reference.ipynb) · [`08_LLM/30`](08_LLM/30_transformer_and_llm_mechanics_math_and_code.ipynb) · [`05_Deep_Learning/23`](05_Deep_Learning/23_neural_network_zoo_classic_and_alternative_architectures.ipynb) · [`24`](05_Deep_Learning/24_neural_network_zoo_scientific_and_modern_architectures.ipynb) | How networks learn (forward pass, backprop, learning rate, optimisers, normalisation, numerics) and how a transformer works inside (attention, KV cache, sampling), all with formulas and code; plus a zoo of every neural-network family, including physics-informed networks, neural operators, spiking and liquid networks |
-| Production backend | [`23_Software_Engineering/14`](23_Software_Engineering/14_authentication_and_authorization_in_production.ipynb) · [`15`](23_Software_Engineering/15_production_backend_patterns_databases_caching_and_apis.ipynb) · [`16_Deployment/08`](16_Deployment/08_large_file_uploads_and_downloads_presigned_multipart_resumable.ipynb) | Authentication and authorization end to end; how database caching, connection pooling and API patterns work in production; uploading a 100 MB file straight to S3/GCS/Azure from the browser with presigned, multipart and resumable uploads |
-| Kubernetes and GPUs | [`17_Docker/kubernetes/02`](17_Docker/kubernetes/02_kubernetes_deep_dive_for_ai_workloads.ipynb) · [`03`](17_Docker/kubernetes/03_gpu_infrastructure_and_llm_serving_on_kubernetes.ipynb) | Kubernetes in depth for AI workloads, then GPU infrastructure and LLM serving (MIG, DRA, Kueue, KServe, vLLM, llm-d, Dynamo, NIM, Ray) |
-| DevOps and platform | [`20_Git_and_DevOps/06`](20_Git_and_DevOps/06_infrastructure_as_code_terraform_opentofu_pulumi.ipynb) · [`07`](20_Git_and_DevOps/07_devsecops_cicd_supply_chain_and_platform_engineering.ipynb) · [`23_Software_Engineering/13`](23_Software_Engineering/13_linux_shell_and_networking_for_ai_engineers.ipynb) · [`15_MLOps/18`](15_MLOps/18_sre_reliability_security_and_finops_for_ai_systems.ipynb) | Terraform/OpenTofu/Pulumi, DevSecOps and supply-chain security, DORA metrics and platform engineering, Linux and networking skills, SRE, compliance and FinOps |
-| AI and cybersecurity (new track) | [`27_AI_and_Cybersecurity/`](27_AI_and_Cybersecurity/README.md) | How AI changes attacks and defense, securing vibe-coded applications, AI for security operations, and attacking and defending AI systems (OWASP LLM Top 10, MITRE ATLAS) |
-| Applied AI and forward deployed engineering (new track) | [`28_Applied_AI_and_Forward_Deployed_Engineering/`](28_Applied_AI_and_Forward_Deployed_Engineering/README.md) | What each AI role does; how a forward deployed engineer runs a customer engagement from discovery to production (scoping, proof of value, integrations, security reviews, adoption, ROI); AI product strategy and business skills |
-| Quantum AI (new track) | [`25_Quantum_AI/`](25_Quantum_AI/README.md) | Part 1, Quantum Computing (`00`–`02`, starting from a no-physics introduction); Part 2, Quantum AI and Quantum ML (`03`–`05`, including quantum vs classical fall detection), honest about what quantum AI can and can't do today |
-| Sensor AI (new track) | [`26_Sensor_AI/`](26_Sensor_AI/README.md) | Signals and frequency, IMU activity and fall detection, radar, LiDAR point clouds, sensor fusion with Kalman filters, and using sensor data to build further models (augmentation, simulation, generative and foundation models) |
-
-Small fix: `10_Agents/05_mcp_and_tools.ipynb` now names MCP's current remote transport (Streamable HTTP). [`GLOSSARY.md`](GLOSSARY.md) gained terms such as CAG, harness engineering, context engineering, A2A, MLA, min-p, Batch API, rate limit, n8n and qubit, and [`LEARNING_PATH.md`](LEARNING_PATH.md) shows where each new notebook fits.
-
----
-
 ## 📂 Repository Structure
 
-> **419 Jupyter notebooks** covering the complete AI/ML stack from Python basics to production deployment. Every notebook contains markdown explanations with LaTeX math formulas, code (scratch → library → production), and an Additional Learning Resources section.
+> **426 Jupyter notebooks** covering the complete AI/ML stack from Python basics to production deployment. Every notebook contains markdown explanations with LaTeX math formulas, code (scratch → library → production), and an Additional Learning Resources section.
 >
-> 🌱 **10 of them are Start Here notebooks** (`00_start_here_<topic>.ipynb`, marked 🌱 below): the first notebook to open in each big area, written for complete beginners. See [Start Here Notebooks](#-start-here-notebooks).
+> 🌱 **11 of them are Start Here notebooks** (`00_start_here_<topic>.ipynb`, marked 🌱 below): the first notebook to open in each big area, written for complete beginners. See [Start Here Notebooks](#-start-here-notebooks).
 >
 > 🏭 **47 of them are industry-practice companions** (`NN_industry_<topic>.ipynb`, marked 🏭 below), placed next to the theory notebooks in every section. They show how each topic is done at a real company, with beginner-friendly markdown and heavily commented code see [Industry Practice Notebooks](#-industry-practice-notebooks).
 >
 > 🎓 **95 of them were added in October 2026** for the optional **university-level tracks** (classical AI, DSA, advanced algorithms, discrete maths, DBMS, software engineering, research methods, ML theory and more; new folders marked 🎓 below) and as **hands-on companions** to existing modules. See [University-Level Tracks](#-university-level-tracks-bs--ms--mphil).
+>
+> ✍️ **7 of them are numericals notebooks** (marked ✍️ below): exam-style problems with small numbers, solved by hand step by step and checked by code, for ML, deep learning, computer vision, NLP and LLMs / generative AI. See [Numericals Solved by Hand](#-numericals-solved-by-hand).
 >
 > 🆕 Each section folder also has a **`notes/` sub-folder** with a comprehensive, plain-English **conceptual study guide** (with diagrams) see [Conceptual Study Notes](#-conceptual-study-notes-with-diagrams). Every notebook has been **executed and verified to run** on a current Python 3.12 stack. Beginners install the small, tested **`requirements-beginner.txt`**; the root **`requirements.txt`** pins the full environment. See [Verified Runnable](#-all-notebooks-verified-runnable).
 
@@ -120,7 +84,7 @@ zero-to-ai-engineer/
 │
 ├── START_HERE.md                             # 👋 Setup guide: Colab or local install, first notebook, troubleshooting
 ├── LEARNING_PATH.md                          # 🧭 Study order (core / recommended / optional) + extra installs per module
-├── GLOSSARY.md                               # 📖 614 AI, ML, CS and data terms in plain English
+├── GLOSSARY.md                               # 📖 2,210 AI, ML, CS and data terms in plain English
 ├── requirements-beginner.txt                 # Small tested install (Python 3.10-3.12, CPU only)
 ├── requirements.txt                          # Full pinned environment for every notebook (Python 3.12+)
 ├── LICENSE                                   # MIT
@@ -208,6 +172,8 @@ zero-to-ai-engineer/
 ├── 03_Machine_Learning/
 │   ├── 00_start_here_your_first_ml_model.ipynb  # 🌱 Start Here: split, baseline, train, evaluate, overfitting, leakage, saving
 │   ├── 00b_20_ml_algorithms_cheatsheet.ipynb # 20 algorithms + AdaBoost: idea, pros/cons, tiny demo each, "which one?" flowchart, benchmark
+│   ├── 00c_ml_numericals_solved_by_hand.ipynb # ✍️ Numericals part 1: confusion matrix, precision/recall/F1, ROC-AUC, log loss, regression metrics, cost function, gradient descent and learning rate, SGD vs mini-batch, scaling, logistic/softmax regression, regularization, Bayes, KNN, bias/variance
+│   ├── 00d_ml_numericals_part2_unsupervised_trees_rl.ipynb # ✍️ Numericals part 2: entropy/Gini/information gain, bagging, AdaBoost, gradient boosting, SVM and kernels, k-means, hierarchical, DBSCAN, PCA, EM, Apriori, anomaly detection, recommenders, RL returns/Bellman/Q-learning
 │   ├── 01_supervised/
 │   │   ├── 00_preprocessing.ipynb            # Feature preprocessing, TargetEncoder, encoders, scalers, pipelines
 │   │   ├── 01_linear_regression.ipynb        # Ridge, Lasso, Elastic Net, polynomial
@@ -326,6 +292,8 @@ zero-to-ai-engineer/
 │
 ├── 05_Deep_Learning/
 │   ├── 00_start_here_pytorch_from_zero.ipynb    # 🌱 Start Here: tensors, autograd, the training loop, debugging training
+│   ├── 00b_dl_numericals_solved_by_hand.ipynb   # ✍️ Numericals part 1: neuron, activations, perceptron, computation graph, backprop on a 2-2-1 net, init, batch norm, dropout, optimizers (momentum/RMSProp/Adam), learning rate and decay schedules, project diagnostics
+│   ├── 00c_dl_numericals_part2_cnn_rnn_attention.ipynb # ✍️ Numericals part 2: conv output size, convolution and pooling by hand, parameter counts, RNN and LSTM steps, attention, embeddings, perplexity
 │   ├── 01_neural_network_fundamentals.ipynb  # Activations, backprop derivation, BatchNorm, Xavier/He init
 │   ├── 02_optimizers.ipynb                   # SGD, Adam, AdamW, Lion, schedulers
 │   ├── 03_cnn.ipynb                          # LeNet→ConvNeXt, ResNet, EfficientNet, transfer learning
@@ -359,6 +327,7 @@ zero-to-ai-engineer/
 │
 ├── 06_Computer_Vision/
 │   ├── 00_start_here_images_and_your_first_cnn.ipynb # 🌱 Start Here: pixels, convolutions, a CNN trained on CPU
+│   ├── 00b_cv_numericals_solved_by_hand.ipynb   # ✍️ Numericals: edge filters, padding/stride, conv cost, 1×1 and depthwise convs, receptive field, transposed conv, U-Net shapes, IoU, NMS, anchors/YOLO, mAP, Dice, triplet loss, style transfer, FGSM
 │   ├── 01_image_basics_opencv.ipynb          # OpenCV, morphology, filtering, SIFT, ORB, optical flow
 │   ├── 02_image_classification.ipynb         # timm, EfficientNet, ViT, data augmentation, TTA
 │   ├── 03_object_detection.ipynb             # YOLO v1-v11, Faster R-CNN, DETR, RT-DETR, YOLO-World
@@ -379,6 +348,7 @@ zero-to-ai-engineer/
 │
 ├── 07_NLP/
 │   ├── 00_start_here_text_to_numbers.ipynb      # 🌱 Start Here: tokens, bag of words, TF-IDF, embeddings, semantic search
+│   ├── 00b_nlp_numericals_solved_by_hand.ipynb  # ✍️ Numericals: TF-IDF, Naive Bayes, edit distance, n-gram smoothing and perplexity, HMM/Viterbi, word2vec and negative sampling, beam search, BLEU/ROUGE, WER, attention, BPE, NER F1
 │   ├── 01_text_preprocessing.ipynb           # Tokenization (BPE/WordPiece/SentencePiece), TF-IDF, BM25
 │   ├── 02_word_embeddings.ipynb              # Word2Vec, GloVe, FastText, ELMo, contextualized embeddings
 │   ├── 03_text_classification.ipynb          # BERT fine-tuning, SetFit, zero-shot classification
@@ -400,6 +370,7 @@ zero-to-ai-engineer/
 │
 ├── 08_LLM/
 │   ├── 00_start_here_how_llms_work.ipynb        # 🌱 Start Here: next-token prediction, sampling, chat templates, a tiny GPT
+│   ├── 00b_llm_and_genai_numericals_solved_by_hand.ipynb # ✍️ Numericals: token cost, temperature/top-k/top-p, transformer parameters, 6ND and Chinchilla, GPU memory, KV cache, quantization, LoRA, MoE, latency, RAG metrics, RLHF/DPO, diffusion, VAE/GAN
 │   ├── 01_chatbots/
 │   │   ├── 01_chatbots.ipynb                 # Multi-turn chat, memory, system prompts, streaming
 │   │   └── notes/
@@ -514,9 +485,9 @@ zero-to-ai-engineer/
 │   └── projects/
 │       ├── 01_cartpole_dqn.py
 │       ├── 02_gridworld_rl.py
-│       ├── 03_rlhf_demo.py
-│       ├── 04_ppo_lunarlander.py
-│       └── 05_multi_armed_bandit.py
+│       ├── 02_ppo_lunar_lander.py
+│       ├── 03_llm_rlhf_demo.py
+│       └── 03_multi_armed_bandit.py
 │
 ├── 12_FastAPI/
 │   ├── 01_fastapi_intro.ipynb                # Routes, Pydantic models, path/query params, CRUD
@@ -527,7 +498,6 @@ zero-to-ai-engineer/
 │   ├── requirements_example.txt             # Example requirements file
 │   ├── iris_model.pkl                        # Pre-trained Iris classification model
 │   ├── iris_scaler.pkl                       # Scaler for Iris model
-│   ├── uploads/                             # Upload directory for file uploads
 │   ├── notes/
 │   └── fastapi_project/
 │       ├── main.py / models.py / schemas.py / database.py / auth.py
@@ -835,23 +805,24 @@ zero-to-ai-engineer/
 
 | Category | Count |
 |----------|-------|
-| Total Jupyter Notebooks | **419** (all executed, no errors in saved outputs ✅) |
-| 🌱 Start Here Notebooks (included above) | **10** (first notebook to open in each big area) |
+| Total Jupyter Notebooks | **426** (all executed, no errors in saved outputs ✅) |
+| 🌱 Start Here Notebooks (included above) | **11** (first notebook to open in each big area) |
 | 🏭 Industry Practice Notebooks (included above) | **47** (in every section) |
 | 🎓 University-level tracks & hands-on companions (included above) | **95** (76 track notebooks + 19 companions, added October 2026) |
-| Beginner guides | `START_HERE.md`, `LEARNING_PATH.md`, `GLOSSARY.md` (614 terms) |
+| ✍️ Numericals notebooks (included above) | **7** (ML ×2, deep learning ×2, computer vision, NLP, LLMs & GenAI; 146 topics, each with a worked problem and a practice problem, 1,100+ hand-vs-code checks) |
+| Beginner guides | `START_HERE.md`, `LEARNING_PATH.md`, `GLOSSARY.md` (2,210 terms) |
 | Track guides (`README.md` in each new track folder, incl. `25_Quantum_AI/` to `28_Applied_AI_and_Forward_Deployed_Engineering/`) | **14** |
 | Conceptual Study Guides (`notes/`) | **86** |
-| Mermaid Diagrams in Guides | **342** |
+| Mermaid diagrams | **588** (342 in the `notes/` guides + 246 in notebooks), all checked to render without errors |
 | AI Fundamentals & Ethics (`00`, `19`) | 17 |
 | Classical AI, DSA & Advanced Algorithms (`00_AI_Fundamentals/` sub-folders) | 33 |
 | Python & Data Analysis (`01`, `02`) | 20 |
-| Machine Learning (`03`) | 60 |
+| Machine Learning (`03`) | 62 |
 | Forecasting (`04`) | 13 |
-| Deep Learning (`05`) | 25 |
-| Computer Vision (`06`) | 13 |
-| NLP (`07`) | 14 |
-| LLMs & Prompt Engineering (`08`, `09`) | 45 |
+| Deep Learning (`05`) | 27 |
+| Computer Vision (`06`) | 14 |
+| NLP (`07`) | 15 |
+| LLMs & Prompt Engineering (`08`, `09`) | 46 |
 | Agents & Reinforcement Learning (`10`, `11`) | 26 |
 | APIs, MLOps, Deployment, Docker, Cloud & Git (`12`, `15`–`18`, `20`) | 59 |
 | Databases (`13`, incl. DBMS fundamentals) | 24 |
@@ -1021,7 +992,7 @@ Each track folder has a **`README.md`** that explains the topic in plain English
 
 ## 🌱 Start Here Notebooks
 
-Ten gentle, fully runnable introductions, one for each big area. Each is the **first notebook to open** in its folder (`00_start_here_<topic>.ipynb`). They assume no prior knowledge beyond the notebooks they link to. They explain every new word, keep code cells short and heavily commented, say *what just happened* after each result, and end with a recap, exercises with hidden solutions, and links to what to study next. All of them run on a normal **CPU with no API key**.
+Eleven gentle, fully runnable introductions, one for each big area. Each is the **first notebook to open** in its folder (`00_start_here_<topic>.ipynb`). They assume no prior knowledge beyond the notebooks they link to. They explain every new word, keep code cells short and heavily commented, say *what just happened* after each result, and end with a recap, exercises with hidden solutions, and links to what to study next. All of them run on a normal **CPU with no API key**.
 
 | Folder | Start Here notebook | You will learn |
 |---|---|---|
@@ -1035,14 +1006,35 @@ Ten gentle, fully runnable introductions, one for each big area. Each is the **f
 | `07_NLP` | [`00_start_here_text_to_numbers`](07_NLP/00_start_here_text_to_numbers.ipynb) | Tokenization, bag of words, TF-IDF, a first text classifier, embeddings and semantic search |
 | `08_LLM` | [`00_start_here_how_llms_work`](08_LLM/00_start_here_how_llms_work.ipynb) | Next-token prediction on a real model, temperature / top-k / top-p sampling, chat templates and token costs, a tiny GPT trained from scratch, hallucinations |
 | `09_Prompt_Engineering` | [`00_start_here_prompting_with_a_free_local_model`](09_Prompt_Engineering/00_start_here_prompting_with_a_free_local_model.ipynb) | Zero-shot vs few-shot, JSON output, step-by-step reasoning, prompt injection, measuring prompts, all run for real with a free local model |
+| `25_Quantum_AI` | [`00_start_here_quantum_computing_explained_simply`](25_Quantum_AI/00_start_here_quantum_computing_explained_simply.ipynb) | Bits vs qubits, gates as 2x2 matrices, measurement, entanglement and interference with everyday analogies, simulated in plain Python; no physics background needed |
 
 Notebooks that use a language model download a small one (`Qwen/Qwen2.5-0.5B-Instruct`, about 1 GB) the first time and then work offline.
 
 ---
 
+## ✍️ Numericals Solved by Hand
+
+Seven notebooks of **worked numerical problems**, the kind asked in university exams and ML interviews, with small numbers you can do with a pen and paper (2×2 confusion matrices with 1s and 0s, a 2-2-1 network, a 4×4 image, a three-word sentence). Their topic list follows the syllabi of Andrew Ng's *Machine Learning Specialization* and *Deep Learning Specialization*, Stanford CS229 / CS230, the DeepLearning.AI *NLP Specialization* and *Generative AI with LLMs*. The problems and numbers themselves are original.
+
+Every section has the same shape: **Problem** → **Solution by hand** (each arithmetic step written out) → a **code cell that recomputes the answer and asserts it matches** → **Try it yourself** (answer hidden in a fold) → a **common mistake / exam tip**. Each notebook ends with a one-page formula cheat sheet. All run on a CPU in seconds, with no API key.
+
+| Area | Notebook | What you calculate |
+|---|---|---|
+| Machine learning, part 1 | [`03_Machine_Learning/00c_ml_numericals_solved_by_hand`](03_Machine_Learning/00c_ml_numericals_solved_by_hand.ipynb) | Confusion matrix, accuracy, precision, recall, specificity, F1 as a harmonic mean, F-beta, threshold moving, ROC curve and AUC (two ways), PR curve, macro/micro/weighted averages, log loss, MAE/MSE/RMSE/R²/MAPE, least squares, cost function and gradient descent, **learning rate** too small/good/too large, batch vs **SGD** vs mini-batch, feature scaling, normal equation, polynomial features, Newton's method, logistic and softmax regression, L1/L2 regularization, Bayes' theorem and Naive Bayes, KNN and cosine similarity, bias/variance, k-fold CV, Hoeffding bound |
+| Machine learning, part 2 | [`03_Machine_Learning/00d_ml_numericals_part2_unsupervised_trees_rl`](03_Machine_Learning/00d_ml_numericals_part2_unsupervised_trees_rl.ipynb) | Entropy, Gini, information gain, regression-tree variance reduction, bagging and out-of-bag rows, AdaBoost, gradient boosting, SVM margin and hinge loss, kernels, k-means, hierarchical clustering, DBSCAN, PCA, EM, Apriori (support/confidence/lift), Gaussian anomaly detection, collaborative filtering, discounted return, Bellman equation, value/policy iteration, Q-learning, ε-greedy |
+| Deep learning, part 1 | [`05_Deep_Learning/00b_dl_numericals_solved_by_hand`](05_Deep_Learning/00b_dl_numericals_solved_by_hand.ipynb) | A neuron, activation derivatives, perceptron (AND gate), computation graph, softmax and cross-entropy, shapes and broadcasting, forward pass and **backpropagation** on a 2-2-1 network, gradient checking, vanishing/exploding gradients, Xavier/He init, batch norm, dropout, weight decay, gradient clipping, exponentially weighted averages, SGD/momentum/RMSProp/**Adam**, **learning rate** and decay schedules (1/t, exponential, step, warmup + cosine), log-scale search, avoidable bias, data mismatch, error analysis |
+| Deep learning, part 2 | [`05_Deep_Learning/00c_dl_numericals_part2_cnn_rnn_attention`](05_Deep_Learning/00c_dl_numericals_part2_cnn_rnn_attention.ipynb) | Convolution output size, 2-D convolution and pooling by hand, parameter counts (dense, conv, RNN/LSTM/GRU, batch norm), RNN and LSTM steps, scaled dot-product attention, embedding similarity, perplexity |
+| Computer vision | [`06_Computer_Vision/00b_cv_numericals_solved_by_hand`](06_Computer_Vision/00b_cv_numericals_solved_by_hand.ipynb) | Pixels and grayscale, edge filters, padding/stride, conv over volumes, conv cost, 1×1 and depthwise-separable convs, receptive field, residual block, EfficientNet scaling, transposed conv, U-Net shapes, localization target, IoU, NMS, anchors and YOLO output size, AP/mAP, Dice and IoU for masks, triplet loss, Gram matrix and style cost, PSNR, FGSM |
+| NLP | [`07_NLP/00b_nlp_numericals_solved_by_hand`](07_NLP/00b_nlp_numericals_solved_by_hand.ipynb) | Bag of words, TF-IDF, cosine similarity, Naive Bayes sentiment, word analogies, edit distance, n-gram probabilities, smoothing and perplexity, HMM and Viterbi, word2vec and negative sampling, RNN/LSTM shapes, beam search with length normalization, BLEU, ROUGE, WER, attention, positional encoding, BPE merges, NER F1 |
+| LLMs and generative AI | [`08_LLM/00b_llm_and_genai_numericals_solved_by_hand`](08_LLM/00b_llm_and_genai_numericals_solved_by_hand.ipynb) | Token cost, temperature/top-k/top-p/min-p, perplexity, transformer parameter count, attention memory, RoPE, training FLOPs (6ND, petaFLOP/s-days, Chinchilla), GPU memory, KV cache (MHA/GQA/MQA), quantization, pruning, distillation, LoRA / prompt tuning / QLoRA, MoE, latency and speculative decoding, RAG chunking and retrieval metrics, Elo, RLHF reward model, PPO clip, DPO, diffusion noising, VAE and GAN losses, context budgeting |
+
+**Suggested use:** read the matching theory notebook first, cover the solution, try the problem yourself, then run the code cell to check.
+
+---
+
 ## ✅ All Notebooks Verified Runnable
 
-All **419 notebooks** were executed on **Python 3.12** (NumPy 2, scikit-learn 1.9, PyTorch 2.12 CPU, Transformers 5), and their saved outputs contain **no error messages**.
+All **426 notebooks** were executed on **Python 3.12** (NumPy 2, scikit-learn 1.9, PyTorch 2.12 CPU, Transformers 5), and their saved outputs contain **no error messages**.
 
 - **Reviewed and fixed in October 2026:**
   - library API changes (Transformers 5, MAPIE 1.x, MLflow model aliases, MONAI, TRL, LangChain/Prefect/Airflow/Evidently and others)
@@ -1050,7 +1042,8 @@ All **419 notebooks** were executed on **Python 3.12** (NumPy 2, scikit-learn 1.
   - data-leakage mistakes in some forecasting and churn examples
   - a few incorrect explanations and results
 - **Added in late October 2026:** the 95 notebooks of the 🎓 university-level tracks and hands-on companions, executed the same way. `23_Software_Engineering/04_debugging_and_profiling.ipynb` prints a few tracebacks on purpose, to teach how to read them; they are caught and are not errors.
-- **Added in November 2026:** the notebooks listed in [What's New](#whats-new-november-2026), executed the same way from a fresh kernel with no errors. The optional framework cells (Qiskit, PennyLane, CrewAI and the other agent frameworks in `10_Agents/15`) were run with those packages installed, and also checked to print *"skipped: pip install …"* when they are missing.
+- **Added in November 2026:** 64 notebooks (RAG types and CAG, LLM caching and tokens, LangChain, agent harness/context engineering and frameworks, cloud and DevOps, production backend, large-scale system design, and the four new tracks `25`–`28`), executed the same way from a fresh kernel with no errors. The optional framework cells (Qiskit, PennyLane, CrewAI and the other agent frameworks in `10_Agents/15`) were run with those packages installed, and also checked to print *"skipped: pip install …"* when they are missing.
+- **Added in November 2026 (numericals):** the 7 ✍️ numericals notebooks, executed from a fresh kernel with no errors. Every hand-worked answer is checked by an assert in the code cell that follows it (over 1,100 checks in total).
 - **No API key needed to run them.** Cells that call paid LLM APIs either fall back to a free local model or print a clear *"skipped: needs X"* message instead of crashing. The same goes for cloud accounts and external services (databases, experiment trackers, …).
 - **GPU-heavy parts** (large-model fine-tuning, big diffusion models) check for a GPU and use small CPU stand-ins or skip with a message.
 - The 🌱 Start Here and 🏭 industry notebooks need **no GPU and no API key**.
@@ -1160,7 +1153,7 @@ source .venv/bin/activate        # Linux / macOS
 # Jupyter, NumPy, pandas, scikit-learn, PyTorch, Transformers, FastAPI, ...
 pip install -r requirements-beginner.txt
 
-# OR install the full pinned environment used across ALL 419 notebooks (Python 3.12+)
+# OR install the full pinned environment used across ALL 426 notebooks (Python 3.12+)
 pip install -r requirements.txt
 
 # Verify installation

@@ -156,9 +156,9 @@ flowchart LR
         C[coffee]
         T[tea]
     end
-    K, king minus man plus woman --> Q
+    K -->|king minus man plus woman| Q
     M -. gender direction .-> W
-    C, close, similar meaning --> T
+    C -->|close, similar meaning| T
 ```
 
 ### 3.1 Word2Vec

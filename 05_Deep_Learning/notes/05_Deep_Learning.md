@@ -48,9 +48,9 @@ The biological analogy (drawn out in the notebook's first section) maps dendrite
 
 ```mermaid
 flowchart LR
-    x1((x1)), w1 --> S[Weighted sum z = w.x + b]
-    x2((x2)), w2 --> S
-    x3((x3)), w3 --> S
+    x1((x1)) -->|w1| S[Weighted sum z = w.x + b]
+    x2((x2)) -->|w2| S
+    x3((x3)) -->|w3| S
     b((bias b)) --> S
     S --> A[Activation f]
     A --> y((output))
@@ -77,8 +77,8 @@ The cell that plots all these activations side by side, and numerically estimate
 
 ```mermaid
 flowchart LR
-    a((x1)), w1 --> Z[Weighted sum]
-    b((x2)), w2 --> Z
+    a((x1)) -->|w1| Z[Weighted sum]
+    b((x2)) -->|w2| Z
     Z --> STEP[Step threshold]
     STEP --> O((0 or 1))
 ```
@@ -196,7 +196,7 @@ flowchart LR
     P --> L[Compute loss]
     L --> B[Backward pass / gradients]
     B --> U[Optimizer update]
-    U, next batch --> D
+    U -->|next batch| D
 ```
 
 ### 2.9 Making deep networks trainable: initialization, normalization, dropout
@@ -245,7 +245,7 @@ flowchart LR
     M --> STEP[Update = learning rate times scaled direction]
     V --> STEP
     STEP --> NEW[New parameters]
-    NEW, next step --> G
+    NEW -->|next step| G
 ```
 
 ### 3.4 Learning-rate schedules and gradient clipping
@@ -353,8 +353,8 @@ flowchart LR
     x1((x_t1)) --> c1[RNN cell]
     x2((x_t2)) --> c2[RNN cell]
     x3((x_t3)) --> c3[RNN cell]
-    c1, h1 --> c2
-    c2, h2 --> c3
+    c1 -->|h1| c2
+    c2 -->|h2| c3
     c1 --> y1((y_t1))
     c2 --> y2((y_t2))
     c3 --> y3((y_t3))
@@ -556,8 +556,8 @@ flowchart LR
     REAL[Real sample] --> DISC[Discriminator]
     FAKE --> DISC
     DISC --> JUDGE[Real or fake decision]
-    JUDGE, train discriminator --> DISC
-    JUDGE, train generator to fool --> GEN
+    JUDGE -->|train discriminator| DISC
+    JUDGE -->|train generator to fool| GEN
 ```
 
 They train together: as the discriminator gets better at spotting fakes, the generator is forced to make better fakes, and vice versa, until the fakes are indistinguishable from real data. GANs produce strikingly sharp images but are notoriously unstable to train and prone to **mode collapse** (the generator producing only a few varieties). **WGAN** and **WGAN-GP** stabilize training by replacing the loss with the Wasserstein (Earth-Mover) distance and enforcing a smoothness constraint. The notebook trains a small GAN on a bimodal distribution.
@@ -573,12 +573,12 @@ They train together: as the discriminator gets better at spotting fakes, the gen
 
 ```mermaid
 flowchart LR
-    IMG[Clean image], add noise --> N1[Noisy]
-    N1, add noise --> N2[More noisy]
-    N2, add noise --> PURE[Pure noise]
-    PURE, denoise --> R2[Less noisy]
-    R2, denoise --> R1[Cleaner]
-    R1, denoise --> GEN[Generated image]
+    IMG[Clean image] -->|add noise| N1[Noisy]
+    N1 -->|add noise| N2[More noisy]
+    N2 -->|add noise| PURE[Pure noise]
+    PURE -->|denoise| R2[Less noisy]
+    R2 -->|denoise| R1[Cleaner]
+    R1 -->|denoise| GEN[Generated image]
 ```
 
 The notebook illustrates the *forward* process numerically watching a point degrade into noise but does not train a full reverse denoiser; it is meant to convey the intuition. **DDIM** is a technique for sampling faster with fewer steps.

@@ -96,7 +96,7 @@ flowchart TD
     H --> I[Returned to client]
     H --> J[monitoring.log_prediction]
     J --> K[Rolling log plus Prometheus counters, histograms, gauges]
-    K --> L[/metrics summary, /metrics/prometheus, drift check]
+    K --> L["/metrics summary, /metrics/prometheus, drift check"]
     subgraph Stack [docker-compose stack]
         M[App]
         L --> O[Prometheus scrapes]

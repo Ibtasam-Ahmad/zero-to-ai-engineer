@@ -73,14 +73,14 @@ A key practical trick: taking the **logarithm** of a multiplicative series turns
 ```mermaid
 flowchart LR
     A[Collect data] --> B{Stationary?}
-    B, No --> C[Difference / transform]
+    B -->|No| C[Difference / transform]
     C --> B
-    B, Yes --> D[Fit model]
+    B -->|Yes| D[Fit model]
     D --> E[Forecast future]
     E --> F[Evaluate on holdout]
     F --> G{Residuals white noise?}
-    G, No --> D
-    G, Yes --> H[Deploy forecast]
+    G -->|No| D
+    G -->|Yes| H[Deploy forecast]
 ```
 
 ## 3. Stationarity: The Central Assumption
@@ -189,11 +189,11 @@ Put together, **ARIMA(p, d, q)** can model a wide range of behaviors. The orders
 flowchart TD
     Start[Stationary series after d differences] --> Plot[Plot ACF and PACF]
     Plot --> Q1{PACF cuts off after lag p<br/>and ACF tails off}
-    Q1, Yes --> AR[Choose AR order p<br/>set q = 0]
+    Q1 -->|Yes| AR[Choose AR order p<br/>set q = 0]
     Plot --> Q2{ACF cuts off after lag q<br/>and PACF tails off}
-    Q2, Yes --> MA[Choose MA order q<br/>set p = 0]
+    Q2 -->|Yes| MA[Choose MA order q<br/>set p = 0]
     Plot --> Q3{Both tail off}
-    Q3, Yes --> ARMA[Mixed model<br/>pick p and q together]
+    Q3 -->|Yes| ARMA[Mixed model<br/>pick p and q together]
     AR --> Out[ARIMA p d q]
     MA --> Out
     ARMA --> Out
@@ -346,8 +346,8 @@ flowchart LR
     X1[y t-2] --> C1[Cell]
     X2[y t-1] --> C2[Cell]
     X3[y t] --> C3[Cell]
-    C1, hidden state h1 --> C2
-    C2, hidden state h2 --> C3
+    C1 -->|hidden state h1| C2
+    C2 -->|hidden state h2| C3
     C3 --> Head[Linear output head]
     Head --> F[Forecast y t+1]
 ```

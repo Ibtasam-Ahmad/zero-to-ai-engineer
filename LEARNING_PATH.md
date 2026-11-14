@@ -1,6 +1,6 @@
 # 🧭 Learning Path: What to Study, in What Order
 
-> **Who is this for?** Anyone who opens this repo and asks: *"There are 419 notebooks. Where do I start, and what can I skip?"*
+> **Who is this for?** Anyone who opens this repo and asks: *"There are 426 notebooks. Where do I start, and what can I skip?"*
 >
 > **Studying for a degree, or want degree-level depth?** Pick a route in [🎓 Choose your route](#-choose-your-route), then check your coverage in the [🗺️ Degree map](#degree-map).
 >
@@ -10,7 +10,7 @@
 
 ## How to read this page
 
-The folders are numbered `00` to `24`, but **the numbers are not the study order**. For example, you need Git (`20`) and some maths (`14`) long before you need deployment (`16`). This page gives you the order.
+The folders are numbered `00` to `28`, but **the numbers are not the study order**. For example, you need Git (`20`) and some maths (`14`) long before you need deployment (`16`). This page gives you the order.
 
 Each stage lists what to do, marked like this:
 
@@ -24,14 +24,16 @@ Each stage lists what to do, marked like this:
 | 🔑 | Needs a paid API key to run fully (you can still read it; free alternatives are listed). |
 | 🎓 | **Degree core**: university-course material (DSA, DBMS, discrete maths, classical AI…). Optional on the job route (a), core on the degree routes (b) and (c). |
 | 🔬 | **MS / MPhil level**: graduate theory and research. Optional on routes (a) and (b), core on route (c). |
+| ✍️ | A **numericals** notebook: exam-style problems with small numbers, solved by hand step by step and checked by code. Do one section after each matching theory notebook. |
 
 **Every folder also has a `notes/` file** (for example `03_Machine_Learning/notes/03_Machine_Learning.md`). It explains the ideas in plain English with diagrams. A good routine for every topic:
 
 1. Read the notes file for the topic.
 2. Run the 🌱 Start Here notebook, if there is one.
 3. Run the core notebooks **cell by cell**. Change numbers, break things, and see what happens.
-4. Do the 🏭 industry notebook.
-5. Write 3–5 sentences explaining what you learned, in your own words.
+4. Work the matching ✍️ **numericals** section by hand before running its code cell.
+5. Do the 🏭 industry notebook.
+6. Write 3–5 sentences explaining what you learned, in your own words.
 
 **Time estimates** assume about **10–15 hours per week**. Going slower is completely fine.
 
@@ -248,6 +250,8 @@ Do `02_Data_Analysis` in **this** order. `01_data_preprocessing` uses tools taug
 | ⭐🏭 | `01_supervised/14_industry_churn_prediction.ipynb`, `15_industry_house_price_regression.ipynb` | Classification and regression done professionally |
 | ✅ | `01_supervised/05_svm`, `06_naive_bayes`, `07_knn`, `13_model_calibration` | More algorithms worth knowing |
 | **Recommended** | `03_Machine_Learning/00b_20_ml_algorithms_cheatsheet.ipynb` | 20 algorithms (plus AdaBoost) on one page: core idea, strengths, weaknesses, a tiny demo each, a "which one?" flowchart and a fair benchmark. Revisit before interviews. |
+| ⭐✍️ | `03_Machine_Learning/00c_ml_numericals_solved_by_hand.ipynb` | Metrics (confusion matrix, precision/recall/F1, ROC-AUC), regression, cost function, gradient descent, learning rate, SGD, regularization, Bayes, KNN, bias/variance, all by hand |
+| ✅✍️ | `03_Machine_Learning/00d_ml_numericals_part2_unsupervised_trees_rl.ipynb` | Trees and ensembles, SVM, k-means, PCA, EM, anomaly detection, recommenders and RL basics by hand |
 | ⭐ | `02_unsupervised/01_clustering`, `02_dimensionality_reduction`, 🏭 `04_industry_customer_segmentation` | Finding structure without labels |
 | ⭐ | `05_feature_engineering/` (all three) | Usually the biggest lever on model quality |
 | ⭐ | `06_model_evaluation/` (all three) | Choosing metrics, tuning, comparing models fairly |
@@ -282,8 +286,10 @@ Do `02_Data_Analysis` in **this** order. `01_data_preprocessing` uses tools taug
 |---|---|---|
 | ⭐🌱 | `05_Deep_Learning/00_start_here_pytorch_from_zero.ipynb` | Tensors, autograd and the training loop, all actually trained on CPU |
 | ⭐ | `01_neural_network_fundamentals.ipynb` → `02_optimizers.ipynb` | What happens inside a network, and how it learns |
+| ⭐✍️ | `05_Deep_Learning/00b_dl_numericals_solved_by_hand.ipynb` | Backprop on a 2-2-1 network, initialisation, batch norm, dropout, optimizers, learning-rate schedules and project diagnostics, all by hand |
 | ⭐🏭 | `16_industry_pytorch_training_pipeline.ipynb` | **Do this right after 01–02.** It is the most practical PyTorch notebook in the repo. |
 | ⭐ | `03_cnn.ipynb`, `04_rnn_lstm_gru.ipynb`, `05_transformers_architecture.ipynb` | The three architecture families. `05` is essential for LLMs. |
+| ✅✍️ | `05_Deep_Learning/00c_dl_numericals_part2_cnn_rnn_attention.ipynb` | Convolutions, pooling, parameter counts, RNN/LSTM steps and attention by hand |
 | ✅🏭 | `17_industry_model_export_and_inference.ipynb` | Getting a trained model out of the notebook |
 | 🔹 | `06`–`15` | Generative models, GNNs, compression, self-supervised learning, PEFT, distributed training… (some need a GPU) |
 | ✅🎓 | `05_Deep_Learning/18_neural_networks_from_scratch_numpy.ipynb` | Build a whole network in plain NumPy (layers, backprop, optimisers, dropout, batch norm, a tiny CNN) |
@@ -299,10 +305,12 @@ Do `02_Data_Analysis` in **this** order. `01_data_preprocessing` uses tools taug
 |---|---|---|
 | ⭐🌱 | `06_Computer_Vision/00_start_here_images_and_your_first_cnn.ipynb` | Pixels, convolutions, and a CNN trained on CPU |
 | ⭐ | `06_Computer_Vision/01_image_basics_opencv.ipynb`, `02_image_classification.ipynb`, 🏭 `11_industry_visual_defect_inspection.ipynb` | Core vision skills |
+| ✅✍️ | `06_Computer_Vision/00b_cv_numericals_solved_by_hand.ipynb` | Conv arithmetic and cost, receptive field, IoU, NMS, YOLO output size, mAP, Dice, triplet loss, style transfer by hand |
 | ✅ | `03_object_detection`, `05_vision_transformers`, 🏭 `12_industry_visual_product_search` | |
 | 🔹 | `04`, `06`–`10` | Segmentation, generation, OCR, video, 3-D, medical imaging |
 | ⭐🌱 | `07_NLP/00_start_here_text_to_numbers.ipynb` | Tokens, TF-IDF, embeddings, semantic search |
 | ⭐ | `07_NLP/01_text_preprocessing`, `02_word_embeddings`, `03_text_classification`, 🏭 `12_industry_support_ticket_routing`, 🏭 `13_industry_semantic_search_engine` | Core NLP |
+| ✅✍️ | `07_NLP/00b_nlp_numericals_solved_by_hand.ipynb` | TF-IDF, Naive Bayes, edit distance, n-grams and perplexity, Viterbi, word2vec, beam search, BLEU/ROUGE by hand |
 | 🔹 | `07_NLP/04`–`11` | NER, generation, QA, topic models, speech, multilingual |
 
 ## Stage 9: LLMs & prompt engineering (6–7 weeks)
@@ -310,6 +318,7 @@ Do `02_Data_Analysis` in **this** order. `01_data_preprocessing` uses tools taug
 | | What | Why |
 |---|---|---|
 | ⭐🌱 | `08_LLM/00_start_here_how_llms_work.ipynb` | Next-token prediction, sampling, chat templates, and a tiny GPT trained from scratch |
+| ✅✍️ | `08_LLM/00b_llm_and_genai_numericals_solved_by_hand.ipynb` | Token cost, sampling, parameter and FLOP counts, GPU and KV-cache memory, quantization, LoRA, RAG metrics, RLHF/DPO and diffusion by hand; also good interview prep |
 | ⭐🌱 | `09_Prompt_Engineering/00_start_here_prompting_with_a_free_local_model.ipynb` | Every basic prompting technique, actually running, with no key |
 | ⭐🔑 | `09_Prompt_Engineering/01_basics.ipynb` → `02_techniques.ipynb` → `03_advanced.ipynb` | The full prompting toolkit |
 | ⭐ | `09_Prompt_Engineering/04_adversarial.ipynb` | Prompt injection: attacks, defences, and how to test a filter with known attacks |
